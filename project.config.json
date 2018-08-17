@@ -10,7 +10,7 @@
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
 	"appid": "wx25abd28bd1be244b",
-	"projectname": "GetWorks%2BGetPeople",
+	"projectname": "kjob",
 	"condition": {
 		"search": {
 			"current": -1,
