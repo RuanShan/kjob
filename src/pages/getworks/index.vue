@@ -11,6 +11,18 @@
         <mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
       </div>
     </div>
+
+    <div class="statistics">
+      <div class="works-num">
+        今日在线招工数:
+        <div class="works-num-color">{{onLineworkersNum}}</div>
+      </div>
+      <div class="people-num">
+        今日浏览人次:
+        <div class="people-num-color">{{browsedTimes}}</div>
+        <div></div>
+      </div>
+    </div>
     
   </div>
 </template>
@@ -310,7 +322,10 @@ export default {
           }
           ]
         }
-      ]
+      ],
+      // ************招工数量和浏览人数************
+      onLineworkersNum: '1234', // 招工数量
+      browsedTimes: '5678' // 浏览人数
     }
   },
 
@@ -361,7 +376,7 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style scoped lang='scss'>
 .sizer {
   display: flex;
   flex-direction: row;
@@ -370,6 +385,35 @@ export default {
     }
     .work-select {
       width: 50%;
+    }
+}
+
+.statistics {
+  height: 36rpx;
+  border:1px solid #c0c0c0;
+  display: flex;
+  flex-direction: row;
+    .works-num {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 50%;
+      font-size:25rpx;
+      text-align:center;
+      .works-num-color {
+        color:red;
+      }
+    }
+    .people-num {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 50%;
+      font-size:25rpx;
+      text-align:center;
+      .people-num-color {
+        color:red;
+      }
     }
 }
 
