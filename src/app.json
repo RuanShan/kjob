@@ -6,7 +6,8 @@
       "pages/getpeople/main",
       "pages/freerelease/main",
       "pages/my/main",    
-      "pages/test/main"
+      "pages/test/main",
+      "pages/workinfo/main"
     ],
     "window": {
       "backgroundTextStyle": "light",
@@ -22,7 +23,7 @@
       "list": [
         {
           "pagePath": "pages/getworks/main",
-          "selectedIconPath": "../dist/resources/tabBar/招工.png", 
+          "selectedIconPath": "../dist/resources/tabBar/招工.png",
           "iconPath": "../dist/resources/tabBar/招工-没有选择.png",
           "text": "招工"
         },

@@ -30,7 +30,7 @@
 
     <!-- 列表概览 ===> START -->
     <div>
-      <div class="circular" v-for="item in jobList" :key="item" @click="detail">
+      <div class="circular" v-for="item in jobList" :key="item" @click="detail(item)">
         <div class="top-----half">
           <div class="one---row">
             <div class="one-row-one">
@@ -389,46 +389,67 @@ export default {
       browsedTimes: '5678', // 浏览人数
 
       // ************招工列表************
-      jobList: [{
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万' // 联系人姓名
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万' // 联系人姓名
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万' // 联系人姓名
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万' // 联系人姓名
-      }
+      jobList: [
+        {
+          city: '广西河池', // 城市
+          typeOfWork: '抹灰工', // 工种
+          price: '6.5', // 价格
+          worksAmount: '7万平方米', // 工程量
+          state: '广西壮族自治区', // 省
+          releaseTime: '2018-06-06 10:55', // 时间
+          headImage: '', // 头像
+          publishName: '姜亿万', // 联系人姓名
+          worksClass: '主体装修安装类', // 工作类
+          description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
+        },
+        {
+          city: '广西河池', // 城市
+          typeOfWork: '抹灰工', // 工种
+          price: '6.5', // 价格
+          worksAmount: '7万平方米', // 工程量
+          state: '广西壮族自治区', // 省
+          releaseTime: '2018-06-06 10:55', // 时间
+          headImage: '', // 头像
+          publishName: '姜亿万', // 联系人姓名
+          worksClass: '主体装修安装类', // 工作类
+          description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
+        },
+        {
+          city: '广西河池', // 城市
+          typeOfWork: '抹灰工', // 工种
+          price: '6.5', // 价格
+          worksAmount: '7万平方米', // 工程量
+          state: '广西壮族自治区', // 省
+          releaseTime: '2018-06-06 10:55', // 时间
+          headImage: '', // 头像
+          publishName: '姜亿万', // 联系人姓名
+          worksClass: '主体装修安装类', // 工作类
+          description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
+        },
+        {
+          city: '广西河池', // 城市
+          typeOfWork: '抹灰工', // 工种
+          price: '6.5', // 价格
+          worksAmount: '7万平方米', // 工程量
+          state: '广西壮族自治区', // 省
+          releaseTime: '2018-06-06 10:55', // 时间
+          headImage: '', // 头像
+          publishName: '姜亿万', // 联系人姓名
+          worksClass: '主体装修安装类', // 工作类
+          description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
+        },
+        {
+          city: '广西河池', // 城市
+          typeOfWork: '抹灰工', // 工种
+          price: '6.5', // 价格
+          worksAmount: '7万平方米', // 工程量
+          state: '广西壮族自治区', // 省
+          releaseTime: '2018-06-06 10:55', // 时间
+          headImage: '', // 头像
+          publishName: '姜亿万', // 联系人姓名
+          worksClass: '主体装修安装类', // 工作类
+          description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
+        }
       ] // 招工列表数据
     }
   },
@@ -476,15 +497,21 @@ export default {
       })
       console.log(this.resultTypeOfWork)
     },
-    // 点击展开详情
-    detail () {
-      console.log('Detail !!!')
+    // 点击展开详情,打开详情页面
+    detail (item) {
+      console.log('工作详情页面 !!!')
+      console.log('item = ', item)
+      wx.navigateTo({ url: '../workinfo/main?dataObj=' + JSON.stringify(item) }) // 当前点击的item,数据传递给招工详情页面
     }
   }
 }
 </script>
 
-<style scoped lang='scss'>
+<style lang='scss'>
+page{
+  height: 100%;
+  background-color: #f0f0f0;
+}
 .sizer {
   display: flex;
   flex-direction: row;
@@ -562,7 +589,7 @@ export default {
           font-size: 35rpx;
           border-radius: 30rpx;
           background-color: #97cbff;
-           border: 1px solid #808080;
+          border: 1px solid #808080;
         }
       }
     }
