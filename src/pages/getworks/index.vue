@@ -29,7 +29,7 @@
     <!-- 统计 ===> END -->
 
     <!-- 列表概览 ===> START -->
-    <div>
+    <div class="list">
       <div class="circular" v-for="item in jobList" :key="item" @click="detail(item)">
         <div class="top-----half">
           <div class="one---row">
@@ -513,21 +513,37 @@ page{
   background-color: #f0f0f0;
 }
 .sizer {
+  // position:absolute;
+  width: 100%;
+  height: 92rpx;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   .position-select {
+    // float: left;     
     width: 50%;
+    position:fixed;
+    left: 0rpx;
+    top: 0rpx;
   }
   .work-select {
+    // float: right;
+    // position:fixed; 
     width: 50%;
+    position:fixed;
+    left: 375rpx;
+    top: 0rpx;
   }
 }
 
 .statistics {
   height: 36rpx;
+  width: 100%;
+  background-color: #ebebeb;
   border: 1px solid #c0c0c0;
   display: flex;
   flex-direction: row;
+  // position:fixed;
   .works-num {
     display: flex;
     flex-direction: row;
@@ -551,117 +567,121 @@ page{
     }
   }
 }
-.circular {
-  margin: 25rpx auto;
-  background: #ffffff;
-  width: 700rpx;
-  height: 300rpx;
-  border: 2px solid #d6d6d6;
-  border-radius: 30rpx;
-  // line-height: 200px;
-  display: flex;
-  flex-direction: column;
-  .top-----half {
-    // background-color: cadetblue;
-    height: 50%;
+
+.list {
+  // margin-top: 40rpx;
+  .circular {
+    margin: 25rpx auto;
+    background: #ffffff;
+    width: 700rpx;
+    height: 300rpx;
+    border: 2px solid #d6d6d6;
+    border-radius: 30rpx;
+    // line-height: 200px;
     display: flex;
     flex-direction: column;
-    .one---row {
-      height: 60%;
-      // background-color:snow;
+    .top-----half {
+      // background-color: cadetblue;
+      height: 50%;
       display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content:space-between;
-      .one-row-one {
-        // width: 70%;
-        padding-left: 25rpx;
-        font-size: 50rpx;
-        font-weight: bold;
-      }
-      .one-row-two {
-        // margin-right: 25rxp;
-        padding-right: 25rpx;
-        // border-radius: 30rpx;
-        // width: 30%;
-        // background-color: blueviolet;
-        .typeOfWork {
-          font-size: 35rpx;
-          border-radius: 30rpx;
-          background-color: #97cbff;
-          border: 1px solid #808080;
-        }
-      }
-    }
-    .two---row {
-      height: 40%;
-      // background-color:chartreuse;
-      display: flex;
-      flex-direction: row;
-      justify-content:space-between;
-      align-items: center;
-       .two-row-one {
-        padding-left: 25rpx;
+      flex-direction: column;
+      .one---row {
+        height: 60%;
+        // background-color:snow;
         display: flex;
-        .price {
-          color: #fc0a77;
-        }
-      }
-      .two-row-two {
-        // width: 60%;
-        // background-color:cornsilk;
-        padding-right: 25rpx;
-        display: flex;
-        .worksAmount {
-          color: #fc0a77;
-        }
-      }
-    }
-  }
-  .bottom-----half {
-    // background-color: salmon;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    .three---row {
-      height: 40%;
-      // background-color:snow;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content:space-between;
-      font-size: 25rpx;
-      color: #808080;
-      .three-row-one {
-        padding-left: 25rpx;
-        // width: 50%;
-      }
-      .three-row-two {
-        padding-right: 25rpx;
-        // width: 50%;
-        // background-color: blueviolet;
-      }
-    }
-    .four---row {
-      height: 60%;
-      padding-left: 25rpx;
-      padding-right: 25rpx;
-      // background-color:chartreuse;
-      border-top: solid 1rpx #b8b8b8;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content:space-between;
-       .four-row-one {
-        display: flex;
+        flex-direction: row;
         align-items: center;
-        // width: 70%;
+        justify-content:space-between;
+        .one-row-one {
+          // width: 70%;
+          padding-left: 25rpx;
+          font-size: 50rpx;
+          font-weight: bold;
+        }
+        .one-row-two {
+          // margin-right: 25rxp;
+          padding-right: 25rpx;
+          // border-radius: 30rpx;
+          // width: 30%;
+          // background-color: blueviolet;
+          .typeOfWork {
+            font-size: 35rpx;
+            border-radius: 30rpx;
+            background-color: #97cbff;
+            border: 1px solid #808080;
+          }
+        }
       }
-      .four-row-two {
+      .two---row {
+        height: 40%;
+        // background-color:chartreuse;
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        align-items: center;
+        .two-row-one {
+          padding-left: 25rpx;
+          display: flex;
+          .price {
+            color: #fc0a77;
+          }
+        }
+        .two-row-two {
+          // width: 60%;
+          // background-color:cornsilk;
+          padding-right: 25rpx;
+          display: flex;
+          .worksAmount {
+            color: #fc0a77;
+          }
+        }
+      }
+    }
+    .bottom-----half {
+      // background-color: salmon;
+      height: 50%;
+      display: flex;
+      flex-direction: column;
+      .three---row {
+        height: 40%;
+        // background-color:snow;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content:space-between;
         font-size: 25rpx;
-        color: #c0c0c0;
-        // width: 30%;
-        // background-color:cornsilk;
+        color: #808080;
+        .three-row-one {
+          padding-left: 25rpx;
+          // width: 50%;
+        }
+        .three-row-two {
+          padding-right: 25rpx;
+          // width: 50%;
+          // background-color: blueviolet;
+        }
+      }
+      .four---row {
+        height: 60%;
+        padding-left: 25rpx;
+        padding-right: 25rpx;
+        // background-color:chartreuse;
+        border-top: solid 1rpx #b8b8b8;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content:space-between;
+        .four-row-one {
+          display: flex;
+          align-items: center;
+          // width: 70%;
+        }
+        .four-row-two {
+          font-size: 25rpx;
+          color: #c0c0c0;
+          // width: 30%;
+          // background-color:cornsilk;
+        }
       }
     }
   }
