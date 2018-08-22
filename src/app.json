@@ -7,6 +7,7 @@
       "pages/freerelease/main",
       "pages/my/main",    
       "pages/test/main",
+      "pages/peopleinfo/main",
       "pages/workinfo/main"
     ],
     "window": {
