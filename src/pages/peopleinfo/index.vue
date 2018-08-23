@@ -10,11 +10,31 @@
       </div>
     </div>
     <!-- 第一大行 ===> END -->
-          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/baseinfo.png">
 
     <!-- 第二大行 ===> START -->
     <div class="second-line">
-
+      <div class="one---row">
+        <div class="one-row-left">
+          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/baseinfo.png">
+        </div>
+        <div class="one-row-right">
+          &nbsp;&nbsp; 基本信息
+        </div>
+      </div>
+      <div class="two---row">
+        <div>
+          年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄&nbsp;&nbsp;:&nbsp;&nbsp;{{item.age}}&nbsp;&nbsp;岁
+        </div>
+        <div>
+          民&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;族&nbsp;&nbsp;:&nbsp;&nbsp;{{item.nation}}
+        </div>
+        <div>
+          个人或班组&nbsp;&nbsp;:&nbsp;&nbsp;10至20人
+        </div>
+        <div>
+          找&nbsp;活&nbsp;区&nbsp;域&nbsp;&nbsp;:&nbsp;&nbsp;{{item.district1_fullname}}
+        </div>
+      </div>
     </div>
     <!-- 第二大行 ===> START -->
 
@@ -22,27 +42,78 @@
     <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
-          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/skill.png">
+          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/tpyeOfWork.png">
         </div>
         <div class="one-row-right">
-          &nbsp;&nbsp; 职业技能
+          &nbsp;&nbsp; 我的工种
         </div>
       </div>
       <div class="two---row">
-        {{item.worksClass}}&nbsp;-&nbsp;{{item.typeOfWork}}
+        <div class="work-class">
+          <div class="work-class-item">
+            {{item.job_taxon1_name}}
+          </div>
+          <div class="work-class-item">
+            {{item.job_taxon1_name}}
+          </div>
+          <div class="work-class-item">
+            {{item.job_taxon1_name}}
+          </div>
+        </div>
+        <div class="tpye-of-work">
+          <div class="job-item">
+            {{item.job1_name}}
+          </div>
+          <div class="job-item">
+            {{item.job2_name}}
+          </div>
+          <div class="job-item">
+            {{item.job3_name}}
+          </div>
+        </div>
       </div>
     </div>
     <!-- 第三大行 ===> END -->
 
     <!-- 第四大行 ===> START -->
     <div class="fourth-line">
-
+      <div class="one---row">
+        <div class="one-row-left">
+          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/discription.png">
+        </div>
+        <div class="one-row-right">
+          &nbsp;&nbsp;招工描述
+        </div>
+      </div>
+      <div class="two---row">
+        {{item.description}}
+      </div>
     </div>
     <!-- 第四大行 ===> END -->
 
     <!-- 第五大行 ===> START -->
     <div class="fifth-line">
-
+      <div class="one---row">
+        <div class="one-row-left">
+          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/work_line.png">
+        </div>
+        <div class="one-row-right">
+          &nbsp;&nbsp; 工作经历
+        </div>
+      </div>
+      <div class="two---row">
+        <div>
+          2018年-04月 -25日 ~ 今   北京市   
+        </div>
+        <div>
+          描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息;
+        </div>
+        <div class="work-image">
+          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
+          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
+          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
+        </div>
+      </div>
     </div>
     <!-- 第五大行 ===> END -->
 
@@ -129,7 +200,7 @@ page {
       align-items: center;
       .two---row {
         color: #ffffff;
-        font-weight:bold;
+        font-weight: bold;
       }
     }
     .second-line {
@@ -147,10 +218,48 @@ page {
       }
       .two---row {
         padding: 25rpx;
-        font-size: 25rpx;
+        font-size: 30rpx;
       }
     }
     .third-line {
+      margin-top: 25rpx;
+      // height: 23%;
+      background-color: #ffffff;
+      flex-direction: column;
+      justify-content: space-around;
+      .one---row {
+        display: flex;
+        padding-left: 25rpx;
+        padding-top: 25rpx;
+        padding-bottom: 25rpx;
+        border-bottom: solid 1rpx #b8b8b8;
+      }
+      .two---row {
+        // font-size: 25rpx;
+        .work-class {
+          display: flex;
+          font-size: 30rpx;
+          .work-class-item {
+            margin: 25rpx;
+            text-align: center;
+            border-radius: 30rpx;
+            border: solid 1rpx #c0c0c0;
+            background-color: #e6e6e6;
+            width: 150rpx;
+            padding: 0rpx 18rpx;
+            height: 40rpx;
+          }
+        }
+        .tpye-of-work {
+          font-size: 30rpx;
+          display: flex;
+          .job-item {
+            margin: 25rpx;
+          }
+        }
+      }
+    }
+    .fourth-line {
       margin-top: 25rpx;
       // height: 23%;
       background-color: #ffffff;
@@ -168,7 +277,7 @@ page {
         font-size: 25rpx;
       }
     }
-    .fourth-line {
+    .fifth-line {
       margin-top: 25rpx;
       // height: 23%;
       background-color: #ffffff;
@@ -179,21 +288,14 @@ page {
         padding-left: 25rpx;
         padding-top: 25rpx;
         padding-bottom: 25rpx;
-        // border-bottom: solid 1rpx #b8b8b8;
+        border-bottom: solid 1rpx #b8b8b8;
       }
-    }
-    .fifth-line {
-      margin-top: 25rpx;
-      // height: 23%;
-      background-color: #ffffff;
-      flex-direction: column;
-      justify-content: space-around;
-      .one---row {
-        display: flex;
+      .two---row {
         padding: 25rpx;
-        font-size: 25rpx;
-        color: #ff82ff;
-        // border-bottom: solid 1rpx #b8b8b8;
+        .work-image {
+          display: flex;
+          justify-content: space-around;
+        }
       }
     }
     .sixth-line {
