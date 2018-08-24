@@ -8,6 +8,8 @@
       "pages/my/main",    
       "pages/test/main",
       "pages/peopleinfo/main",
+      "pages/releasemy/main",
+      "pages/releasejob/main",
       "pages/workinfo/main"
     ],
     "window": {

@@ -120,6 +120,7 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
+    // 得到getWorks页面跳转过来的数据,并解析
     this.item = JSON.parse(option.dataObj) // 解析得到对象
     wx.getSystemInfo({
       success: (res) => {
@@ -141,6 +142,7 @@ export default {
         }
       })
     },
+    // 拨打电话按钮,时间处理函数
     calling: function () {
       wx.makePhoneCall({
         phoneNumber: '12345678900', // 此号码并非真实电话号码，仅用于测试

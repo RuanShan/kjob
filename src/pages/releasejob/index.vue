@@ -42,17 +42,15 @@ export default {
       backgroundColor: '#4b55b6'
     })
     wx.setNavigationBarTitle({
-      title: '免费发布'
+      title: '发布招工'
     })
   },
   methods: {
     releaseWorkerInfo () {
       console.log('免费发布找活信息****')
-      wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
     },
     releaseJobInfo () {
       console.log('免费发布招工信息%%%')
-      wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
     }
   }
 }
