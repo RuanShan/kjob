@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="base-info">基本信息(必填)</div>
+
     <div class="info-must">
 
       <!-- 列表单元  START -->
@@ -130,7 +131,7 @@
       </div>
       <!-- 列表单元  END -->
 
-      <!-- 列表单元  START -->
+      <!-- 列表单元 找活区域 START -->
       <div class="my-info-list">
         <div class="one-and-two-col">
           <div class="icon">
@@ -193,7 +194,7 @@
           <div class="text">
           </div>
         </div>
-        <div class="three-col" @click="deleteCity">
+        <div class="three-col" ref="district3" @click="deleteCity">
           <div class="input-choose">{{district3_id}}</div>
           <div class="chose-icon">
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/minus.png">
@@ -202,13 +203,88 @@
       </div>
       <!-- 列表单元  第三个选择的区域   END -->
 
+      <!-- 列表单元 找活区域 START -->
+      <div class="my-info-list">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            我的工种
+          </div>
+        </div>
+        <div class="three-col">
+          <mpvue-picker ref="mpvuePickerReleaseMy" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
+          <div class="input-choose">请选择(Max 3个)</div>
+          <div class="chose-icon">
+            <img @click="showPicker" style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/adding.png">
+          </div>
+        </div>
+      </div>
+      <!-- 列表单元  END -->
+
+      <!-- 列表单元 工种选择动态显示列表  START -->
+      <div class="my-info-list" v-if="job_taxon_display" v-for="(item, index) in tpyeofWork" :key="index">
+        <div class="one-and-two-col">
+          <div class="icon">
+          </div>
+          <div class="text">
+          </div>
+        </div>
+        <div class="three-col" @click="deleteWork(index)">
+          <div class="work-type-choose">
+            <div class="work-taxon">{{item.team}}</div>
+            <div class="work-type">&nbsp;&nbsp;-&nbsp;&nbsp;{{item.item}}</div>
+          </div>
+          <div class="chose-icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/minus.png">
+          </div>
+        </div>
+      </div>
+      <!-- 列表单元  工种选择动态显示列表   END -->
+
+      <!-- 列表单元 找活描述 START -->
+      <div class="on-and-down">
+        <div class="my-info-list-2">
+          <div class="one-and-two-col">
+            <div class="icon">
+              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+            </div>
+            <div class="text">
+              找活描述
+            </div>
+          </div>
+
+        </div>
+        <div class="text-array-class">
+          <textarea class="text-array" auto-focus="true" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+        </div>
+      </div>
+      <!-- 列表单元 找活描述 END -->
+
+    </div>
+
+    <div class="base-info">经验(可不填)</div>
+    <!-- 列表单元 找活描述 START -->
+    <div class="info-option">
+      点击展开选项
+    </div>
+    <!-- 列表单元 找活描述 END -->
+
+    <div class="base-info"></div>
+    <div class="skip">
+      <button class="freeRelease" type="primary" @click="freeRelease">免费发布找活</button>
     </div>
   </div>
 </template>
 
 <script>
+import mpvuePicker from 'mpvue-picker'
 
 export default {
+  components: {
+    mpvuePicker
+  },
   data () {
     return {
       headImage: '', // 头像
@@ -219,7 +295,7 @@ export default {
       nation: '请选择', // 名族,输入
       members: '请选择', // 个人或班组,输入
       district: '', // 找活区域,输入
-      tpyeofWork: [], // 工作 ,输入
+      tpyeofWork: [], // 工种 ,输入
       discription: '', // 找活描述,输入
       // citys: ['请选择'], // 找活区域,输入
       // ************五十六个民族 picker 需要的数据************
@@ -497,7 +573,292 @@ export default {
       district2_display: false,
       district3_display: false,
       district_number: 0,
-      tempDistrict: ''
+      tempDistrict: '',
+      // ************工种筛选数据, 还需要有个事件和处理函数showPicker()**************
+      resultTypeOfWork: { // 返回选择的工种类和工种
+        team: '', // 工种类
+        item: '' // 工种
+      },
+      pickerValueDefault: [1, 1],
+      deepLength: 2,
+      mode: 'multiLinkageSelector',
+      mulLinkageTwoPicker: [
+        {
+          label: '全部',
+          value: 0,
+          children: [{
+            label: '全部',
+            value: 0
+          }
+          ]
+        },
+        {
+          label: '主体土建类',
+          value: 1,
+          children: [{
+            label: '全部',
+            value: 0
+          },
+          {
+            label: '木工',
+            value: 1
+          },
+          {
+            label: '铝膜工',
+            value: 2
+          },
+          {
+            label: '钢筋工',
+            value: 3
+          },
+          {
+            label: '架子工',
+            value: 4
+          },
+          {
+            label: '混凝土工',
+            value: 5
+          },
+          {
+            label: '水电工',
+            value: 6
+          },
+          {
+            label: '焊工/铆工',
+            value: 7
+          },
+          {
+            label: '防水保温工',
+            value: 8
+          },
+          {
+            label: '油漆工',
+            value: 9
+          },
+          {
+            label: '水暖管道工',
+            value: 10
+          },
+          {
+            label: '打桩/破桩工',
+            value: 11
+          },
+          {
+            label: '杂工',
+            value: 12
+          },
+          {
+            label: '爬架工',
+            value: 13
+          },
+          {
+            label: '钢筋压力焊',
+            value: 14
+          },
+          {
+            label: '钢筋车丝',
+            value: 15
+          },
+          {
+            label: '钢筋翻样',
+            value: 16
+          },
+          {
+            label: '钢结构/打板',
+            value: 17
+          }
+          ]
+        },
+        {
+          label: '主体装修安装类',
+          value: 2,
+          children: [{
+            label: '全部',
+            value: 0
+          },
+          {
+            label: '泥瓦工',
+            value: 1
+          },
+          {
+            label: '贴砖工',
+            value: 2
+          },
+          {
+            label: '幕墙工',
+            value: 3
+          },
+          {
+            label: '门窗护栏扶手工',
+            value: 4
+          },
+          {
+            label: '内外墙腻子工',
+            value: 5
+          },
+          {
+            label: '防水保温工',
+            value: 6
+          },
+          {
+            label: '砌砖工',
+            value: 7
+          },
+          {
+            label: '抹灰工',
+            value: 8
+          },
+          {
+            label: '强弱电安装工',
+            value: 9
+          },
+          {
+            label: '消防管道工',
+            value: 10
+          },
+          {
+            label: '拉毛挂网红',
+            value: 11
+          },
+          {
+            label: '装修木工/吊顶',
+            value: 12
+          },
+          {
+            label: '打磨/抛光工',
+            value: 13
+          },
+          {
+            label: '地坪工',
+            value: 14
+          }
+          ]
+        },
+        {
+          label: '工程管理施工类',
+          value: 3,
+          children: [{
+            label: '全部',
+            value: 0
+          },
+          {
+            label: '项目经理',
+            value: 1
+          },
+          {
+            label: '技术总工',
+            value: 2
+          },
+          {
+            label: '总工',
+            value: 3
+          },
+          {
+            label: '施工员',
+            value: 4
+          },
+          {
+            label: '测量放线员',
+            value: 5
+          },
+          {
+            label: '安全员',
+            value: 6
+          },
+          {
+            label: '资料员',
+            value: 7
+          },
+          {
+            label: '材料员',
+            value: 8
+          },
+          {
+            label: '造价员',
+            value: 9
+          },
+          {
+            label: '质检员',
+            value: 10
+          },
+          {
+            label: '预算员',
+            value: 11
+          },
+          {
+            label: '实验员',
+            value: 12
+          },
+          {
+            label: '监理',
+            value: 13
+          },
+          {
+            label: '水电员',
+            value: 14
+          },
+          {
+            label: '后勤',
+            value: 15
+          },
+          {
+            label: '安保门卫',
+            value: 16
+          },
+          {
+            label: '杂工',
+            value: 17
+          }
+          ]
+        },
+        {
+          label: '机械操作类',
+          value: 4,
+          children: [{
+            label: '全部',
+            value: 0
+          },
+          {
+            label: '塔吊工',
+            value: 1
+          },
+          {
+            label: '信号工',
+            value: 2
+          },
+          {
+            label: '挖机工',
+            value: 3
+          },
+          {
+            label: '推土机工',
+            value: 4
+          },
+          {
+            label: '升降机工',
+            value: 5
+          },
+          {
+            label: '装卸机工',
+            value: 6
+          },
+          {
+            label: '起重机工',
+            value: 7
+          },
+          {
+            label: '铲车/叉车工',
+            value: 8
+          },
+          {
+            label: '升降电梯司机',
+            value: 9
+          }
+          ]
+        }
+      ],
+      pickerNumber: 0, // picker点击的次数的计数器
+      job_taxon_display: false // 工种选项动态显示标志位
     }
   },
 
@@ -567,6 +928,60 @@ export default {
     // 删除区域选择处理函数
     deleteCity (e) {
       console.log(e)
+      console.log(this.$refs.district3)
+    },
+    // *****工种筛选方法,必须要有*****
+    showPicker () {
+      this.$refs.mpvuePickerReleaseMy.show()
+      // this.mulLinkDisplay = true
+    },
+    /* ********mpvuePickerReleaseMy点击确定事件处理函数
+    // 因为console.log(e)返回的是数组下标,故需要自己判断处理
+    ******************** */
+    onConfirm (e) {
+      // console.log(e)
+      // 得到选择的数组下标,给tempArray
+      // 进来后加1,
+      this.pickerNumber++
+      // 判读第几次,如果大于3次就弹窗提示,并且再次把计算器赋值3;小于3次,加入工种数组
+      if (this.pickerNumber > 3) {
+        this.pickerNumber = 3
+        wx.showModal({
+          content: '最多只能选择3个工种',
+          showCancel: false
+        })
+      } else {
+        let tempArray = e
+        // 根据得到的数组数据遍历picker数据,然后根据e数组下标得到工种
+        this.mulLinkageTwoPicker.forEach((elem) => {
+          if (tempArray[0] === elem.value) {
+            this.resultTypeOfWork.team = elem.label
+            elem.children.forEach((ele) => {
+              if (tempArray[1] === ele.value) {
+                this.resultTypeOfWork.item = ele.label
+              }
+            })
+          }
+        })
+        console.log(this.resultTypeOfWork)
+        this.tpyeofWork.push(this.resultTypeOfWork)
+        this.job_taxon_display = true // 打开工种显示开关
+      }
+    },
+    // *****工种删除点击处理函数,删除所选项*****
+    deleteWork (index) {
+      console.log(index)
+      // 删除指定数组元素,根据index
+      this.tpyeofWork.splice(this.tpyeofWork.findIndex(item => item.id === index), 1)
+      this.pickerNumber-- // 计数器减一
+      if (this.pickerNumber === 0) { // 计数器减到0时,关闭显示开关
+        this.job_taxon_display = false
+      }
+    },
+    // 免费发布找活按钮点击处理函数-----跳转到找活页面
+    freeRelease () {
+      console.log('免费发布找活')
+      wx.reLaunch({ url: '../getpeople/main' }) // 跳转到发布找活页面
     }
   }
 }
@@ -591,16 +1006,57 @@ page {
       border-bottom: solid 1rpx #808080;
       .one-and-two-col {
         display: flex;
-        .icon {
-        }
         .text {
           margin-left: 25rpx;
         }
       }
       .three-col {
         display: flex;
+        .work-type-choose {
+          display: flex;
+          .work-taxon {
+            border-radius: 30rpx;
+            background-color: #0080ff;
+            border: solid 2rpx #006ddb;
+            color: #ffffff;
+            font-size: 30rpx;
+            margin: auto 0;
+          }
+        }
       }
     }
+    .on-and-down {
+      border-bottom: solid 1rpx #808080;
+      .my-info-list-2 {
+        display: flex;
+        padding: 25rpx 25rpx 10rpx 25rpx;
+        justify-content: space-between;
+        .one-and-two-col {
+          display: flex;
+          .text {
+            margin-left: 25rpx;
+          }
+        }
+      }
+    }
+  }
+  .info-option {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-bottom: solid 1rpx #808080;
+    height: 100rpx;
+    color: #808080;
+    justify-content: center;
+    align-items: center;
+    font-size: 30rpx;
+  }
+  .skip {
+    margin: 25rpx 0rpx;
+  }
+  .freeRelease {
+    background-color: #2862f9;
+    margin: 0rpx 25rpx;
   }
 }
 </style>

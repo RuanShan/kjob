@@ -482,6 +482,9 @@ export default {
     showPicker () {
       this.$refs.mpvuePicker.show()
     },
+    /* ********mpvuePicker点击确定事件处理函数
+    // 因为console.log(e)返回的是数组下标,故需要自己判断处理
+    ******************** */
     onConfirm (e) {
       // console.log (e)
       let tempArray = e

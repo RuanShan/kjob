@@ -3,11 +3,11 @@
       "pages/index/main",
       "pages/getworks/main",      
       "pages/counter/main",
+      "pages/peopleinfo/main",
       "pages/getpeople/main",
       "pages/freerelease/main",
       "pages/my/main",    
       "pages/test/main",
-      "pages/peopleinfo/main",
       "pages/releasemy/main",
       "pages/releasejob/main",
       "pages/workinfo/main"
