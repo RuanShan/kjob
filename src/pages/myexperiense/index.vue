@@ -17,119 +17,6 @@
       </div>
       <!-- 列表单元 招工名称 END -->
 
-      <!-- 列表单元 招工类型 START -->
-      <div class="my-info-list">
-        <div class="one-and-two-col">
-          <div class="icon">
-            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
-          </div>
-          <div class="text">
-            招工类型
-          </div>
-        </div>
-        <div class="three-col">
-          <div class="two-button">
-            <radio-group class="radio-group" @change="radioChange">
-              <label class="button-point" v-for="(item,index) in radioItems" :key="index">
-                <radio :value="item.value" :checked="item.checked" />
-                <div class="">{{item.name}}</div>
-              </label>
-            </radio-group>
-          </div>
-        </div>
-      </div>
-      <!-- 列表单元 招工类型 END -->
-
-      <!-- 列表单元 找活区域 START -->
-      <div class="my-info-list">
-        <div class="one-and-two-col">
-          <div class="icon">
-            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
-          </div>
-          <div class="text">
-            招工地点
-          </div>
-        </div>
-        <picker mode="region" :value="cityIndex" @change="cityChoose">
-          <div class="three-col">
-            <div class="input-choose">{{district_fullname}}</div>
-            <div class="chose-icon">
-              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
-            </div>
-          </div>
-        </picker>
-      </div>
-      <!-- 列表单元 找活区域 END -->
-
-      <!-- 列表单元 工种选择 START -->
-      <div class="my-info-list">
-        <div class="one-and-two-col">
-          <div class="icon">
-            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
-          </div>
-          <div class="text">
-            工种类别
-          </div>
-        </div>
-        <div class="three-col">
-          <mpvue-picker ref="mpvuePickerReleaseMy" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
-          <div class="input-choose">{{job_taxon_id}}</div>
-          <div class="chose-icon">
-            <img @click="showPicker" style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
-          </div>
-        </div>
-      </div>
-      <!-- 列表单元 工种选择 END -->
-
-      <!-- 列表单元 招工人数 START -->
-      <div class="my-info-list">
-        <div class="one-and-two-col">
-          <div class="icon">
-            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
-          </div>
-          <div class="text">
-            招工名称
-          </div>
-        </div>
-        <div class="three-col">
-          <input class="wx-input" maxlength="10" type="number" placeholder="多少人?只能数字" v-model="numOfPeople" />
-        </div>
-      </div>
-      <!-- 列表单元 招工人数 END -->
-
-      <!-- 列表单元 工资标准 START -->
-      <div class="my-info-list">
-        <div class="one-and-two-col">
-          <div class="icon">
-            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
-          </div>
-          <div class="text">
-            工资标准
-          </div>
-        </div>
-        <div class="three-col">
-          <input class="wx-input" style="width:190rpx;" maxlength="10" type="number" placeholder="多少钱?" v-model="pay" /> &nbsp;&nbsp;元/天
-        </div>
-      </div>
-      <!-- 列表单元 工资标准 END -->
-
-      <!-- 列表单元 招工描述 START -->
-      <div class="on-and-down">
-        <div class="my-info-list-2">
-          <div class="one-and-two-col">
-            <div class="icon">
-              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
-            </div>
-            <div class="text">
-              招工描述
-            </div>
-          </div>
-        </div>
-        <div class="text-array-class">
-          <textarea class="text-array" @input="textAreaInput" auto-focus="true" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
-        </div>
-      </div>
-      <!-- 列表单元 招工描述 END -->
 
       <div class="base-info"></div>
 
@@ -512,7 +399,7 @@ export default {
       backgroundColor: '#4b55b6'
     })
     wx.setNavigationBarTitle({
-      title: '发布招工'
+      title: '我的经验'
     })
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
@@ -524,6 +411,11 @@ export default {
     showPicker () {
       this.$refs.mpvuePickerReleaseMy.show()
       // this.mulLinkDisplay = true
+    },
+    // 免费发布找活按钮点击处理函数-----跳转到找活页面
+    freeRelease () {
+      console.log('免费发布找活')
+      wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
     },
     // **********************招工类型点击事件**************************
     radioChange (e) {
@@ -581,11 +473,6 @@ export default {
     textAreaInput (e) {
       console.log(e.target.value)
       this.description = e.target.value
-    },
-    // 免费发布找活按钮点击处理函数-----跳转到找活页面
-    freeRelease () {
-      console.log('免费发布找活')
-      wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
     }
   }
 }

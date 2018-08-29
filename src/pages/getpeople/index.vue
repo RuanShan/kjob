@@ -92,7 +92,7 @@ export default {
         // 工种
         item: ''
       },
-      pickerValueDefault: [1, 1],
+      pickerValueDefault: [0, 0],
       deepLength: 2,
       mode: 'multiLinkageSelector',
       mulLinkageTwoPicker: [

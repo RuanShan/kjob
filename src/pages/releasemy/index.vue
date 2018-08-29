@@ -150,7 +150,7 @@
           </div>
         </picker>
       </div>
-      <!-- 列表单元  END -->
+      <!-- 列表单元 找活区域 END -->
 
       <!-- 列表单元 第一个选择的区域  START -->
       <div class="my-info-list" v-if="district1_display">
@@ -203,7 +203,7 @@
       </div>
       <!-- 列表单元  第三个选择的区域   END -->
 
-      <!-- 列表单元 找活区域 START -->
+      <!-- 列表单元 我的工种 START -->
       <div class="my-info-list">
         <div class="one-and-two-col">
           <div class="icon">
@@ -254,19 +254,19 @@
               找活描述
             </div>
           </div>
-
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" auto-focus="true" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          <textarea class="text-array" @input="textAreaInput" auto-focus="true" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
         </div>
       </div>
       <!-- 列表单元 找活描述 END -->
 
     </div>
+    <!-- info-must END -->
 
     <div class="base-info">经验(可不填)</div>
     <!-- 列表单元 找活描述 START -->
-    <div class="info-option">
+    <div class="info-option" @click="toMyExperiense">
       点击展开选项
     </div>
     <!-- 列表单元 找活描述 END -->
@@ -296,7 +296,7 @@ export default {
       members: '请选择', // 个人或班组,输入
       district: '', // 找活区域,输入
       tpyeofWork: [], // 工种 ,输入
-      discription: '', // 找活描述,输入
+      description: '', // 找活描述,输入
       // citys: ['请选择'], // 找活区域,输入
       // ************五十六个民族 picker 需要的数据************
       nations: ['汉族', '蒙古族', '回族', '藏族', '维吾尔族', '苗族', '彝族', '壮族', '布依族', '朝鲜族', '满族', '侗族', '瑶族', '白族', '土家族',
@@ -579,7 +579,7 @@ export default {
         team: '', // 工种类
         item: '' // 工种
       },
-      pickerValueDefault: [1, 1],
+      pickerValueDefault: [0, 0],
       deepLength: 2,
       mode: 'multiLinkageSelector',
       mulLinkageTwoPicker: [
@@ -884,6 +884,7 @@ export default {
       console.log(' 选择的民族是 : => ', this.nationsObjArray[e.mp.detail.value].name)
       this.nation = this.nationsObjArray[e.mp.detail.value].name
     },
+
     // 个人或班组选择处理函数
     choosemembers (e) {
       console.log('找活区域选择点击了************')
@@ -925,16 +926,19 @@ export default {
         })
       }
     },
+
     // 删除区域选择处理函数
     deleteCity (e) {
       console.log(e)
       console.log(this.$refs.district3)
     },
+
     // *****工种筛选方法,必须要有*****
     showPicker () {
       this.$refs.mpvuePickerReleaseMy.show()
       // this.mulLinkDisplay = true
     },
+
     /* ********mpvuePickerReleaseMy点击确定事件处理函数
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
@@ -968,6 +972,7 @@ export default {
         this.job_taxon_display = true // 打开工种显示开关
       }
     },
+
     // *****工种删除点击处理函数,删除所选项*****
     deleteWork (index) {
       console.log(index)
@@ -978,10 +983,17 @@ export default {
         this.job_taxon_display = false
       }
     },
-    // 免费发布找活按钮点击处理函数-----跳转到找活页面
-    freeRelease () {
-      console.log('免费发布找活')
-      wx.reLaunch({ url: '../getpeople/main' }) // 跳转到发布找活页面
+
+    // ************找活描述中,textArray 输入处理函数***************
+    textAreaInput (e) {
+      console.log(e.target.value)
+      this.description = e.target.value
+    },
+
+    // 经验点击处理函数-----跳转到我的经验页面
+    toMyExperiense () {
+      console.log('调到我的经验页面')
+      wx.navigateTo({ url: '../myexperiense/main' }) // 跳转到我的经验页面
     }
   }
 }
