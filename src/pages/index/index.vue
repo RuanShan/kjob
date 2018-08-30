@@ -11,6 +11,11 @@
       <button type="primary" style="background-color: #2862f9;" @click="getUserInfo()">立即体验</button>
       <!-- <button type="primary" style="background-color: #2862f9;" @click="log()">log</button> -->
     </div>
+
+    <!-- <button @click="toMyExperiense">我的经验</button> -->
+    <button @click="toIDCard">身份认证</button>
+    <button @click="toPhoneID">手机认证</button>
+
     <div class="company-text">
       <text class="company" decode="true">公司名称有限公司</text>
     </div>
@@ -44,13 +49,36 @@ export default {
       console.log('url le ')
       wx.switchTab({ url: '../getworks/main' })
     },
+
     printText () {
       console.log('打印了额!!!')
     },
+
     log () {
       wx.switchTab({ url: '../logs/main' })
+    },
+
+    // 经验点击处理函数-----跳转到我的经验页面
+    toMyExperiense () {
+      console.log('调到我的经验页面')
+      wx.navigateTo({ url: '../myexperiense/main' }) // 跳转到我的经验页面
+    },
+
+    // *********************点击身份认证处理函数************************
+    // ***跳转到身份证认证界面***
+    // ***************************************************************
+    toIDCard () {
+      wx.navigateTo({ url: '../idcard/main' })
+    },
+
+    // *********************点击手机号码认证处理函数************************
+    // ***跳转到手机认证界面***
+    // ***************************************************************
+    toPhoneID () {
+      wx.navigateTo({ url: '../phoneid/main' })
     }
   },
+
   created () {
     wx.hideTabBar({ animation: true })
   }

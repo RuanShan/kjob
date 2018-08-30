@@ -11,6 +11,8 @@
       "pages/releasemy/main",
       "pages/releasejob/main",
       "pages/myexperiense/main",
+      "pages/idcard/main",
+      "pages/phoneid/main",
       "pages/workinfo/main"
     ],
     "window": {
