@@ -214,7 +214,7 @@
           </div>
         </div>
         <div class="three-col">
-          <mpvue-picker ref="mpvuePickerReleaseMy" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
+          <mpvue-picker ref="mpvuePickerReleaseMy" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm" @onCancel="onCancel"></mpvue-picker>
           <div class="input-choose">请选择(Max 3个)</div>
           <div class="chose-icon">
             <img @click="showPicker" style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/adding.png">
@@ -256,7 +256,7 @@
           </div>
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" @input="textAreaInput" auto-focus="true" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          <textarea class="text-array" v-if="textareaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
         </div>
       </div>
       <!-- 列表单元 找活描述 END -->
@@ -574,6 +574,8 @@ export default {
       district3_display: false,
       district_number: 0,
       tempDistrict: '',
+      // ************textarea 数据**************
+      textareaDisplay: true, // textarea标签是否显示开关
       // ************工种筛选数据, 还需要有个事件和处理函数showPicker()**************
       resultTypeOfWork: { // 返回选择的工种类和工种
         team: '', // 工种类
@@ -933,9 +935,11 @@ export default {
       console.log(this.$refs.district3)
     },
 
-    // *****工种筛选方法,必须要有*****
+    // ********************工种筛选方法,必须要有**************************
+    // 把 textarea 标签显示关闭
     showPicker () {
       this.$refs.mpvuePickerReleaseMy.show()
+      this.textareaDisplay = false
       // this.mulLinkDisplay = true
     },
 
@@ -943,7 +947,9 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirm (e) {
-      // console.log(e)
+      console.log(e)
+      console.log('onConfirm')
+      this.textareaDisplay = true // textarea 显示打开
       // 得到选择的数组下标,给tempArray
       // 进来后加1,
       this.pickerNumber++
@@ -971,6 +977,14 @@ export default {
         this.tpyeofWork.push(this.resultTypeOfWork)
         this.job_taxon_display = true // 打开工种显示开关
       }
+    },
+
+    /* ********mpvuePickerReleaseMy 的取消点击确定事件处理函数
+    // 把 textarea 标签显示打开
+    ******************** */
+    onCancel (e) {
+      console.log('onCancel')
+      this.textareaDisplay = true
     },
 
     // *****工种删除点击处理函数,删除所选项*****

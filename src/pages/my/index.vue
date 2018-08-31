@@ -2,13 +2,14 @@
   <div>
     <!-- 列表单元 第一行 START -->
     <div class="first-section">
-      <img class="background-img" src="../../../resources/images/bkg.png">
+      <img class="background-img" src="/resources/images/bkg.jpg">
       <div class="one-colum">
-        <img style="width: 160rpx; height: 160rpx;" src="../../../resources/headImage/姜亿万.png">
+        <!-- <img style="width: 160rpx; height: 160rpx;" src="/resources/headImage/姜亿万.png"> -->
+        <img style="width: 160rpx; height: 160rpx;" :src="userInfo.avatarUrl">
       </div>
       <div class="two-colum">
         <div class="name">
-          姜亿万
+          {{userInfo.nickName}}
         </div>
       </div>
     </div>
@@ -17,7 +18,7 @@
     <!-- 列表单元 第二行 START -->
     <div class="second-row">
       <div class="one-colum" @click="toIDCard">
-        <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/peopleID.png">
+        <img style="width: 120rpx; height: 120rpx;" src="/resources/icon/peopleID.png">
         <div>身份认证</div>
       </div>
       <div class="two-colum" @click="toPhoneID">
@@ -44,6 +45,7 @@
 export default {
   data () {
     return {
+      userInfo: [] // 当前微信用户信息
     }
   },
 
@@ -55,6 +57,13 @@ export default {
     })
     wx.setNavigationBarTitle({
       title: '我的'
+    })
+    wx.getStorage({
+      key: 'userInfo',
+      success: (res) => {
+        console.log(res.data)
+        this.userInfo = res.data
+      }
     })
   },
 

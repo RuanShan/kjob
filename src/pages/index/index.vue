@@ -1,20 +1,19 @@
 <template>
   <div class="content">
     <div class="login-image">
-      <img src="../../../resources/login/Login_first.png" style="width:750rpx;height: 550rpx;" alt="建筑用工小程序欢迎您" />
+      <img src="../../../resources/login/Login_first.jpg" style="width:750rpx;height: 550rpx;" alt="建筑用工小程序欢迎您" />
     </div>
     <div class="slogan-text">
       <text class="slogan" decode="true">为了您的用工需求服务!</text>
     </div>
     <div class="start-button">
       <!-- <button type="primary" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="background-color: #2862f9;">立即体验</button> -->
-      <button type="primary" style="background-color: #2862f9;" @click="getUserInfo()">立即体验</button>
-      <!-- <button type="primary" style="background-color: #2862f9;" @click="log()">log</button> -->
+      <button type="primary" style="background-color: #2862f9;" open-type="getUserInfo" @click="getUserInfo()">立即体验</button>
     </div>
 
     <!-- <button @click="toMyExperiense">我的经验</button> -->
-    <button @click="toIDCard">身份认证</button>
-    <button @click="toPhoneID">手机认证</button>
+    <!-- <button @click="toIDCard">身份认证</button>
+    <button @click="toPhoneID">手机认证</button> -->
 
     <div class="company-text">
       <text class="company" decode="true">公司名称有限公司</text>
@@ -42,20 +41,16 @@ export default {
           wx.getUserInfo({
             success: (res) => {
               this.userInfo = res.userInfo
+              console.log(this.userInfo)
+              wx.setStorage({
+                key: 'userInfo',
+                data: this.userInfo
+              })
             }
           })
         }
       })
-      console.log('url le ')
       wx.switchTab({ url: '../getworks/main' })
-    },
-
-    printText () {
-      console.log('打印了额!!!')
-    },
-
-    log () {
-      wx.switchTab({ url: '../logs/main' })
     },
 
     // 经验点击处理函数-----跳转到我的经验页面

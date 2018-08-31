@@ -1,20 +1,14 @@
 <template>
   <div class="page">
-    <checkbox-group @change="checkboxChange">
-      <label class="weui-cell weui-check__label" v-for="(item, index) in checkboxItems" :key="index">
-        <checkbox class="weui-check" :value="item.value" :checked="item.checked" />
-        <div class="weui-cell__hd weui-check__hd_in-checkbox">
-          <icon class="weui-icon-checkbox_circle" type="circle" size="23" v-if="!item.checked"></icon>
-          <!-- <icon class="weui-icon-checkbox_success" type="success" size="23" v-if="item.checked"></icon> -->
-        </div>
-        <div class="weui-cell__bd">{{item.name}}</div>
-      </label>
-    </checkbox-group>
-    <div>
-      <checkbox-group @change="checkboxChange">
-        <checkbox class="weui-check" :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
-      </checkbox-group>
-    </div>
+    <view class="section">
+      <view class="section__title">多列选择器</view>
+      <picker mode="multiSelector" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="objectMultiArray" range="multiArray">
+        <view class="picker">
+          当前选择：{{multiArray[0][multiIndex[0]]}}，{{multiArray[1][multiIndex[1]]}}，{{multiArray[2][multiIndex[2]]}}
+        </view>
+      </picker>
+    </view>
+
   </div>
 </template>
 
@@ -22,32 +16,122 @@
 export default {
   data () {
     return {
-      checkboxItems: [
-        { name: 'standard is dealt for u.', value: '0', checked: true },
-        { name: 'standard is dealicient for u.', value: '1', checked: false }
+      multiArray: [['无脊柱动物', '脊柱动物'], ['扁性动物', '线形动物', '环节动物', '软体动物', '节肢动物'], ['猪肉绦虫', '吸血虫']],
+      objectMultiArray: [
+        [
+          {
+            id: 0,
+            name: '无脊柱动物'
+          },
+          {
+            id: 1,
+            name: '脊柱动物'
+          }
+        ], [
+          {
+            id: 0,
+            name: '扁性动物'
+          },
+          {
+            id: 1,
+            name: '线形动物'
+          },
+          {
+            id: 2,
+            name: '环节动物'
+          },
+          {
+            id: 3,
+            name: '软体动物'
+          },
+          {
+            id: 3,
+            name: '节肢动物'
+          }
+        ], [
+          {
+            id: 0,
+            name: '猪肉绦虫'
+          },
+          {
+            id: 1,
+            name: '吸血虫'
+          }
+        ]
       ],
-      cheItem: { name: '锐朗设计', value: '0', checked: true }
+      multiIndex: [0, 0, 0],
+      customItem: '全部'
     }
   },
   methods: {
-    checkboxChange (e) {
-      console.log('checkbox发生change事件，携带value值为：' + e.mp.detail.value)
-      // let checkboxItems = this.checkboxItems
-      // let values = e.mp.detail.value
-      // for (var i = 0, lenI = checkboxItems.length; i < lenI; ++i) {
-      //   checkboxItems[i].checked = false
-
-      //   for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
-      //     if (checkboxItems[i].value === values[j]) {
-      //       checkboxItems[i].checked = true
-      //       break
-      //     }
-      //   }
-      // }
-      // this.checkboxItems = checkboxItems
+    bindMultiPickerChange: function (e) {
+      console.log('picker发送选择改变，携带值为', e.detail.value)
+      this.setData({
+        multiIndex: e.detail.value
+      })
     },
-    che () {
-      console.log('adfafdaf')
+    bindMultiPickerColumnChange: function (e) {
+      console.log('修改的列为', e.detail.column, '，值为', e.detail.value)
+      var data = {
+        multiArray: this.data.multiArray,
+        multiIndex: this.data.multiIndex
+      }
+      data.multiIndex[e.detail.column] = e.detail.value
+      switch (e.detail.column) {
+        case 0:
+          switch (data.multiIndex[0]) {
+            case 0:
+              data.multiArray[1] = ['扁性动物', '线形动物', '环节动物', '软体动物', '节肢动物']
+              data.multiArray[2] = ['猪肉绦虫', '吸血虫']
+              break
+            case 1:
+              data.multiArray[1] = ['鱼', '两栖动物', '爬行动物']
+              data.multiArray[2] = ['鲫鱼', '带鱼']
+              break
+          }
+          data.multiIndex[1] = 0
+          data.multiIndex[2] = 0
+          break
+        case 1:
+          switch (data.multiIndex[0]) {
+            case 0:
+              switch (data.multiIndex[1]) {
+                case 0:
+                  data.multiArray[2] = ['猪肉绦虫', '吸血虫']
+                  break
+                case 1:
+                  data.multiArray[2] = ['蛔虫']
+                  break
+                case 2:
+                  data.multiArray[2] = ['蚂蚁', '蚂蟥']
+                  break
+                case 3:
+                  data.multiArray[2] = ['河蚌', '蜗牛', '蛞蝓']
+                  break
+                case 4:
+                  data.multiArray[2] = ['昆虫', '甲壳动物', '蛛形动物', '多足动物']
+                  break
+              }
+              break
+            case 1:
+              switch (data.multiIndex[1]) {
+                case 0:
+                  data.multiArray[2] = ['鲫鱼', '带鱼']
+                  break
+                case 1:
+                  data.multiArray[2] = ['青蛙', '娃娃鱼']
+                  break
+                case 2:
+                  data.multiArray[2] = ['蜥蜴', '龟', '壁虎']
+                  break
+              }
+              break
+          }
+          data.multiIndex[2] = 0
+          console.log(data.multiIndex)
+          break
+      }
+      this.setData(data)
     }
   }
 
@@ -55,7 +139,4 @@ export default {
 </script>
 
 <style>
-.nones {
-  color: red;
-}
 </style>
