@@ -28,13 +28,25 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-section">
-      <checkbox-group @click="checkboxChange">
-        <label class="checkbox" v-for="item in items" :key="item">
-          <checkbox :value="item.name" :checked="item.checked" />{{item.value}}
-        </label>
+      <checkbox-group class="checkbox-select" @change="checkboxChange">
+        <checkbox :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
       </checkbox-group>
     </div>
     <!-- 列表单元 第三行 END -->
+
+    <!-- 列表单元 第四行 START -->
+    <div class="fourth-section">
+      <button class="verify-button" type="primary" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
+    </div>
+    <!-- 列表单元 第四行 END -->
+
+    <!-- 列表单元 第四行 START -->
+    <div class="fifth">
+      <div>
+        {{exceptions}}
+      </div>
+    </div>
+    <!-- 列表单元 第四行 END -->
   </div>
 </template>
 
@@ -45,9 +57,9 @@ export default {
     return {
       realName: '', // 用户输入的真实姓名
       cardIdNum: '', // 用户输入的身份证号码
-      items: [
-        { name: 'CHN', value: '中国', checked: 'false' }
-      ]
+      cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
+      buttonDisabled: true, // 按钮是否可以的控制开关
+      exceptions: '免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款'
     }
   },
 
@@ -63,9 +75,14 @@ export default {
   },
 
   methods: {
-    checkboxChange: function (e) {
-      console.log(e)
-      // console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+    checkboxChange (e) {
+      console.log(e.mp.detail.value)
+      console.log(e.mp.detail.value[0])
+      if (e.mp.detail.value[0] === '1') {
+        this.buttonDisabled = false
+      } else {
+        this.buttonDisabled = true
+      }
     }
   }
 }
@@ -135,6 +152,33 @@ page {
     }
   }
   .three-section {
+    margin-top: 25rpx;
+    width: 100%;
+    height: 100rpx;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    .checkbox-select {
+      margin-left: 25rpx;
+    }
+  }
+  .fourth-section {
+    margin-top: 25rpx;
+    width: 100%;
+    // height: 100rpx;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    .verify-button {
+      height: 86rpx;
+      width: 700rpx;
+      // background-color: #2862f9;
+      margin: 25rpx 25rpx;
+      color: #ffffff;
+    }
+  }
+  .fifth {
+    margin: 25rpx;
   }
 }
 </style>

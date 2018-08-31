@@ -11,7 +11,9 @@
       </label>
     </checkbox-group>
     <div>
-      <checkbox class="weui-check" @click="che" :value="item.value" :checked="item.checked" />{{item.name}}
+      <checkbox-group @change="checkboxChange">
+        <checkbox class="weui-check" :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
+      </checkbox-group>
     </div>
   </div>
 </template>
@@ -23,25 +25,26 @@ export default {
       checkboxItems: [
         { name: 'standard is dealt for u.', value: '0', checked: true },
         { name: 'standard is dealicient for u.', value: '1', checked: false }
-      ]
+      ],
+      cheItem: { name: '锐朗设计', value: '0', checked: true }
     }
   },
   methods: {
     checkboxChange (e) {
       console.log('checkbox发生change事件，携带value值为：' + e.mp.detail.value)
-      let checkboxItems = this.checkboxItems
-      let values = e.mp.detail.value
-      for (var i = 0, lenI = checkboxItems.length; i < lenI; ++i) {
-        checkboxItems[i].checked = false
+      // let checkboxItems = this.checkboxItems
+      // let values = e.mp.detail.value
+      // for (var i = 0, lenI = checkboxItems.length; i < lenI; ++i) {
+      //   checkboxItems[i].checked = false
 
-        for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
-          if (checkboxItems[i].value === values[j]) {
-            checkboxItems[i].checked = true
-            break
-          }
-        }
-      }
-      this.checkboxItems = checkboxItems
+      //   for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
+      //     if (checkboxItems[i].value === values[j]) {
+      //       checkboxItems[i].checked = true
+      //       break
+      //     }
+      //   }
+      // }
+      // this.checkboxItems = checkboxItems
     },
     che () {
       console.log('adfafdaf')
