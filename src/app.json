@@ -1,11 +1,11 @@
 {
     "pages": [
       "pages/index/main",
-      "pages/getworks/main",      
+      "pages/getworks/main",
       "pages/peopleinfo/main",
       "pages/getpeople/main",
       "pages/freerelease/main",
-      "pages/my/main",    
+      "pages/my/main",
       "pages/test/main",
       "pages/releasemy/main",
       "pages/releasejob/main",
@@ -28,35 +28,34 @@
       "list": [
         {
           "pagePath": "pages/getworks/main",
-          "selectedIconPath": "/resources/tabBar/招工.png",
-          "iconPath": "/resources/tabBar/招工没有选择.png",
+          "selectedIconPath": "/resources/tabBar/zhaogong-s.png",
+          "iconPath": "/resources/tabBar/zhaogong.png",
           "text": "招工"
         },
         {
           "pagePath": "pages/getpeople/main",
-          "selectedIconPath": "/resources/tabBar/找人.png", 
-          "iconPath": "/resources/tabBar/找人没有选择.png",
+          "selectedIconPath": "/resources/tabBar/gongren-s.png",
+          "iconPath": "/resources/tabBar/gongren.png",
           "text": "找活"
         },
         {
           "pagePath": "pages/freerelease/main",
-          "selectedIconPath": "/resources/tabBar/发布.png", 
-          "iconPath": "/resources/tabBar/发布没有选择.png",
+          "selectedIconPath": "/resources/tabBar/fabu-s.png",
+          "iconPath": "/resources/tabBar/fabu.png",
           "text": "免费发布"
         },
         {
           "pagePath": "pages/my/main",
-          "selectedIconPath": "/resources/tabBar/我的.png", 
-          "iconPath": "/resources/tabBar/我的没有选择.png",
+          "selectedIconPath": "/resources/tabBar/wode-s.png",
+          "iconPath": "/resources/tabBar/wode.png",
           "text": "我的"
         },
         {
           "pagePath": "pages/test/main",
-          "selectedIconPath": "/resources/tabBar/我的.png", 
-          "iconPath": "/resources/tabBar/我的没有选择.png",
+          "selectedIconPath": "/resources/tabBar/wode-s.png",
+          "iconPath": "/resources/tabBar/wode.png",
           "text": "实验"
         }
       ]
     }
   }
-  
