@@ -4,7 +4,8 @@ module.exports = {
     root: true,
     parser: 'babel-eslint',
     parserOptions: {
-        sourceType: 'module'
+      ecmaVersion: 6,
+      sourceType: 'module'
     },
     env: {
         browser: false,
@@ -12,7 +13,7 @@ module.exports = {
         es6: true
     },
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    extends: 'standard',
+    extends: 'eslint:recommended',
     // required to lint *.vue files
     plugins: [
         'html'
@@ -24,7 +25,10 @@ module.exports = {
         // allow async-await
         'generator-star-spacing': 0,
         // allow debugger during development
-        'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+        'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+        "no-console": 0,
+        'no-unused-vars': ["error", {"vars": "all", "args": "none", "ignoreRestSiblings": true }],
+
     },
     globals: {
         App: true,
