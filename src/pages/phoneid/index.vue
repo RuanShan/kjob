@@ -19,7 +19,7 @@
         <div>号&nbsp;&nbsp;:</div>
       </div>
       <div class="two-column">
-        <input class="wx-input" maxlength="6" type="text" placeholder="收到的短信验证码" v-model="verifyCode" />
+        <input class="wx-input" maxlength="6" type="number" placeholder="收到的短信验证码" v-model="inputVerifyCode" />
       </div>
     </div>
     <!-- 列表单元 第二行 END -->
@@ -34,7 +34,7 @@
 
     <!-- 列表单元 第四行 START -->
     <div class="fourth-section">
-      <button class="verify-button" type="primary" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
+      <button class="verify-button" type="primary" @click="veriryButton" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
     </div>
     <!-- 列表单元 第四行 END -->
 
@@ -56,6 +56,7 @@ export default {
     return {
       phoneNum: null, // 用户输入的手机号码
       verifyCode: '', // 用户输入的收到的验证码
+      inputVerifyCode: '', // 用户输入的校验码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
       buttonDisabled: true, // 按钮是否可以的控制开关
       exceptions: '免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款',
@@ -99,13 +100,14 @@ export default {
             {
               mobile: this.phoneNum
             }
-          ).then(function (response) {
-            console.log('根据手机号码得到的kjob的校验码 = ', response.code)
-            this.verifyCode = response.code
+          ).then((response) => {
+            console.log('收到的response = ', response)
+            // console.log('根据手机号码得到的kjob的校验码 = ', response.code)
+            this.verifyCode = response.data.sms.code
           }).catch(function (error) {
             console.log('Fly 错误: = ', error)
           })
-        } else {
+        } else { // 非法号码
           console.log('手机号码----非非非非非非法')
           // 提示框
           wx.showModal({
@@ -119,6 +121,31 @@ export default {
           content: '请填入当前手机号码',
           showCancel: false
         })
+      }
+    },
+    // *********************点击 '验证'按钮 处理函数************************
+    // ***1.判断验证号是否填写,没有填写弹窗,填写判读是否一致***
+    // ******
+    // ***************************************************************
+    veriryButton () {
+      if (this.inputVerifyCode.length < 6) {
+        // 提示框
+        wx.showModal({
+          content: '验证码长度不正确',
+          showCancel: false
+        })
+      } else {
+        // 验证码正确 -> 1.跳转; 2.存入状态
+        if (this.inputVerifyCode === this.verifyCode) {
+          // wx.redirectTo({ url: '../my/main' }) // 跳转到我的页面
+          wx.navigateBack({ delta: 1 })
+        } else {
+          // 提示框
+          wx.showModal({
+            content: '请输入正确的验证码',
+            showCancel: false
+          })
+        }
       }
     }
   },
