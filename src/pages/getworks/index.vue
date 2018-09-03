@@ -89,12 +89,18 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
+import Fly from 'flyio/dist/npm/wx'
+
 export default {
   components: {
     mpvuePicker
   },
   data () {
     return {
+      // ************当前用户信息需要的数据************
+      // userInfo: [],
+      // ************网络请求需要的数据************
+      // wx_follower: {}, // 登录时sever需要的数据,根据userInfo修改得到
       // ************地区筛选数据************
       region: ['广东省', '广州市', '海珠区'],
       // ************工种筛选数据**************
@@ -455,6 +461,7 @@ export default {
   },
 
   async onLoad () {
+    let follower = {} // 登录时sever需要的数据,根据userInfo修改得到
     wx.showTabBar({ animation: true })
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
@@ -462,6 +469,75 @@ export default {
     })
     wx.setNavigationBarTitle({
       title: '招工列表'
+    })
+    wx.getUserInfo({
+      // 请求微信server,得到userInfo
+      success: function (res) {
+        let userInfo = res.userInfo
+        console.log('getUserInfo后得到的是 userInfo = ', userInfo)
+        // 整理数据,变成kjob server需要的数据
+        follower.nickname = userInfo.nickName
+        follower.headimgurl = userInfo.avatarUrl
+        follower.sex = userInfo.gender
+        follower.city = userInfo.city
+        follower.country = userInfo.country
+        follower.language = userInfo.language
+        follower.province = userInfo.province
+        follower.nickname = userInfo.nickName
+        console.log('let follower =  ', follower)
+        // 检查Session
+        wx.checkSession({
+          success: function () {
+            // session_key 未过期，并且在本生命周期一直有效
+            wx.getStorage({
+              key: 'userInfo',
+              success: (res) => {
+                console.log('getStorage得到的数据是 = ', res.data)
+                console.log(res.data)
+                // this.userInfo = res.data
+              }
+            })
+          },
+          fail: function () {
+            // session_key 已经失效，需要重新执行登录流程
+            // 重新登录
+            //  获取临时登录凭证（code）
+            wx.login({
+              // 访问微信 server 成功获取code后 微信返回的数据res
+              success: function (res) {
+                console.log('login success res = ', res)
+                let fly = new Fly()
+                // 访问kjob-server给从微信server得到的code和userInfo数据
+                fly.post(
+                  'https://kjob-api.firecart.cn/api/v1/wechat_app/login/',
+                  {
+                    code: res.code,
+                    wx_follower: follower
+                  }
+                )
+                  .then(function (response) {
+                    console.log('访问kjob 给code和整理后得userInfo后,得到的数据 = ', response)
+                    follower.id = response.data.id
+                    console.log('添加Id后的follower数据是 = ', follower)
+                    wx.setStorage({
+                      key: 'userInfo',
+                      data: follower,
+                      success: () => {
+                        console.log('userInfo 存储成功了!!!')
+                      },
+                      fail: () => {
+                        console.log('userInfo 存储失败了*******')
+                      }
+                    })
+                  })
+                  .catch(function (error) {
+                    console.log('Fly 错误: = ', error)
+                  })
+              }
+            })
+          }
+        })
+      }
     })
   },
 
@@ -486,19 +562,19 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirm (e) {
-      // console.log (e)
-      let tempArray = e
-      this.mulLinkageTwoPicker.forEach((elem) => {
-        if (tempArray[0] === elem.value) {
-          this.resultTypeOfWork.team = elem.label
-          elem.children.forEach((ele) => {
-            if (tempArray[1] === ele.value) {
-              this.resultTypeOfWork.item = ele.label
-            }
-          })
-        }
-      })
-      console.log(this.resultTypeOfWork)
+      console.log(e)
+      // let tempArray = e
+      // this.mulLinkageTwoPicker.forEach((elem) => {
+      //   if (tempArray[0] === elem.value) {
+      //     this.resultTypeOfWork.team = elem.label
+      //     elem.children.forEach((ele) => {
+      //       if (tempArray[1] === ele.value) {
+      //         this.resultTypeOfWork.item = ele.label
+      //       }
+      //     })
+      //   }
+      // })
+      // console.log(this.resultTypeOfWork)
     },
     // 点击展开详情,打开详情页面
     detail (item) {
@@ -511,7 +587,7 @@ export default {
 </script>
 
 <style lang='scss'>
-page{
+page {
   height: 100%;
   background-color: #f0f0f0;
 }
@@ -523,17 +599,17 @@ page{
   flex-direction: row;
   justify-content: space-between;
   .position-select {
-    // float: left;     
+    // float: left;
     width: 50%;
-    position:fixed;
+    position: fixed;
     left: 0rpx;
     top: 0rpx;
   }
   .work-select {
     // float: right;
-    // position:fixed; 
+    // position:fixed;
     width: 50%;
-    position:fixed;
+    position: fixed;
     left: 375rpx;
     top: 0rpx;
   }
@@ -594,7 +670,7 @@ page{
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-between;
+        justify-content: space-between;
         .one-row-one {
           // width: 70%;
           padding-left: 25rpx;
@@ -620,7 +696,7 @@ page{
         // background-color:chartreuse;
         display: flex;
         flex-direction: row;
-        justify-content:space-between;
+        justify-content: space-between;
         align-items: center;
         .two-row-one {
           padding-left: 25rpx;
@@ -651,7 +727,7 @@ page{
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-between;
+        justify-content: space-between;
         font-size: 25rpx;
         color: #808080;
         .three-row-one {
@@ -673,7 +749,7 @@ page{
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-between;
+        justify-content: space-between;
         .four-row-one {
           display: flex;
           align-items: center;

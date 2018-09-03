@@ -8,7 +8,8 @@
     </div>
     <div class="start-button">
       <!-- <button type="primary" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="background-color: #2862f9;">立即体验</button> -->
-      <button type="primary" style="background-color: #2862f9;" open-type="getUserInfo" @click="getUserInfo()">立即体验</button>
+      <button type="primary" style="background-color: #2862f9;" open-type="getUserInfo" @getuserinfo="onGotUserInfo">立即体验</button>
+      <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button> -->
     </div>
 
     <!-- <button @click="toMyExperiense">我的经验</button> -->
@@ -52,7 +53,22 @@ export default {
       })
       wx.switchTab({ url: '../getworks/main' })
     },
-
+    onGotUserInfo: function (e) {
+      console.log(e)
+      // console.log('errMsg', e.mp.detail.errMsg)
+      // console.log('userInfo ', e.mp.detail.userInfo)
+      // console.log('rawData', e.mp.detail.rawData)
+      // 判断点击是哪个按钮 如果点击授权,跳转页面;如果点击拒绝,弹窗提示
+      if (e.mp.detail.userInfo !== undefined) {
+        // 跳转getworks
+        wx.switchTab({ url: '../getworks/main' })
+      } else {
+        wx.showModal({
+          content: '程序需要授权才能运行',
+          showCancel: false
+        })
+      }
+    },
     // 经验点击处理函数-----跳转到我的经验页面
     toMyExperiense () {
       console.log('调到我的经验页面')

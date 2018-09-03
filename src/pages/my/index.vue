@@ -5,11 +5,11 @@
       <img class="background-img" src="/resources/images/bkg.jpg">
       <div class="one-colum">
         <!-- <img style="width: 160rpx; height: 160rpx;" src="/resources/headImage/姜亿万.png"> -->
-        <img style="width: 160rpx; height: 160rpx;" :src="userInfo.avatarUrl">
+        <img style="width: 160rpx; height: 160rpx;" :src="userInfo.headimgurl">
       </div>
       <div class="two-colum">
         <div class="name">
-          {{userInfo.nickName}}
+          {{userInfo.nickname}}
         </div>
       </div>
     </div>
@@ -61,7 +61,8 @@ export default {
     wx.getStorage({
       key: 'userInfo',
       success: (res) => {
-        console.log(res.data)
+        console.log('res', res)
+        console.log('res.data', res.data)
         this.userInfo = res.data
       }
     })

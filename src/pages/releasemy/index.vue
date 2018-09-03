@@ -577,10 +577,10 @@ export default {
       // ************textarea 数据**************
       textareaDisplay: true, // textarea标签是否显示开关
       // ************工种筛选数据, 还需要有个事件和处理函数showPicker()**************
-      resultTypeOfWork: { // 返回选择的工种类和工种
-        team: '', // 工种类
-        item: '' // 工种
-      },
+      // resultTypeOfWork: { // 返回选择的工种类和工种
+      //   team: '', // 工种类
+      //   item: '' // 工种
+      // },
       pickerValueDefault: [0, 0],
       deepLength: 2,
       mode: 'multiLinkageSelector',
@@ -961,20 +961,27 @@ export default {
           showCancel: false
         })
       } else {
-        let tempArray = e
+        // let tempArray = e
         // 根据得到的数组数据遍历picker数据,然后根据e数组下标得到工种
-        this.mulLinkageTwoPicker.forEach((elem) => {
-          if (tempArray[0] === elem.value) {
-            this.resultTypeOfWork.team = elem.label
-            elem.children.forEach((ele) => {
-              if (tempArray[1] === ele.value) {
-                this.resultTypeOfWork.item = ele.label
-              }
-            })
-          }
-        })
-        console.log(this.resultTypeOfWork)
-        this.tpyeofWork.push(this.resultTypeOfWork)
+        // this.mulLinkageTwoPicker.forEach((elem) => {
+        //   if (tempArray[0] === elem.value) {
+        //     this.resultTypeOfWork.team = elem.label
+        //     elem.children.forEach((ele) => {
+        //       if (tempArray[1] === ele.value) {
+        //         this.resultTypeOfWork.item = ele.label
+        //       }
+        //     })
+        //   }
+        // })
+        // log(e) 打印的数据是 lable:装修类-木工,把lable给resultTypeOfWork,主要是为了界面的要求,才给这样的数据{ team: '', item: '' }
+        let tempIndex = 0
+        let tempObj = { team: '', item: '' }
+        let resultTypeOfWork = e.label
+        console.log(resultTypeOfWork)
+        tempIndex = resultTypeOfWork.indexOf('-')
+        tempObj.team = resultTypeOfWork.substring(0, tempIndex)
+        tempObj.item = resultTypeOfWork.substring(tempIndex + 1)
+        this.tpyeofWork.push(tempObj)
         this.job_taxon_display = true // 打开工种显示开关
       }
     },
@@ -1041,7 +1048,7 @@ page {
         .work-type-choose {
           display: flex;
           .work-taxon {
-            border-radius: 30rpx;
+            border-radius: 20rpx;
             background-color: #0080ff;
             border: solid 2rpx #006ddb;
             color: #ffffff;

@@ -3,10 +3,10 @@
     <!-- 列表单元 第一行 START -->
     <div class="first-section">
       <div class="one-column">
-        <input class="wx-input" maxlength="11" type="text" placeholder="请填当前手机号码" v-model="realName" />
+        <input class="wx-input" maxlength="11" type="number" placeholder="请填当前手机号码" v-model="phoneNum" />
       </div>
       <div class="two-column">
-        <button class="verify-phone" type="default">免费获取验证码</button>
+        <button class="verify-phone" type="default" @click="getverifyCode">免费获取验证码</button>
       </div>
     </div>
     <!-- 列表单元 第一行 END -->
@@ -19,7 +19,7 @@
         <div>号&nbsp;&nbsp;:</div>
       </div>
       <div class="two-column">
-        <input class="wx-input" maxlength="18" type="text" placeholder="收到的短信验证码" v-model="cardIdNum" />
+        <input class="wx-input" maxlength="6" type="text" placeholder="收到的短信验证码" v-model="verifyCode" />
       </div>
     </div>
     <!-- 列表单元 第二行 END -->
@@ -49,12 +49,13 @@
 </template>
 
 <script>
+import Fly from 'flyio/dist/npm/wx'
 
 export default {
   data () {
     return {
-      realName: '', // 用户输入的真实姓名
-      cardIdNum: '', // 用户输入的身份证号码
+      phoneNum: null, // 用户输入的手机号码
+      verifyCode: '', // 用户输入的收到的验证码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
       buttonDisabled: true, // 按钮是否可以的控制开关
       exceptions: '免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款',
@@ -74,9 +75,51 @@ export default {
   },
 
   methods: {
+    // *********************点击验证按钮处理函数************************
+    // ***用户输入的code和从kjob收到的code比较,相同->跳转;不同->弹窗***
+    // ***************************************************************
     checkboxChange (e) {
       console.log(e.mp.detail.value[0])
       this.checkBoxFlage = e.mp.detail.value[0]
+    },
+    // *********************点击免费获取验证码处理函数************************
+    // ***1.判断有没有电话号码: 1.1: 如果有->验证手机号码是否合法; 1.2: 如果没有->弹框***
+    // ***1.1.1: 合法 提交到kjob server,得到code; 1.1.2: 不合法->弹窗***
+    // ***************************************************************
+    getverifyCode () {
+      let phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/
+      console.log('点击了按钮')
+      if (this.phoneNum !== null) { // 不为空,用户填写了数字
+        if (phoneReg.test(this.phoneNum)) { // 根据规则校验
+          console.log('手机号码----合法')
+          let fly = new Fly()
+          // 访问kjob-server给从微信server得到的code和userInfo数据
+          fly.post(
+            'https://kjob-api.firecart.cn/sms',
+            {
+              mobile: this.phoneNum
+            }
+          ).then(function (response) {
+            console.log('根据手机号码得到的kjob的校验码 = ', response.code)
+            this.verifyCode = response.code
+          }).catch(function (error) {
+            console.log('Fly 错误: = ', error)
+          })
+        } else {
+          console.log('手机号码----非非非非非非法')
+          // 提示框
+          wx.showModal({
+            content: '输入的手机号码非法,请重新输入',
+            showCancel: false
+          })
+        }
+      } else { // 电话号码为空
+        // 提示框
+        wx.showModal({
+          content: '请填入当前手机号码',
+          showCancel: false
+        })
+      }
     }
   },
 
