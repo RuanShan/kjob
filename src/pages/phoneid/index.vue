@@ -88,13 +88,14 @@ export default {
     // ***1.1.1: 合法 提交到kjob server,得到code; 1.1.2: 不合法->弹窗***
     // ***************************************************************
     getverifyCode () {
+      // 手机号码规则
       let phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/
       console.log('点击了按钮')
       if (this.phoneNum !== null) { // 不为空,用户填写了数字
         if (phoneReg.test(this.phoneNum)) { // 根据规则校验
           console.log('手机号码----合法')
-          let fly = new Fly()
           // 访问kjob-server给从微信server得到的code和userInfo数据
+          let fly = new Fly()
           fly.post(
             'https://kjob-api.firecart.cn/sms',
             {
@@ -137,7 +138,6 @@ export default {
       } else {
         // 验证码正确 -> 1.跳转; 2.存入状态
         if (this.inputVerifyCode === this.verifyCode) {
-          // wx.redirectTo({ url: '../my/main' }) // 跳转到我的页面
           wx.navigateBack({ delta: 1 })
         } else {
           // 提示框

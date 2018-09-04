@@ -36,7 +36,7 @@
 
     <!-- 列表单元 第四行 START -->
     <div class="fourth-section">
-      <button class="verify-button" type="primary" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
+      <button class="verify-button" type="primary" @click="verifyButton" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
     </div>
     <!-- 列表单元 第四行 END -->
 
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import Fly from 'flyio/dist/npm/wx'
 
 export default {
   data () {
@@ -79,11 +80,50 @@ export default {
     checkboxChange (e) {
       console.log(e.mp.detail.value[0])
       this.checkBoxFlage = e.mp.detail.value[0]
+    },
+    // *********************点击 '验证'按钮 处理函数************************
+    // ***1.判断身份证校验 , 2.姓名校验 ***
+    // ******
+    // ***************************************************************
+    verifyButton () {
+      if (this.realName === '') {
+        console.log('姓名没有填写')
+        // 提示框
+        wx.showModal({
+          content: '请填写姓名',
+          showCancel: false
+        })
+        return false
+      }
+      if (!this.cardIdNum || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(this.cardIdNum)) {
+        console.log('身份证号码----非非非非非非法')
+        // 提示框
+        wx.showModal({
+          content: '身份证号格式错误',
+          showCancel: false
+        })
+        return false
+      }
+      let fly = new Fly()
+      fly.post(
+        'https://kjob-api.firecart.cn/api/v1/wx_followers/1/identify_id_num',
+        {
+          id_num: this.cardIdNum,
+          realname: this.realName
+        })
+        .then(function (response) {
+          console.log('then........')
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log('catch........')
+          console.log(error)
+        })
     }
   },
 
   watch: {
-    // *********************监测变化处理函数************************
+    // *********************监测变化处理函数************************ 210203197611101013
     // ***变化来源于checkbox处理函数,如果=1 => 说明已经选择了checkbox,如果=undefined => 说明没有选中***
     // ***************************************************************
     checkBoxFlage: function () {
