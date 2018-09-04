@@ -139,6 +139,40 @@ export const searchJobs = ( data ) => {
   //return fly.post(`${host}/api/v1/jobs/search`, qs.stringify(data))
 }
 
+// 添加招工
+// 参数
+{
+  job:{
+    worker_type: 'parttime',
+  customer_id]:1
+  district_id]:1
+  job_taxon_id]:1
+  quantity]:10
+  pay]:300
+  }
+  [worker_type]:parttime
+job[customer_id]:1
+job[district_id]:1
+job[job_taxon_id]:1
+job[quantity]:10
+job[pay]:300
+job[description]:this is desription
+// 返回
+// {
+//     "id": 17,
+//     "customer_id": 1,
+//     "worker_type": "parttime",
+//     "job_taxon_id": 1,
+//     "quantity": 10,
+//     "pay": 300,
+//     "created_at": "2018-09-04T10:52:16.000+08:00",
+//     "updated_at": "2018-09-04T10:52:16.000+08:00"
+// }
+export const addJob = ( data ) => {
+  let params = {  url: '/api/v1/jobs', data: data }
+  return post( params )
+}
+
 // 取得小程序用户信息，包括工作经验
 // 返回
 // {
@@ -227,7 +261,7 @@ export const searchApplicants = ( data ) => {
   return post( params )
 }
 
-// 添加招工
+// 添加找活
 // {
 //     "id": 33,
 //     "realname": "realname755",
@@ -258,5 +292,25 @@ export const addApplicant = ( data ) => {
 // }
 export const getVerifyCode = ( data ) => {
   let params = {  url: '/sms', data: data }
+  return post( params )
+}
+
+// 手机信息认证
+// 参数
+//  mobile:13322280797
+//  code:28283
+
+export const identifyMobile = ( data ) => {
+  let params = {  url: '/api/v1/wx_followers/1/identify_mobile', data: data }
+  return post( params )
+}
+
+// 身份证实名验证
+// 参数
+//  id_num:211204198803240012
+//  realname:卡卡
+
+export const identifyIdnum = ( data ) => {
+  let params = {  url: '/api/v1/wx_followers/1/identify_id_num', data: data }
   return post( params )
 }
