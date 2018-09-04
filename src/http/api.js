@@ -51,3 +51,7 @@ export const getJobTaxonTree = () => {
   let params = {  url: '/api/v1/job_taxons/tree' }
     return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
+
+export const searchJobs = ( data ) => {
+  return fly.post(`${host}/api/v1/jobs/search`, qs.stringify(data))
+}

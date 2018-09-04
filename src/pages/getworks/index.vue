@@ -29,8 +29,11 @@
   <!-- 统计 ===> END -->
 
   <!-- 列表概览 ===> START -->
-  <div class="list">
-    <div class="circular" v-for="item in jobList" :key="item" @click="detail(item)">
+  <div id="job-list-wrap" class="list">
+
+    <scroll-view class="job-list" :style="computedHeightStyle"  :scroll-y="true" @scrolltolower="scrolltolower" @scroll="scroll" >
+
+      <div class="circular" v-for="item in jobList" :key="item" @click="detail(item)">
       <div class="top-----half">
         <div class="one---row">
           <div class="one-row-one">
@@ -81,6 +84,7 @@
         </div>
       </div>
     </div>
+    </scroll-view>
   </div>
   <!-- 列表概览 ===> END -->
 
@@ -92,7 +96,8 @@ import mpvuePicker from 'mpvue-picker'
 import Fly from 'flyio/dist/npm/wx'
 import {
   getJobTaxonTree,
-  getRegionTree
+  getRegionTree,
+  searchJobs
 } from '../../http/api.js'
 
 export default {
@@ -101,6 +106,17 @@ export default {
   },
   data() {
     return {
+      scrollViewHeight: 0,
+
+      state: {
+        q: {
+          page: 0,
+          perPage: 6
+        },
+        loading: true,
+        loadEnd: false,
+        noData: false
+      },
       // ************当前用户信息需要的数据************
       // userInfo: [],
       // ************网络请求需要的数据************
@@ -462,10 +478,16 @@ export default {
       // ************API数据************
       regionPickerData: [], //地区
       jobTaxonPickerData: [], //招工分类
+      jobs:[],
       end: null
     }
   },
-
+  computed:{
+    computedHeightStyle(){
+      //return `height:${this.scrollViewHeight}px`
+      return `height:500px`
+    }
+  },
   async onLoad() {
     let follower = {} // 登录时sever需要的数据,根据userInfo修改得到
     wx.showTabBar({
@@ -544,8 +566,26 @@ export default {
         })
       }
     })
+    // 获取系统信息
+    wx.getSystemInfo({
+      success:  (res)=> {
+        console.log(res);
+        // 可使用窗口宽度、高度
+        console.log('height=' + res.windowHeight);
+        console.log('width=' + res.windowWidth);
+        // 计算主体部分高度,单位为px
+        //that.setData({
+          // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
+        //  second_height: res.windowHeight - res.windowWidth / 750 * (92+36 + 98)
+        //})
 
+        this.scrollViewHeight = res.windowHeight  - res.statusBarHeight- res.windowWidth / 750 * (92+32 + 98)
+
+      }
+    })
     console.log("on loaded...")
+    this.loadMoreJob()
+
     getRegionTree().then(res => {
       console.log(res)
     })
@@ -556,6 +596,28 @@ export default {
   },
 
   methods: {
+    async loadMoreJob(){
+      this.state.q.page += 1
+      let params = { page: this.state.q.page, per_page: this.state.q.perPage}
+      let data = await searchJobs( params )
+
+      console.log(data)
+      if (data.jobs.length === 0) {
+        this.state.loading = false
+        this.state.q.page -= 1
+        if (this.state.q.page === 0) {
+          this.state.noData = true
+        } else {
+          this.state.loadEnd = true
+        }
+        return
+      } else if (data.length < this.state.q.perPage) {
+        this.state.loading = false
+        this.state.loadEnd = true
+      }
+      this.jobs = this.jobs.concat(data.jobs)
+      console.log( "this.jobs.length="+this.jobs.length)
+    },
     setData(ev) {
       console.log('开始发送 了!!!')
       console.log(ev)
@@ -597,7 +659,15 @@ export default {
       wx.navigateTo({
         url: '../workinfo/main?dataObj=' + JSON.stringify(item)
       }) // 当前点击的item,数据传递给招工详情页面
-    }
+    },
+    scrolltolower(){
+      this.loadMoreJob()
+      console.log(7)
+    },
+    scroll(e) {
+      console.log(6)
+      console.log(e)
+    },
   }
 }
 </script>
@@ -664,6 +734,9 @@ page {
 }
 
 .list {
+  .job-list{
+
+  }
     // margin-top: 40rpx;
     .circular {
         margin: 25rpx auto;
