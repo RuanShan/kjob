@@ -11,10 +11,12 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "better-scroll": "^1.12.6",
+    "flyio": "^0.6.0",
     "mpvue": "^1.0.11",
     "mpvue-picker": "^2.0.1",
-    "vuex": "^3.0.1",
-    "flyio": "^0.6.0"
+    "qs": "^6.5.2",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
