@@ -114,10 +114,23 @@ export default {
         .then(function (response) {
           console.log('then........')
           console.log(response)
+          if (response.id !== '') {
+            wx.showToast({
+              title: '成功',
+              icon: 'success',
+              duration: 2000
+            })
+            wx.navigateBack({ delta: 1 })
+          }
         })
         .catch(function (error) {
           console.log('catch........')
           console.log(error)
+          // 提示框
+          wx.showModal({
+            content: '认证未通过,请重新检查!',
+            showCancel: false
+          })
         })
     }
   },

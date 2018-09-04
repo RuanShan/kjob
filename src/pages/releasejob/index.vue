@@ -88,7 +88,7 @@
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
           </div>
           <div class="text">
-            招工名称
+            招工人数
           </div>
         </div>
         <div class="three-col">
@@ -98,7 +98,7 @@
       <!-- 列表单元 招工人数 END -->
 
       <!-- 列表单元 工资标准 START -->
-      <div class="my-info-list">
+      <div class="my-info-list" v-if="timeWorkDisplay">
         <div class="one-and-two-col">
           <div class="icon">
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
@@ -112,6 +112,22 @@
         </div>
       </div>
       <!-- 列表单元 工资标准 END -->
+
+      <!-- 列表单元 招工人数 START -->
+      <div class="my-info-list" v-if="allWorkDisplay">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            工程数量
+          </div>
+        </div>
+        <div class="three-col">
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少量?只能数字" v-model="numOfAmount" /> &nbsp;&nbsp;平方米
+        </div>
+      </div>
+      <!-- 列表单元 招工人数 END -->
 
       <!-- 列表单元 招工描述 START -->
       <div class="on-and-down">
@@ -202,6 +218,9 @@ export default {
   data () {
     return {
       title: '', // 输入的招工名称
+      // ************根据点工和包工选择数据,显示不同的内容************
+      timeWorkDisplay: true, // 选择点工显示
+      allWorkDisplay: false, // 选择包工显示
       // ************地区筛选数据************
       cityIndex: ['辽宁省', '大连市', '中山区'], // 默认选中的省市区
       district_fullname: '请选择', // 用户选择的省市区,和在页面中显示的作用
@@ -495,11 +514,12 @@ export default {
       ],
       // ******************点工和包工使用的变量*********************
       radioItems: [
-        { name: '点工', value: '0' },
-        { name: '包工', value: '1', checked: true }
+        { name: '点工', value: '0', checked: true },
+        { name: '包工', value: '1' }
       ],
       worker_type: '', // 招工类型
       numOfPeople: '', // 输入招工人数
+      numOfAmount: '', // 输入工程量
       pay: '', // 输入的工资标准
       description: '', // 招工描述 输入
       disclaimer: '双方联系时自行辨别真伪，求职过程请勿叫那样任何费用。包公头老板招人是最好唱拜师先。验证身份证后再带入项目。现场以免被讹.举报电话:0411-1234678' // 免责声明 服务器给
@@ -543,6 +563,14 @@ export default {
         }
       })
       console.log('radio 选择的是 : ' + this.worker_type)
+      // 判断用户选择的是哪一个招工类型
+      if (this.worker_type === '点工') {
+        this.timeWorkDisplay = true
+        this.allWorkDisplay = false
+      } else {
+        this.timeWorkDisplay = false
+        this.allWorkDisplay = true
+      }
     },
     // ************招工地点点击事件处理函数***************
     cityChoose (e) {

@@ -1,38 +1,45 @@
 <template>
   <div class="page">
-    <button @click="netTestGet">网络测试-get</button>
-    <button @click="netTestPost">网络测试-post</button>
+    <button @click="netTestGet">得到用工分类数据</button>
+    <button @click="showPickerForJob">用工分类mpvuePicker</button>
+    <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onChange="onChangeForJob" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
   </div>
 </template>
 
 <script>
-import Fly from 'flyio/dist/npm/wx'
+import { getJobTaxonTree } from '@/http/api.js'
+import mpvuePicker from 'mpvue-picker'
+
 export default {
+  components: {
+    mpvuePicker
+  },
   data () {
     return {
-
+      modeForJob: 'multiLinkageSelector',
+      pickerJobArray: [],
+      pickerJobDefault: [1],
+      deepLengthForJob: 2
     }
   },
   methods: {
     netTestGet () {
-      let fly = new Fly()
-      fly.get('https://www.easy-mock.com/mock/5b409280aedea31f953c7898/test/weixin')
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+      getJobTaxonTree().then(res => {
+        console.log(res)
+        this.pickerJobArray = res
+      })
     },
-    netTestPost () {
-      let fly = new Fly()
-      fly.post('https://www.easy-mock.com/mock/5b409280aedea31f953c7898/test/test')
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+    showPickerForJob () {
+      this.$refs.mpvuePickerForJob.show();
+    },
+    onConfirmForJob (e) {
+      console.log(e);
+    },
+    onChangeForJob (e) {
+      console.log(e);
+    },
+    onCancelForJob (e) {
+      console.log(e);
     }
   }
 }

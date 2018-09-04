@@ -3,14 +3,13 @@
     <!-- 筛选 ===> START -->
     <div class="sizer">
       <div class="position-select">
-        <button @click="showPickerForRegion">地区筛选</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <picker class="" mode="region" :value="region" @change="CityChange">
+          <button type="default">地区筛选</button>
+        </picker>
       </div>
       <div class="work-select">
-        <!-- <button @click="showPicker">工种筛选</button>
-        <mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker> -->
-        <button @click="showPickerForJob">工种筛选</button>
-        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onChange="onChangeForJob" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
+        <button @click="showPicker">工种筛选</button>
+        <mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
       </div>
     </div>
     <!-- 筛选 ===> END -->
@@ -124,10 +123,7 @@ export default {
       // wx_follower: {}, // 登录时sever需要的数据,根据userInfo修改得到
 
       // ************地区筛选数据************
-      modeForRegion: 'multiLinkageSelector',
-      pickerRegionArray: [],
-      pickerRegionDefault: [1],
-      deepLengthForRegion: 3,
+      region: ['广东省', '广州市', '海珠区'],
 
       // ************工种筛选数据**************
       resultTypeOfWork: { // 返回选择的工种类和工种
@@ -136,10 +132,10 @@ export default {
         // 工种
         item: ''
       },
-      modeForJob: 'multiLinkageSelector',
-      pickerJobArray: [],
-      pickerJobDefault: [1],
-      deepLengthForJob: 2,
+      pickerValueDefault: [0, 0],
+      deepLength: 2,
+      mode: 'multiLinkageSelector',
+      mulLinkageTwoPicker: [],
 
       // ************招工数量和浏览人数************
       onLineworkersNum: '1234', // 招工数量
@@ -319,12 +315,12 @@ export default {
     this.loadMoreJob()
 
     getRegionTree().then(res => {
-      console.log('地区',res)
-      this.pickerRegionArray = res;
+      // console.log(res)
     })
     getJobTaxonTree().then(res => {
-      console.log('用工分类', res);
-      this.pickerJobArray = res
+      console.log('用工分类',res);
+      // console.log(res)
+      this.mulLinkageTwoPicker = res
     })
 
   },
@@ -352,33 +348,22 @@ export default {
       this.jobs = this.jobs.concat(data.jobs)
       console.log("this.jobs.length=" + this.jobs.length)
     },
-    // ***************地区筛选方法***************
-    showPickerForRegion () {
-      this.$refs.mpvuePickerForRegion.show();
+    setData (ev) {
+      console.log('开始发送 了!!!')
+      console.log(ev)
+      wx.setStorage({
+        key: 'abc',
+        data: 'hello WX !!!'
+      })
+      console.log('发送完毕了!!!')
     },
-    /* ********地区筛选mpvuePicker点击确定事件处理函数
-    // 因为console.log(e)返回的是数组下标,故需要自己判断处理
-    ******************** */
-    onConfirmForRegion (e) {
-      console.log(e);
+    CityChange (e) {
+      console.log('选中的城市为：' + e.mp.detail.value)
     },
-    // CityChange (e) {
-    //   console.log('选中的城市为：' + e.mp.detail.value)
-    // },
-    // ***************工种筛选方法***************
-    showPickerForJob () {
-      this.$refs.mpvuePickerForJob.show();
+    // *****工种筛选方法*****
+    showPicker () {
+      this.$refs.mpvuePicker.show()
     },
-    /* ********工种筛选mpvuePicker点击确定事件处理函数
-    // 因为console.log(e)返回的是数组下标,故需要自己判断处理
-    ******************** */
-    onConfirmForJob (e) {
-      console.log(e);
-    },
-
-    // showPicker () {
-    //   this.$refs.mpvuePicker.show()
-    // },
     /* ********mpvuePicker点击确定事件处理函数
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
