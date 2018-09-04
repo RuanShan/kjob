@@ -62,13 +62,32 @@ export const wechatAppLogin = () => {
     //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
 
-
+// 取得区域信息列表，数据适用mpvue-picker
+// 返回
+// [{
+//   "value": 1,
+//   "label": "北京市",
+//   "children": [{
+//     "value": 1,
+//     "label": "北京市",
+//     "children": [{
+//         "value": 1,
+//         "label": "东城区"
+//       },
+//       {
+//         "value": 2,
+//         "label": "西城区"
+//       }
+//     ]
+//   }]
+// }]
 export const getRegionTree = () => {
   let params = {  url: '/api/v1/provinces/tree' }
   return get(params)
     //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
 
+// 取得工种分类列表，数据适用mpvue-picker
 export const getJobTaxonTree = () => {
   let params = {  url: '/api/v1/job_taxons/tree' }
     return get(params)
@@ -158,6 +177,17 @@ export const getWxFollower = (id) => {
 }
 
 // 添加工作经验
+// 参数
+// customer_work:{
+//   customer_id]:1,
+//   name: 'somename',
+//   start_at: '2017-08-16',
+//   end_at: '2017-08-16',
+//   district_id: 1,
+//   work_images_attributes:[ {attachment: file}]
+// }
+// customer_work[work_images_attributes][][attachment] file 组件的名字
+// 返回
 // {
 //     "id": 4,
 //     "customer_id": 1,
