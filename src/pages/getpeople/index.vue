@@ -3,13 +3,12 @@
     <!-- 筛选 ===> START -->
     <div class="sizer">
       <div class="position-select">
-        <picker class="" mode="region" :value="region" @change="CityChange">
-          <button type="default">地区筛选</button>
-        </picker>
+        <button @click="showPickerForRegion">地区筛选</button>
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
-        <button @click="showPicker">工种筛选</button>
-        <mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
+        <button @click="showPickerForJob">工种筛选</button>
+        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
       </div>
     </div>
     <!-- 筛选 ===> END -->
@@ -20,7 +19,7 @@
         <div class="div-left">
           <div class="left-top">
             <div class="left-top-one">
-              <img style="width: 80rpx; height: 80rpx;" src="../../../resources/headImage/姜亿万.png">
+              <img style="width: 80rpx; height: 80rpx;" :src='item.headimgurl'>
             </div>
             <div class="left-top-two">
               <div class="left-top-two-top">
@@ -40,24 +39,24 @@
             <div class="job-item">
               {{item.job1_name}}
             </div>
-            <div class="job-item">
+            <div class="job-item" v-show="item.job2_name">
               {{item.job2_name}}
             </div>
-            <div class="job-item">
+            <div class="job-item" v-show="item.job3_name">
               {{item.job3_name}}
             </div>
           </div>
         </div>
         <div class="div-right">
           <div class="right-top">
-            <div>
-              {{item.district1_fullname}}
+            <div v-show="item.district1_fullname">
+              {{item.district2_fullname}}
             </div>
             <div>
               {{item.district1_fullname}}
             </div>
-            <div>
-              {{item.district1_fullname}}
+            <div v-show="item.district1_fullname">
+              {{item.district3_fullname}}
             </div>
           </div>
           <div class="right-bottom">
@@ -76,6 +75,7 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
+import { getJobTaxonTree, getRegionTree, searchApplicants } from '../../http/api.js'
 export default {
   components: {
     mpvuePicker
@@ -83,293 +83,20 @@ export default {
   data () {
     return {
       // ************地区筛选数据************
-      region: ['广东省', '广州市', '海珠区'],
+      modeForRegion: 'multiLinkageSelector',
+      pickerRegionArray: [],
+      pickerRegionDefault: [1],
+      deepLengthForRegion: 3,
+
       // ************工种筛选数据**************
-      // 返回选择的工种类和工种
-      resultTypeOfWork: {
-        // 工种类
-        team: '',
-        // 工种
-        item: ''
+      resultTypeOfWork: { // 返回选择的工种类和工种
+        team: '', // 工种类
+        item: '' // 工种
       },
-      pickerValueDefault: [0, 0],
-      deepLength: 2,
-      mode: 'multiLinkageSelector',
-      mulLinkageTwoPicker: [
-        {
-          label: '全部',
-          value: 0,
-          children: [{
-            label: '全部',
-            value: 0
-          }
-          ]
-        },
-        {
-          label: '主体土建类',
-          value: 1,
-          children: [{
-            label: '全部',
-            value: 0
-          },
-          {
-            label: '木工',
-            value: 1
-          },
-          {
-            label: '铝膜工',
-            value: 2
-          },
-          {
-            label: '钢筋工',
-            value: 3
-          },
-          {
-            label: '架子工',
-            value: 4
-          },
-          {
-            label: '混凝土工',
-            value: 5
-          },
-          {
-            label: '水电工',
-            value: 6
-          },
-          {
-            label: '焊工/铆工',
-            value: 7
-          },
-          {
-            label: '防水保温工',
-            value: 8
-          },
-          {
-            label: '油漆工',
-            value: 9
-          },
-          {
-            label: '水暖管道工',
-            value: 10
-          },
-          {
-            label: '打桩/破桩工',
-            value: 11
-          },
-          {
-            label: '杂工',
-            value: 12
-          },
-          {
-            label: '爬架工',
-            value: 13
-          },
-          {
-            label: '钢筋压力焊',
-            value: 14
-          },
-          {
-            label: '钢筋车丝',
-            value: 15
-          },
-          {
-            label: '钢筋翻样',
-            value: 16
-          },
-          {
-            label: '钢结构/打板',
-            value: 17
-          }
-          ]
-        },
-        {
-          label: '主体装修安装类',
-          value: 2,
-          children: [{
-            label: '全部',
-            value: 0
-          },
-          {
-            label: '泥瓦工',
-            value: 1
-          },
-          {
-            label: '贴砖工',
-            value: 2
-          },
-          {
-            label: '幕墙工',
-            value: 3
-          },
-          {
-            label: '门窗护栏扶手工',
-            value: 4
-          },
-          {
-            label: '内外墙腻子工',
-            value: 5
-          },
-          {
-            label: '防水保温工',
-            value: 6
-          },
-          {
-            label: '砌砖工',
-            value: 7
-          },
-          {
-            label: '抹灰工',
-            value: 8
-          },
-          {
-            label: '强弱电安装工',
-            value: 9
-          },
-          {
-            label: '消防管道工',
-            value: 10
-          },
-          {
-            label: '拉毛挂网红',
-            value: 11
-          },
-          {
-            label: '装修木工/吊顶',
-            value: 12
-          },
-          {
-            label: '打磨/抛光工',
-            value: 13
-          },
-          {
-            label: '地坪工',
-            value: 14
-          }
-          ]
-        },
-        {
-          label: '工程管理施工类',
-          value: 3,
-          children: [{
-            label: '全部',
-            value: 0
-          },
-          {
-            label: '项目经理',
-            value: 1
-          },
-          {
-            label: '技术总工',
-            value: 2
-          },
-          {
-            label: '总工',
-            value: 3
-          },
-          {
-            label: '施工员',
-            value: 4
-          },
-          {
-            label: '测量放线员',
-            value: 5
-          },
-          {
-            label: '安全员',
-            value: 6
-          },
-          {
-            label: '资料员',
-            value: 7
-          },
-          {
-            label: '材料员',
-            value: 8
-          },
-          {
-            label: '造价员',
-            value: 9
-          },
-          {
-            label: '质检员',
-            value: 10
-          },
-          {
-            label: '预算员',
-            value: 11
-          },
-          {
-            label: '实验员',
-            value: 12
-          },
-          {
-            label: '监理',
-            value: 13
-          },
-          {
-            label: '水电员',
-            value: 14
-          },
-          {
-            label: '后勤',
-            value: 15
-          },
-          {
-            label: '安保门卫',
-            value: 16
-          },
-          {
-            label: '杂工',
-            value: 17
-          }
-          ]
-        },
-        {
-          label: '机械操作类',
-          value: 4,
-          children: [{
-            label: '全部',
-            value: 0
-          },
-          {
-            label: '塔吊工',
-            value: 1
-          },
-          {
-            label: '信号工',
-            value: 2
-          },
-          {
-            label: '挖机工',
-            value: 3
-          },
-          {
-            label: '推土机工',
-            value: 4
-          },
-          {
-            label: '升降机工',
-            value: 5
-          },
-          {
-            label: '装卸机工',
-            value: 6
-          },
-          {
-            label: '起重机工',
-            value: 7
-          },
-          {
-            label: '铲车/叉车工',
-            value: 8
-          },
-          {
-            label: '升降电梯司机',
-            value: 9
-          }
-          ]
-        }
-      ],
+      modeForJob: 'multiLinkageSelector',
+      pickerJobArray: [],
+      pickerJobDefault: [1],
+      deepLengthForJob: 2,
 
       // ************招工数量和浏览人数************
       onLineworkersNum: '1234', // 招工数量
@@ -377,91 +104,23 @@ export default {
 
       // ************找活列表************
       peopleList: [
-        {
-          'id': 2,
-          'realname': '李大阳', // 姓名
-          'headimgurl': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132',
-          'age': '29', // 年龄
-          'nation': '汉族', // 民族
-          'members': 1, // 队伍 ****
-          'description': 'this is desription', // 描述
-          'state': 'pending', //
-          'created_at': '2018-08-22', // 发布时间 *****
-          'customer_realname': '',
-          'district1_fullname': '北京市-东城区', // 地址
-          'job_taxon1_name': '主体土建类', // 工种类 ****
-          'job1_name': '木工', // 工种 ****
-          'job2_name': '强弱电安装工', // 工种 ****
-          'job3_name': '防水保温工' // 工种 ****
-        },
-        {
-          'id': 2,
-          'realname': '李大阳', // 姓名
-          'headimgurl': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132',
-          'age': '29', // 年龄
-          'nation': '汉族', // 民族
-          'members': 1, // 队伍 ****
-          'description': 'this is desription', // 描述
-          'state': 'pending', //
-          'created_at': '2018-08-22', // 发布时间 *****
-          'customer_realname': '',
-          'district1_fullname': '北京市-东城区', // 地址
-          'job_taxon1_name': '主体土建类', // 工种类 ****
-          'job1_name': '木工', // 工种 ****
-          'job2_name': '强弱电安装工', // 工种 ****
-          'job3_name': '防水保温工' // 工种 ****
-        },
-        {
-          'id': 2,
-          'realname': '李大阳', // 姓名
-          'headimgurl': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132',
-          'age': '29', // 年龄
-          'nation': '汉族', // 民族
-          'members': 1, // 队伍 ****
-          'description': 'this is desription', // 描述
-          'state': 'pending', //
-          'created_at': '2018-08-22', // 发布时间 *****
-          'customer_realname': '',
-          'district1_fullname': '北京市-东城区', // 地址
-          'job_taxon1_name': '主体土建类', // 工种类 ****
-          'job1_name': '木工', // 工种 ****
-          'job2_name': '强弱电安装工', // 工种 ****
-          'job3_name': '防水保温工' // 工种 ****
-        },
-        {
-          'id': 2,
-          'realname': '李大阳', // 姓名
-          'headimgurl': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132',
-          'age': '29', // 年龄
-          'nation': '汉族', // 民族
-          'members': 1, // 队伍 ****
-          'description': 'this is desription', // 描述
-          'state': 'pending', //
-          'created_at': '2018-08-22', // 发布时间 *****
-          'customer_realname': '',
-          'district1_fullname': '北京市-东城区', // 地址
-          'job_taxon1_name': '主体土建类', // 工种类 ****
-          'job1_name': '木工', // 工种 ****
-          'job2_name': '强弱电安装工', // 工种 ****
-          'job3_name': '防水保温工' // 工种 ****
-        },
-        {
-          'id': 2,
-          'realname': '李大阳', // 姓名
-          'headimgurl': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132',
-          'age': '29', // 年龄
-          'nation': '汉族', // 民族
-          'members': 1, // 队伍 ****
-          'description': 'this is desription', // 描述
-          'state': 'pending', //
-          'created_at': '2018-08-22', // 发布时间 *****
-          'customer_realname': '',
-          'district1_fullname': '北京市-东城区', // 地址
-          'job_taxon1_name': '主体土建类', // 工种类 ****
-          'job1_name': '木工', // 工种 ****
-          'job2_name': '强弱电安装工', // 工种 ****
-          'job3_name': '防水保温工' // 工种 ****
-        }
+        // {
+        //   'id': 2,
+        //   'realname': '李大阳', // 姓名
+        //   'headimgurl': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132',
+        //   'age': '29', // 年龄
+        //   'nation': '汉族', // 民族
+        //   'members': 1, // 队伍 ****
+        //   'description': 'this is desription', // 描述
+        //   'state': 'pending', //
+        //   'created_at': '2018-08-22', // 发布时间 *****
+        //   'customer_realname': '',
+        //   'district1_fullname': '北京市-东城区', // 地址
+        //   'job_taxon1_name': '主体土建类', // 工种类 ****
+        //   'job1_name': '木工', // 工种 ****
+        //   'job2_name': '强弱电安装工', // 工种 ****
+        //   'job3_name': '防水保温工' // 工种 ****
+        // }
       ]
     }
   },
@@ -475,46 +134,73 @@ export default {
     wx.setNavigationBarTitle({
       title: '找活列表'
     })
+    /* *************get kjob server 得到全国地区数据*************** */
+    getRegionTree().then(res => {
+      console.log('地区', res)
+      this.pickerRegionArray = res;
+    })
+    /* *************get kjob server 得到工种数据*************** */
+    getJobTaxonTree().then(res => {
+      console.log('用工分类', res);
+      this.pickerJobArray = res
+    })
+    /* *************get kjob server 得到工种数据*************** */
+    searchApplicants().then((res) => {
+      // let tempString = '';
+      console.log(res);
+      res.jobs.forEach((value) => {
+        value.created_at = value.created_at.substring(0, 10)
+      });
+      this.peopleList = res.jobs;
+    }).catch((err) => {
+      console.log(err);
+    })
   },
 
   methods: {
-    setData (ev) {
-      console.log('开始发送 了!!!')
-      console.log(ev)
-      wx.setStorage({
-        key: 'abc',
-        data: 'hello WX !!!'
-      })
-      console.log('发送完毕了!!!')
-    },
-    CityChange (e) {
-      console.log('选中的城市为：' + e.mp.detail.value)
-    },
-    // *****工种筛选方法*****
-    showPicker () {
-      this.$refs.mpvuePicker.show()
-    },
-    onConfirm (e) {
-      // console.log (e)
-      let tempArray = e
-      this.mulLinkageTwoPicker.forEach((elem) => {
-        if (tempArray[0] === elem.value) {
-          this.resultTypeOfWork.team = elem.label
-          elem.children.forEach((ele) => {
-            if (tempArray[1] === ele.value) {
-              this.resultTypeOfWork.item = ele.label
-            }
-          })
-        }
-      })
-      console.log(this.resultTypeOfWork)
-    },
+    // onConfirm (e) {
+    //   // console.log (e)
+    //   let tempArray = e
+    //   this.mulLinkageTwoPicker.forEach((elem) => {
+    //     if (tempArray[0] === elem.value) {
+    //       this.resultTypeOfWork.team = elem.label
+    //       elem.children.forEach((ele) => {
+    //         if (tempArray[1] === ele.value) {
+    //           this.resultTypeOfWork.item = ele.label
+    //         }
+    //       })
+    //     }
+    //   })
+    //   console.log(this.resultTypeOfWork)
+    // },
+
     // 点击展开详情,打开详情页面
     detail (item) {
       console.log(' 找活详情页面 !!!')
       console.log('item = ', item)
       wx.navigateTo({ url: '../peopleinfo/main?dataObj=' + JSON.stringify(item) }) // 当前点击的item,数据传递给招工详情页面
-    }
+    },
+
+    // ***************地区筛选方法***************
+    showPickerForRegion () {
+      this.$refs.mpvuePickerForRegion.show();
+    },
+    /* ********地区筛选mpvuePicker点击确定事件处理函数
+    // 因为console.log(e)返回的是数组下标,故需要自己判断处理
+    ******************** */
+    onConfirmForRegion (e) {
+      console.log(e);
+    },
+    // ***************工种筛选方法***************
+    showPickerForJob () {
+      this.$refs.mpvuePickerForJob.show();
+    },
+    /* ********工种筛选mpvuePicker点击确定事件处理函数
+    // 因为console.log(e)返回的是数组下标,故需要自己判断处理
+    ******************** */
+    onConfirmForJob (e) {
+      console.log(e);
+    },
   }
 }
 </script>
@@ -598,7 +284,7 @@ page {
               .certification {
                 padding: 5rpx 20rpx;
                 font-size: 28rpx;
-                font-weight:bold;
+                font-weight: bold;
                 border-radius: 30rpx;
                 border: solid 5rpx #fe0a9c;
                 color: #f80404;
@@ -606,7 +292,7 @@ page {
             }
           }
           .left-top-two-bottom {
-            color:#afafaf;
+            color: #afafaf;
             width: 400rpx;
             height: 50%;
             display: flex;

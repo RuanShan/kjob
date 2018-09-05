@@ -74,6 +74,14 @@ export default {
     wx.setNavigationBarTitle({
       title: '身份证认证'
     })
+    wx.getStorage({
+      key: 'userInfo',
+      success: (res) => {
+        console.log('res = ', res)
+        console.log('res.data = ', res.data)
+        // this.Data = res.data
+      }
+    })
   },
 
   methods: {

@@ -3,7 +3,7 @@
     <!-- 第一大行 ===> START -->
     <div class="first-line">
       <div class="one---row">
-        <img style="width: 120rpx; height: 120rpx;" src="../../../resources/headImage/姜亿万.png">
+        <img style="width: 120rpx; height: 120rpx;" :src='item.headimgurl'>
       </div>
       <div class="two---row">
         {{item.realname}}
@@ -53,21 +53,21 @@
           <div class="work-class-item">
             {{item.job_taxon1_name}}
           </div>
-          <div class="work-class-item">
-            {{item.job_taxon1_name}}
+          <div class="work-class-item" v-show="item.job_taxon2_name">
+            {{item.job_taxon2_name}}
           </div>
-          <div class="work-class-item">
-            {{item.job_taxon1_name}}
+          <div class="work-class-item" v-show="item.job_taxon3_name">
+            {{item.job_taxon3_name}}
           </div>
         </div>
         <div class="tpye-of-work">
           <div class="job-item">
             {{item.job1_name}}
           </div>
-          <div class="job-item">
+          <div class="job-item" v-show="item.job2_name">
             {{item.job2_name}}
           </div>
-          <div class="job-item">
+          <div class="job-item" v-show="item.job3_name">
             {{item.job3_name}}
           </div>
         </div>
