@@ -4,7 +4,7 @@
     <div class="sizer">
       <div class="position-select">
         <button @click="showPickerForRegion">地区筛选</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="3" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="2" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
         <!-- <button @click="showPicker">工种筛选</button>
@@ -321,14 +321,14 @@ export default {
     this.loadMoreJob()
 
     getRegionTree().then(res => {
-      console.log('地区1', res)
-      this.pickerRegionArray= regions
+    //  console.log('地区1', res)
       console.log('地区2', this.pickerRegionArray)
     })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
       this.pickerJobArray = res
     })
+    this.pickerRegionArray= regions
 
   },
 

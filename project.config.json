@@ -11,6 +11,7 @@
 	"compileType": "miniprogram",
 	"appid": "wxfee5872ed5af4066",
 	"projectname": "kjob",
+	"libVersion": "2.2.5",
 	"condition": {
 		"search": {
 			"current": -1,
