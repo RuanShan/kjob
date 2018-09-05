@@ -4,7 +4,7 @@
     <div class="sizer">
       <div class="position-select">
         <button @click="showPickerForRegion">地区筛选</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="3" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
         <!-- <button @click="showPicker">工种筛选</button>
@@ -101,6 +101,8 @@ import {
   searchJobs
 } from '../../http/api.js'
 
+import { regions } from '../../store/regions'
+
 export default {
   components: {
     mpvuePicker
@@ -126,7 +128,7 @@ export default {
       // ************地区筛选数据************
       modeForRegion: 'multiLinkageSelector',
       pickerRegionArray: [],
-      pickerRegionDefault: [1],
+      pickerRegionDefault: [],
       deepLengthForRegion: 3,
 
       // ************工种筛选数据**************
@@ -319,8 +321,9 @@ export default {
     this.loadMoreJob()
 
     getRegionTree().then(res => {
-      console.log('地区',res)
-      this.pickerRegionArray = res;
+      console.log('地区1', res)
+      this.pickerRegionArray= regions
+      console.log('地区2', this.pickerRegionArray)
     })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
@@ -360,6 +363,7 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForRegion (e) {
+      console.log( "yes, calling onConfirmForRegion")
       console.log(e);
     },
     // CityChange (e) {
@@ -373,9 +377,17 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForJob (e) {
-      console.log(e);
+      console.log(e)
     },
 
+    onCancelForRegion(e){
+      console.log(e)
+
+    },
+    onChangeForRegion(e){
+      console.log(e)
+
+    },
     // showPicker () {
     //   this.$refs.mpvuePicker.show()
     // },
@@ -430,19 +442,18 @@ page {
   flex-direction: row;
   justify-content: space-between;
   .position-select {
-    // float: left;
+    float: left;
     width: 50%;
-    position: fixed;
-    left: 0;
-    top: 0;
+    // position: fixed;
+    // left: 0;
+    // top: 0;
   }
   .work-select {
-    // float: right;
-    // position:fixed;
+    float: right;
     width: 50%;
-    position: fixed;
-    left: 375rpx;
-    top: 0;
+    // position: fixed;
+    // left: 375rpx;
+    // top: 0;
   }
 }
 
