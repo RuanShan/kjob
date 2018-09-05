@@ -141,22 +141,17 @@ export const searchJobs = ( data ) => {
 
 // 添加招工
 // 参数
-{
-  job:{
-    worker_type: 'parttime',
-  customer_id]:1
-  district_id]:1
-  job_taxon_id]:1
-  quantity]:10
-  pay]:300
-  }
-  [worker_type]:parttime
-job[customer_id]:1
-job[district_id]:1
-job[job_taxon_id]:1
-job[quantity]:10
-job[pay]:300
-job[description]:this is desription
+// {
+//   job: {
+//     worker_type: 'parttime',
+//     customer_id: 1,
+//     district_id: 1,
+//     job_taxon_id: 1,
+//     quantity: 10,
+//     pay: 300,
+//     description: "this is desription"
+//   }
+// }
 // 返回
 // {
 //     "id": 17,

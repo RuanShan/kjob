@@ -1,5 +1,5 @@
 // 配置
-const host = 'https://kjob_api.firecart.cn' // 生产
+const host = 'https://tapi.getstore.cn' // 生产
 const appid = ''
 const appKey = ''
 
