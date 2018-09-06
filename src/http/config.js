@@ -18,6 +18,7 @@ var fly = new Fly
 fly.interceptors.request.use((request) => {
   // 给所有请求添加自定义header
   request.headers['X-Tag'] = 'flyio'
+  request.headers['Accept'] = 'application/json'
   // 打印出请求体
   // console.log(request.body)
   // 终止请求
