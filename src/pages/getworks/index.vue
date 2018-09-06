@@ -94,13 +94,13 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
-import Fly from 'flyio/dist/npm/wx'
+// import Fly from 'flyio/dist/npm/wx'
 import {
   getJobTaxonTree,
   getRegionTree,
-  searchJobs
+  searchJobs,
+  wechatAppLogin
 } from '../../http/api.js'
-
 import { regions } from '../../store/regions'
 
 export default {
@@ -270,27 +270,30 @@ export default {
               // 访问微信 server 成功获取code后 微信返回的数据res
               success: function (res) {
                 console.log('login success res = ', res)
-                let fly = new Fly()
+                // let fly = new Fly()
                 // 访问kjob-server给从微信server得到的code和userInfo数据
-                fly.post('https://kjob-api.firecart.cn/api/v1/wechat_app/login/', {
+                // fly.post('https://kjob-api.firecart.cn/api/v1/wechat_app/login/', {
+                //   code: res.code,
+                //   wx_follower: follower
+                // })
+                wechatAppLogin({
                   code: res.code,
                   wx_follower: follower
-                })
-                  .then(function (response) {
-                    console.log('访问kjob 给code和整理后得userInfo后,得到的数据 = ', response)
-                    follower.id = response.data.id
-                    console.log('添加Id后的follower数据是 = ', follower)
-                    wx.setStorage({
-                      key: 'userInfo',
-                      data: follower,
-                      success: () => {
-                        console.log('userInfo 存储成功了!!!')
-                      },
-                      fail: () => {
-                        console.log('userInfo 存储失败了*******')
-                      }
-                    })
+                }).then(function (data) {
+                  console.log('访问kjob 给code和整理后得userInfo后,得到的数据 = ', data)
+                  follower.id = data.id
+                  console.log('添加Id后的follower数据是 = ', follower)
+                  wx.setStorage({
+                    key: 'userInfo',
+                    data: follower,
+                    success: () => {
+                      console.log('userInfo 存储成功了!!!')
+                    },
+                    fail: () => {
+                      console.log('userInfo 存储失败了*******')
+                    }
                   })
+                })
                   .catch(function (error) {
                     console.log('Fly 错误: = ', error)
                   })
@@ -322,7 +325,7 @@ export default {
 
     getRegionTree().then(res => {
       console.log('地区1', res)
-      this.pickerRegionArray= regions
+      this.pickerRegionArray = regions
       console.log('地区2', this.pickerRegionArray)
     })
     getJobTaxonTree().then(res => {
@@ -363,7 +366,7 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForRegion (e) {
-      console.log( "yes, calling onConfirmForRegion")
+      console.log("yes, calling onConfirmForRegion")
       console.log(e);
     },
     // CityChange (e) {
@@ -380,11 +383,11 @@ export default {
       console.log(e)
     },
 
-    onCancelForRegion(e){
+    onCancelForRegion (e) {
       console.log(e)
 
     },
-    onChangeForRegion(e){
+    onChangeForRegion (e) {
       console.log(e)
 
     },

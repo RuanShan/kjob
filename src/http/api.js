@@ -56,9 +56,9 @@ export const deleteRequest = (params) => {
 // {
 //     "ret": 0 失败 0，成功 1
 // }
-export const wechatAppLogin = () => {
-  let params = {  url: '/api/v1/wechat_app/login/' }
-  return get(params)
+export const wechatAppLogin = (data) => {
+  let params = {  url: '/api/v1/wechat_app/login/', data: data }
+  return post(params)
     //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
 

@@ -37,6 +37,7 @@
     <!-- 列表单元 第四行 START -->
     <div class="fourth-section">
       <button class="verify-button" type="primary" @click="verifyButton" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
+      <button @click="getUserInfo">get USERINFO</button>
     </div>
     <!-- 列表单元 第四行 END -->
 
@@ -73,14 +74,6 @@ export default {
     })
     wx.setNavigationBarTitle({
       title: '身份证认证'
-    })
-    wx.getStorage({
-      key: 'userInfo',
-      success: (res) => {
-        console.log('res = ', res)
-        console.log('res.data = ', res.data)
-        // this.Data = res.data
-      }
     })
   },
 
@@ -140,6 +133,24 @@ export default {
             showCancel: false
           })
         })
+    },
+    getUserInfo () {
+      wx.getStorage({
+        key: 'userInfo',
+        success: (res) => {
+          console.log('res = ', res)
+          console.log('res.data = ', res.data)
+          // this.Data = res.data
+        }
+      })
+      wx.getStorage({
+        key: 'userInfo',
+        success: (res) => {
+          console.log('res', res)
+          console.log('res.data', res.data)
+          this.userInfo = res.data
+        }
+      })
     }
   },
 

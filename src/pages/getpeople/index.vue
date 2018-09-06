@@ -4,11 +4,11 @@
     <div class="sizer">
       <div class="position-select">
         <button @click="showPickerForRegion">地区筛选</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
         <button @click="showPickerForJob">工种筛选</button>
-        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
+        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
       </div>
     </div>
     <!-- 筛选 ===> END -->
@@ -191,6 +191,10 @@ export default {
     onConfirmForRegion (e) {
       console.log(e);
     },
+    onCancelForRegion (e) {
+      console.log(e);
+    },
+
     // ***************工种筛选方法***************
     showPickerForJob () {
       this.$refs.mpvuePickerForJob.show();
@@ -199,6 +203,9 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForJob (e) {
+      console.log(e);
+    },
+    onCancelForJob (e) {
       console.log(e);
     },
   }
