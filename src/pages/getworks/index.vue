@@ -323,10 +323,14 @@ export default {
     getRegionTree().then(res => {
     //  console.log('地区1', res)
       console.log('地区2', this.pickerRegionArray)
+    }).catch(function(error){
+      console.log('error', error)
     })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
       this.pickerJobArray = res
+    }).catch(function(error){
+      console.log('error', error)
     })
     this.pickerRegionArray= regions
 
