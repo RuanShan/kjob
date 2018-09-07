@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div class="base-info">基本信息(必填)</div>
+
     <div class="info-must">
       <!-- 列表单元 招工名称 START -->
       <div class="my-info-list">
@@ -50,14 +52,13 @@
             招工地点
           </div>
         </div>
-        <picker mode="region" :value="cityIndex" @change="cityChoose">
-          <div class="three-col">
-            <div class="input-choose">{{district_fullname}}</div>
-            <div class="chose-icon">
-              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
-            </div>
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <div class="three-col" @click="showPickerForRegion">
+          <div class="input-choose">{{district_fullname}}</div>
+          <div class="chose-icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
           </div>
-        </picker>
+        </div>
       </div>
       <!-- 列表单元 找活区域 END -->
 
@@ -71,11 +72,11 @@
             工种类别
           </div>
         </div>
-        <div class="three-col">
-          <mpvue-picker ref="mpvuePickerReleaseMy" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker>
+        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
+        <div class="three-col" @click="showPickerForJob">
           <div class="input-choose">{{job_taxon_id}}</div>
           <div class="chose-icon">
-            <img @click="showPicker" style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
           </div>
         </div>
       </div>
@@ -142,10 +143,62 @@
           </div>
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          <textarea class="text-array" v-show="textAreaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
         </div>
       </div>
       <!-- 列表单元 招工描述 END -->
+
+      <!-- 列表单元 添加工程照片 START -->
+      <div class="on-and-down">
+        <div class="my-info-list-2">
+          <div class="one-and-two-col">
+            <div class="icon">
+              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+            </div>
+            <div class="text">
+              添加工程照片
+            </div>
+          </div>
+        </div>
+        <div class="image-upload">
+          <div class="pre-div-image">
+            <block v-for="(item, index) in files" :key="index">
+              <div class="uploader-pre-image" @click="predivImage" :id="item">
+                <image class="uploader__img" :src="item" mode="aspectFill" />
+                <button class="delet-button" @click.stop="deleteImage(index)">删除</button>
+              </div>
+            </block>
+          </div>
+          <div>
+            <div class="uploader-input-box" v-if="addImageDisplay">
+              <div class="add-image" @click="chooseImage">
+                <img style="width: 160rpx; height: 160rpx;" src="../../../resources/icon/add-2.png">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 列表单元 添加工程照片 END -->
+
+      <!-- 列表单元 工种选择 START -->
+      <div class="my-info-list">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            发布时间
+          </div>
+        </div>
+        <mpvue-picker ref="mpvuePickerForTime" :mode="modeForTime" :pickerValueDefault="pickerTimeDefault" :deepLength="deepLengthForTime" @onConfirm="onConfirmForTime" @onCancel="onCancelForTime" :pickerValueArray="pickerTimeArray"></mpvue-picker>
+        <div class="three-col" @click="showPickerForTime">
+          <div class="input-choose">{{releaseTime}}</div>
+          <div class="chose-icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
+          </div>
+        </div>
+      </div>
+      <!-- 列表单元 工种选择 END -->
 
       <div class="base-info"></div>
 
@@ -160,7 +213,7 @@
           </div>
         </div>
         <div class="three-col">
-          李大眼
+          {{userInfoForAPI.realname}}
         </div>
       </div>
       <!-- 列表单元 发布人 END -->
@@ -176,12 +229,12 @@
           </div>
         </div>
         <div class="three-col">
-          13456789876
+          {{userInfoForAPI.mobile}}
         </div>
       </div>
       <!-- 列表单元 联系电话 END -->
 
-      <div class="base-info"></div>
+      <div class="base-info-space"></div>
 
       <!-- 列表单元 免责声明 START -->
       <div class="my-info-list">
@@ -196,7 +249,7 @@
       </div>
       <!-- 列表单元 免责声明 END -->
 
-      <div class="base-info"></div>
+      <div class="base-info-space"></div>
 
       <!-- 列表单元 免费发布招工 START -->
       <div class="skip">
@@ -210,6 +263,7 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
+import { getRegionTree, getJobTaxonTree, addJob } from '../../http/api.js'
 
 export default {
   components: {
@@ -217,311 +271,63 @@ export default {
   },
   data () {
     return {
+      userInfoForAPI: null, // 当前用户信息
       title: '', // 输入的招工名称
+
       // ************根据点工和包工选择数据,显示不同的内容************
       timeWorkDisplay: true, // 选择点工显示
       allWorkDisplay: false, // 选择包工显示
+
       // ************地区筛选数据************
-      cityIndex: ['辽宁省', '大连市', '中山区'], // 默认选中的省市区
+      modeForRegion: 'multiLinkageSelector',
+      pickerRegionArray: [],
+      pickerRegionDefault: [0, 0],
+      deepLengthForRegion: 2,
       district_fullname: '请选择', // 用户选择的省市区,和在页面中显示的作用
-      // ************工种筛选数据, 还需要有个事件和处理函数showPicker()**************
-      resultTypeOfWork: { // 返回选择的工种类和工种
-        team: '', // 工种类
-        item: '' // 工种
-      },
+
+      // ************工种筛选数据**************
       job_taxon_id: '请选择', // 工种类别'装修类-木工'
-      pickerValueDefault: [0, 0],
-      deepLength: 2,
-      mode: 'multiLinkageSelector',
-      mulLinkageTwoPicker: [
-        // {
-        //   label: '全部',
-        //   value: 0,
-        //   children: [{
-        //     label: '全部',
-        //     value: 0
-        //   }
-        //   ]
-        // },
+      modeForJob: 'multiLinkageSelector',
+      pickerJobArray: [],
+      pickerJobDefault: [0, 0],
+      deepLengthForJob: 2,
+
+      // ************发布时间选数据**************
+      releaseTime: '请选择', // 发布时间 '请选择'之后通过用户输入改
+      modeForTime: 'selector',
+      pickerTimeDefault: [1],
+      deepLengthForTime: 1,
+      pickerTimeArray: [
         {
-          label: '机械操作类',
-          value: 0,
-          children: [
-            //   {
-            //   label: '全部',
-            //   value: 0
-            // },
-            {
-              label: '升降电梯司机',
-              value: 0
-            },
-            {
-              label: '塔吊工',
-              value: 1
-            },
-            {
-              label: '信号工',
-              value: 2
-            },
-            {
-              label: '挖机工',
-              value: 3
-            },
-            {
-              label: '推土机工',
-              value: 4
-            },
-            {
-              label: '升降机工',
-              value: 5
-            },
-            {
-              label: '装卸机工',
-              value: 6
-            },
-            {
-              label: '起重机工',
-              value: 7
-            },
-            {
-              label: '铲车/叉车工',
-              value: 8
-            }
-          ]
+          label: '15天',
+          value: 0
         },
         {
-          label: '主体土建类',
-          value: 1,
-          children: [
-            // {
-            //   label: '全部',
-            //   value: 0
-            // },
-            {
-              label: '钢结构/打板',
-              value: 0
-            },
-            {
-              label: '木工',
-              value: 1
-            },
-            {
-              label: '铝膜工',
-              value: 2
-            },
-            {
-              label: '钢筋工',
-              value: 3
-            },
-            {
-              label: '架子工',
-              value: 4
-            },
-            {
-              label: '混凝土工',
-              value: 5
-            },
-            {
-              label: '水电工',
-              value: 6
-            },
-            {
-              label: '焊工/铆工',
-              value: 7
-            },
-            {
-              label: '防水保温工',
-              value: 8
-            },
-            {
-              label: '油漆工',
-              value: 9
-            },
-            {
-              label: '水暖管道工',
-              value: 10
-            },
-            {
-              label: '打桩/破桩工',
-              value: 11
-            },
-            {
-              label: '杂工',
-              value: 12
-            },
-            {
-              label: '爬架工',
-              value: 13
-            },
-            {
-              label: '钢筋压力焊',
-              value: 14
-            },
-            {
-              label: '钢筋车丝',
-              value: 15
-            },
-            {
-              label: '钢筋翻样',
-              value: 16
-            }
-          ]
+          label: '30天',
+          value: 1
         },
         {
-          label: '主体装修安装类',
-          value: 2,
-          children: [
-            //   {
-            //   label: '全部',
-            //   value: 0
-            // },
-            {
-              label: '地坪工',
-              value: 0
-            },
-            {
-              label: '泥瓦工',
-              value: 1
-            },
-            {
-              label: '贴砖工',
-              value: 2
-            },
-            {
-              label: '幕墙工',
-              value: 3
-            },
-            {
-              label: '门窗护栏扶手工',
-              value: 4
-            },
-            {
-              label: '内外墙腻子工',
-              value: 5
-            },
-            {
-              label: '防水保温工',
-              value: 6
-            },
-            {
-              label: '砌砖工',
-              value: 7
-            },
-            {
-              label: '抹灰工',
-              value: 8
-            },
-            {
-              label: '强弱电安装工',
-              value: 9
-            },
-            {
-              label: '消防管道工',
-              value: 10
-            },
-            {
-              label: '拉毛挂网红',
-              value: 11
-            },
-            {
-              label: '装修木工/吊顶',
-              value: 12
-            },
-            {
-              label: '打磨/抛光工',
-              value: 13
-            }
-          ]
-        },
-        {
-          label: '工程管理施工类',
-          value: 3,
-          children: [
-            //   {
-            //   label: '全部',
-            //   value: 0
-            // },
-            {
-              label: '杂工',
-              value: 17
-            },
-            {
-              label: '项目经理',
-              value: 1
-            },
-            {
-              label: '技术总工',
-              value: 2
-            },
-            {
-              label: '总工',
-              value: 3
-            },
-            {
-              label: '施工员',
-              value: 4
-            },
-            {
-              label: '测量放线员',
-              value: 5
-            },
-            {
-              label: '安全员',
-              value: 6
-            },
-            {
-              label: '资料员',
-              value: 7
-            },
-            {
-              label: '材料员',
-              value: 8
-            },
-            {
-              label: '造价员',
-              value: 9
-            },
-            {
-              label: '质检员',
-              value: 10
-            },
-            {
-              label: '预算员',
-              value: 11
-            },
-            {
-              label: '实验员',
-              value: 12
-            },
-            {
-              label: '监理',
-              value: 13
-            },
-            {
-              label: '水电员',
-              value: 14
-            },
-            {
-              label: '后勤',
-              value: 15
-            },
-            {
-              label: '安保门卫',
-              value: 16
-            }
-          ]
+          label: '60天',
+          value: 2
         }
       ],
+
+      // ************图片预览数据************
+      files: [], // 图片保存位置
+      addImageDisplay: true, // 图片添加显示开关
+      addImageCount: 0, // 图片添加计数器
+
       // ******************点工和包工使用的变量*********************
       radioItems: [
         { name: '点工', value: '0', checked: true },
         { name: '包工', value: '1' }
       ],
-      worker_type: '', // 招工类型
+      worker_type: '点工', // 招工类型
       numOfPeople: '', // 输入招工人数
       numOfAmount: '', // 输入工程量
       pay: '', // 输入的工资标准
       description: '', // 招工描述 输入
+      textAreaDisplay: true, // 招工描述显示开关
       disclaimer: '双方联系时自行辨别真伪，求职过程请勿叫那样任何费用。包公头老板招人是最好唱拜师先。验证身份证后再带入项目。现场以免被讹.举报电话:0411-1234678' // 免责声明 服务器给
     }
   },
@@ -537,14 +343,31 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
+    })
+    /* *************get kjob server 得到全国地区数据*************** */
+    getRegionTree().then(res => {
+      console.log('地区', res)
+      this.pickerRegionArray = res;
+    }).catch(function (error) {
+      console.log('error', error)
+    })
+    /* *************get kjob server 得到工种数据*************** */
+    getJobTaxonTree().then(res => {
+      console.log('用工分类', res);
+      this.pickerJobArray = res
+    }).catch(function (error) {
+      console.log('error', error)
+    })
   },
 
   methods: {
-    // *****工种筛选方法,必须要有*****
-    showPicker () {
-      this.$refs.mpvuePickerReleaseMy.show()
-      // this.mulLinkDisplay = true
-    },
     // **********************招工类型点击事件**************************
     radioChange (e) {
       let resultData = e.mp.detail.value
@@ -572,48 +395,170 @@ export default {
         this.allWorkDisplay = true
       }
     },
-    // ************招工地点点击事件处理函数***************
-    cityChoose (e) {
-      this.district_fullname = ''
-      let array = e.mp.detail.value
-      let tempChar = '-'
-      // e.mp.detail.value是有3个元素的数组分别是省市区
-      console.log('选中的城市为：', e.mp.detail.value)
-      // 循环分别得到省,市,区(value),第一个不加'-',后两个加,得到的结果是'辽宁省-大连市-高新园区'
-      array.forEach((value, index) => {
-        if (index === 0) {
-          this.district_fullname = `${this.district_fullname}${value}`
-        } else {
-          this.district_fullname = `${this.district_fullname}${tempChar}${value}`
-        }
-      })
-    },
-    /* ********mpvuePickerReleaseMy点击确定事件处理函数
-    // 因为console.log(e)返回的是数组下标,故需要自己判断处理,结果如这样 [1,2]
-    ******************** */
-    onConfirm (e) {
-      console.log(e)
-      let num = 0
-      this.job_taxon_id = '' // 每次进来初始化
-      e.forEach((value, index) => {
-        if (index === 0) {
-          num = value // 把数组0的值先给num,保存起来,
-          this.job_taxon_id = `${this.mulLinkageTwoPicker[value].label}${'-'}`
-        } else {
-          // 拼接字符串
-          this.job_taxon_id = `${this.job_taxon_id}${this.mulLinkageTwoPicker[num].children[value].label}`
-        }
-      })
-    },
+   
     // ************找活描述中,textArray 输入处理函数***************
     textAreaInput (e) {
       console.log(e.target.value)
       this.description = e.target.value
     },
-    // 免费发布找活按钮点击处理函数-----跳转到找活页面
+
+    // **********免费发布找活按钮点击处理函数-----跳转到找活页面************
     freeRelease () {
-      console.log('免费发布找活')
-      wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+      console.log('免费发布找活了.....')
+      let dataToServer = {}
+      // dataToServer.name = this.title // 招工名称
+      dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
+      dataToServer.district_id = this.district_fullname // 招工地点
+      dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
+      dataToServer.quantity = this.numOfPeople // 招工人数
+      dataToServer.pay = this.pay // 工资标准
+      dataToServer.description = this.description // 招工描述
+      // dataToServer.work_images_attributes = this.files  // 照片
+      // dataToServer.expire_in = this.releaseTime // 发布时间
+      if (this.worker_type === '点工') {
+        dataToServer.worker_type = 'parttime' // 招工类型-点工
+        // 如果没有填全,弹窗
+        if (this.title === '' || this.district_fullname == '请选择' || this.job_taxon_id === '请选择' || this.numOfPeople === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+          wx.showModal({
+            content: '请填入必填信息,方能提交保存!',
+            showCancel: false
+          })
+        } else { // 转换数据,提交KJob
+          this.addJobInfo(dataToServer)
+          // wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+        }
+      }
+      if (this.worker_type === '包工') {
+        dataToServer.worker_type = 'contract' // 招工类型-包工
+        if (this.title === '' || this.district_fullname == '请选择' || this.job_taxon_id === '请选择' || this.numOfPeople === '' || this.numOfAmount === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+          wx.showModal({
+            content: '请填入必填信息,方能提交保存!',
+            showCancel: false
+          })
+        } else {
+          wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+        }
+      }
+    },
+
+    // *************************添加招工信息******************************
+    addJobInfo (dataToServer) {
+      addJob(dataToServer).then((res) => {
+        console.log('addJobInfo => ', res);
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+
+    // ***************地区筛选方法***************
+    showPickerForRegion () {
+      this.textAreaDisplay = false;
+      this.$refs.mpvuePickerForRegion.show();
+    },
+
+    /* ********地区筛选mpvuePicker点击确定事件处理函数******************** */
+    onConfirmForRegion (e) {
+      console.log(e);
+      this.district_fullname = e.label
+      this.textAreaDisplay = true;
+    },
+
+    onCancelForRegion (e) {
+      this.textAreaDisplay = true;
+      console.log(e);
+    },
+
+    // ***************工种筛选方法***************
+    showPickerForJob () {
+      this.textAreaDisplay = false;
+      this.$refs.mpvuePickerForJob.show();
+    },
+
+    /* ********工种筛选mpvuePicker点击确定事件处理函数******************** */
+    onConfirmForJob (e) {
+      console.log(e);
+      this.textAreaDisplay = true;
+      this.job_taxon_id = e.label
+    },
+
+    onCancelForJob (e) {
+      console.log(e);
+      this.textAreaDisplay = true;
+    },
+
+    // ***************时间筛选方法***************
+    showPickerForTime () {
+      this.textAreaDisplay = false;
+      this.$refs.mpvuePickerForTime.show();
+    },
+
+    /* ********时间筛选mpvuePicker点击确定事件处理函数******************** */
+    onConfirmForTime (e) {
+      console.log(e);
+      this.textAreaDisplay = true;
+      this.releaseTime = e.label
+    },
+
+    onCancelForTime (e) {
+      this.textAreaDisplay = true;
+      console.log(e);
+    },
+
+    // *********************点击添加图片处理函数************************
+    // ***把图片添加到files[]中,成功后把图片添加的计数器加一***
+    // ***************************************************************
+    chooseImage (e) {
+      let _this = this
+      wx.chooseImage({
+        count: 3, // 只能选3张
+        sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album'], // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+          _this.files = _this.files.concat(res.tempFilePaths)
+        },
+        fail: function () {
+          console.log('fail')
+        },
+        complete: function () {
+          console.log('commplete')
+          _this.addImageCount++
+        }
+      })
+    },
+
+    // *********************预览图片处理函数************************
+    // ***调用wx.previewImage***
+    // ***************************************************************
+    predivImage (e) {
+      console.log(e)
+      wx.previewImage({
+        current: e.currentTarget.id, // 当前显示图片的http链接
+        urls: this.files // 需要预览的图片http链接列表
+      })
+    },
+
+    // *********************删除图片处理函数************************
+    // ***把图片从files[]中删除,图片计数器减一***
+    // ***************************************************************
+    deleteImage (index) {
+      console.log(index)
+      this.files.splice(this.files.findIndex(item => item.id === index), 1)
+      this.addImageCount--
+    },
+  },
+
+  watch: {
+    // *********************监测计数器变化处理函数************************
+    // ***如果3次添加图片,不显示添加加号,否则显示***
+    // ***************************************************************
+    addImageCount: function () {
+      console.log(this.addImageCount)
+      if (this.addImageCount >= 3) {
+        this.addImageDisplay = false
+      } else {
+        this.addImageDisplay = true
+      }
     }
   }
 }
@@ -623,9 +568,13 @@ export default {
 page {
   height: 100%;
   background-color: #f0f0f0;
-  .base-info {
+  .base-info-space {
     height: 25rpx;
     background-color: #f0f0f0;
+  }
+  .base-info {
+    font-size: 25rpx;
+    margin: 10rpx 25rpx;
   }
   .info-must {
     display: flex;
@@ -710,6 +659,68 @@ page {
   }
   .release-people-info {
     height: 300rpx;
+  }
+  .on-and-down {
+    border-bottom: solid 1rpx #808080;
+    .my-info-list-2 {
+      display: flex;
+      padding: 25rpx 25rpx 10rpx 25rpx;
+      justify-content: space-between;
+      .one-and-two-col {
+        display: flex;
+        .text {
+          margin-left: 25rpx;
+        }
+      }
+    }
+    .image-upload {
+      height: 300rpx;
+      background-color: #ffffff;
+      .uploader-input-box {
+        float: left;
+        position: relative;
+        margin-right: 9px;
+        margin-bottom: 9px;
+        width: 77px;
+        height: 77px;
+        // border: 1px solid #d9d9d9;
+        .add-image {
+          margin: 25rpx;
+          height: 200rpx;
+          width: 200rpx;
+          background-color: #ffffff;
+          border: solid 1rpx #0080ff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+      .pre-div-image {
+        .uploader__img {
+          display: block;
+          width: 200rpx;
+          height: 200rpx;
+        }
+        .uploader-pre-image {
+          float: left;
+          margin: 25rpx;
+          .delet-button {
+            height: 50rpx;
+            display: flex;
+            align-items: center;
+            font-size: 40rpx;
+            justify-content: center;
+          }
+        }
+      }
+    }
+    // .add-Images {
+    //   height: 100rpx;
+    //   border: solid 1rpx #808080;
+    //   background-color: #e5e5e5;
+    //   width: 700rpx;
+    //   margin: 0 25rpx 25rpx 25rpx;
+    // }
   }
 }
 </style>

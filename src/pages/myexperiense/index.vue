@@ -254,7 +254,7 @@ export default {
 
   watch: {
     // *********************监测计数器变化处理函数************************
-    // ***如果3次添加图片,不显示添加加号,否则显示***
+    // ***如果3次添加图片,不显示添加加号,否则显示***ffffff
     // ***************************************************************
     addImageCount: function () {
       console.log(this.addImageCount)
@@ -330,7 +330,7 @@ page {
           margin-bottom: 9px;
           width: 77px;
           height: 77px;
-          border: 1px solid #d9d9d9;
+          // border: 1px solid #d9d9d9;
           .add-image {
             margin: 25rpx;
             height: 200rpx;

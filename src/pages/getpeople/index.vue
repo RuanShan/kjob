@@ -85,8 +85,8 @@ export default {
       // ************地区筛选数据************
       modeForRegion: 'multiLinkageSelector',
       pickerRegionArray: [],
-      pickerRegionDefault: [1],
-      deepLengthForRegion: 3,
+      pickerRegionDefault: [0,0],
+      deepLengthForRegion: 2,
 
       // ************工种筛选数据**************
       resultTypeOfWork: { // 返回选择的工种类和工种
@@ -138,13 +138,17 @@ export default {
     getRegionTree().then(res => {
       console.log('地区', res)
       this.pickerRegionArray = res;
+    }).catch(function (error) {
+      console.log('error', error)
     })
     /* *************get kjob server 得到工种数据*************** */
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
       this.pickerJobArray = res
+    }).catch(function (error) {
+      console.log('error', error)
     })
-    /* *************get kjob server 得到工种数据*************** */
+    /* *************get kjob server 得到找活列表数据*************** */
     searchApplicants().then((res) => {
       // let tempString = '';
       console.log(res);

@@ -206,7 +206,7 @@ export const addJob = ( data ) => {
 //     ]
 // }
 export const getWxFollower = (id) => {
-  let params = {  url: '/api/v1/wx_followers'+id }
+  let params = {  url: '/api/v1/wx_followers/'+id }
   return get(params)
 }
 

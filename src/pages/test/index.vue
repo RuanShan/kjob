@@ -1,48 +1,47 @@
 <template>
-  <div class="page">
-    <button @click="netTestGet">得到用工分类数据</button>
-    <button @click="showPickerForJob">用工分类mpvuePicker</button>
-    <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onChange="onChangeForJob" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
+  <div class="mpvue-picer">
+    <button @click="showPickerForTime">single mpvuePickerForTime</button>
+    <mpvue-picker ref="mpvuePickerForTime" :mode="modeForTime" :pickerValueDefault="pickerTimeDefault" :deepLength="deepLengthForTime" @onConfirm="onConfirmForTime" @onCancel="onCancelForTime" :pickerValueArray="pickerTimeArray"></mpvue-picker>
   </div>
 </template>
 
 <script>
-import { getJobTaxonTree } from '@/http/api.js'
-import mpvuePicker from 'mpvue-picker'
-
+import mpvuePicker from 'mpvue-picker';
 export default {
-  components: {
-    mpvuePicker
-  },
   data () {
     return {
-      modeForJob: 'multiLinkageSelector',
-      pickerJobArray: [],
-      pickerJobDefault: [1],
-      deepLengthForJob: 2
-    }
+      modeForTime: 'selector',
+      pickerTimeDefault: [0],
+      deepLengthForTime: 1,
+      pickerTimeArray: [
+        {
+          label: '15天',
+          value: 0
+        },
+        {
+          label: '30天',
+          value: 1
+        },
+        {
+          label: '60天',
+          value: 2
+        }
+      ],
+    };
   },
+  components: { mpvuePicker },
   methods: {
-    netTestGet () {
-      getJobTaxonTree().then(res => {
-        console.log(res)
-        this.pickerJobArray = res
-      })
+    showPickerForTime () {
+      this.$refs.mpvuePickerForTime.show();
     },
-    showPickerForJob () {
-      this.$refs.mpvuePickerForJob.show();
-    },
-    onConfirmForJob (e) {
+    onConfirmForTime (e) {
       console.log(e);
     },
-    onChangeForJob (e) {
-      console.log(e);
-    },
-    onCancelForJob (e) {
+    onCancelForTime (e) {
       console.log(e);
     }
   }
-}
+};
 </script>
 
 <style>

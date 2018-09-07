@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="three-col">
-          <img style="width: 50rpx; height: 50rpx;" src="../../../resources/headImage/姜亿万.png">
+          <img style="width: 50rpx; height: 50rpx;" :src="userInfoForAPI.headimgurl">
         </div>
       </div>
       <!-- 列表单元  END -->
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="three-col">
-          {{realName}}
+          {{userInfoForAPI.realname}}
         </div>
       </div>
       <!-- 列表单元  END -->
@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="three-col">
-          {{phone}}
+          {{userInfoForAPI.mobile}}
         </div>
       </div>
       <!-- 列表单元  END -->
@@ -141,14 +141,21 @@
             找活区域
           </div>
         </div>
-        <picker mode="region" :value="cityIndex" @change="cityChoose">
+        <!-- <picker mode="region" :value="cityIndex" @change="cityChoose">
           <div class="three-col">
             <div class="input-choose">请选择(Max 3个)</div>
             <div class="chose-icon">
               <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/adding.png">
             </div>
           </div>
-        </picker>
+        </picker> -->
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <div class="three-col" @click="showPickerForRegion">
+          <div class="input-choose">请选择(Max 3个)</div>
+          <div class="chose-icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/adding.png">
+          </div>
+        </div>
       </div>
       <!-- 列表单元 找活区域 END -->
 
@@ -256,7 +263,7 @@
           </div>
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" v-if="textareaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          <textarea class="text-array" v-show="textareaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
         </div>
       </div>
       <!-- 列表单元 找活描述 END -->
@@ -280,6 +287,10 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
+import {
+  getRegionTree,
+  getJobTaxonTree,
+} from '../../http/api.js'
 
 export default {
   components: {
@@ -287,7 +298,8 @@ export default {
   },
   data () {
     return {
-      headImage: '', // 头像
+      userInfoForAPI: null, // 当前用户信息
+      headimgurl: '', // 头像
       realName: '李大阳', // 姓名,来自用户信息
       phone: '13456789123', // 电话号码,来自用户信息
       age: '28', // 年龄,来自用户信息
@@ -563,8 +575,16 @@ export default {
         }
       ],
       memberIndex: 0, // 民族默认选择-汉族
+
       // ************地区筛选数据************
-      cityIndex: ['辽宁省', '大连市', '中山区'],
+      // cityIndex: ['辽宁省', '大连市', '中山区'],
+
+      // ************地区筛选数据************
+      modeForRegion: 'multiLinkageSelector',
+      pickerRegionArray: [],
+      pickerRegionDefault: [0, 0],
+      deepLengthForRegion: 2,
+
       // ************找活区域数据************
       district1_id: '',
       district2_id: '',
@@ -574,8 +594,10 @@ export default {
       district3_display: false,
       district_number: 0,
       tempDistrict: '',
+
       // ************textarea 数据**************
       textareaDisplay: true, // textarea标签是否显示开关
+
       // ************工种筛选数据, 还需要有个事件和处理函数showPicker()**************
       // resultTypeOfWork: { // 返回选择的工种类和工种
       //   team: '', // 工种类
@@ -875,6 +897,28 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
+    })
+     /* *************get kjob server 得到全国地区数据*************** */
+    getRegionTree().then(res => {
+      console.log('地区', res)
+      this.pickerRegionArray = res;
+    }).catch(function (error) {
+      console.log('error', error)
+    })
+    /* *************get kjob server 得到工种数据*************** */
+    getJobTaxonTree().then(res => {
+      console.log('用工分类', res);
+      this.pickerJobArray = res
+    }).catch(function (error) {
+      console.log('error', error)
+    })
   },
 
   methods: {
@@ -935,6 +979,24 @@ export default {
       console.log(this.$refs.district3)
     },
 
+    // ***************地区筛选方法***************
+    showPickerForRegion () {
+      // this.textAreaDisplay = false;
+      this.$refs.mpvuePickerForRegion.show();
+    },
+
+    /* ********地区筛选mpvuePicker点击确定事件处理函数******************** */
+    onConfirmForRegion (e) {
+      console.log(e);
+      // this.district_fullname = e.label
+      // this.textAreaDisplay = true;
+    },
+
+    onCancelForRegion (e) {
+      // this.textAreaDisplay = true;
+      console.log(e);
+    },
+
     // ********************工种筛选方法,必须要有**************************
     // 把 textarea 标签显示关闭
     showPicker () {
@@ -961,18 +1023,6 @@ export default {
           showCancel: false
         })
       } else {
-        // let tempArray = e
-        // 根据得到的数组数据遍历picker数据,然后根据e数组下标得到工种
-        // this.mulLinkageTwoPicker.forEach((elem) => {
-        //   if (tempArray[0] === elem.value) {
-        //     this.resultTypeOfWork.team = elem.label
-        //     elem.children.forEach((ele) => {
-        //       if (tempArray[1] === ele.value) {
-        //         this.resultTypeOfWork.item = ele.label
-        //       }
-        //     })
-        //   }
-        // })
         // log(e) 打印的数据是 lable:装修类-木工,把lable给resultTypeOfWork,主要是为了界面的要求,才给这样的数据{ team: '', item: '' }
         let tempIndex = 0
         let tempObj = { team: '', item: '' }

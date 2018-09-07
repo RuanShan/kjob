@@ -4,7 +4,7 @@
     <div class="sizer">
       <div class="position-select">
         <button @click="showPickerForRegion">地区筛选</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="3" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="2" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
         <!-- <button @click="showPicker">工种筛选</button>
@@ -99,7 +99,8 @@ import {
   getJobTaxonTree,
   getRegionTree,
   searchJobs,
-  wechatAppLogin
+  wechatAppLogin,
+  getWxFollower
 } from '../../http/api.js'
 import { regions } from '../../store/regions'
 
@@ -121,14 +122,14 @@ export default {
         noData: false
       },
       // ************当前用户信息需要的数据************
-      // userInfo: [],
+      userInfoForAPI: null,
       // ************网络请求需要的数据************
       // wx_follower: {}, // 登录时sever需要的数据,根据userInfo修改得到
 
       // ************地区筛选数据************
       modeForRegion: 'multiLinkageSelector',
       pickerRegionArray: [],
-      pickerRegionDefault: [],
+      pickerRegionDefault: [0, 0],
       deepLengthForRegion: 3,
 
       // ************工种筛选数据**************
@@ -236,7 +237,7 @@ export default {
     })
     wx.getUserInfo({
       // 请求微信server,得到userInfo
-      success: function (res) {
+      success: (res) => {
         let userInfo = res.userInfo
         console.log('getUserInfo后得到的是 userInfo = ', userInfo)
         // 整理数据,变成kjob server需要的数据
@@ -251,24 +252,11 @@ export default {
         console.log('let follower =  ', follower)
         // 检查Session
         wx.checkSession({
-          success: function () {
+          success: () => {
             // session_key 未过期，并且在本生命周期一直有效
-            wx.getStorage({
-              key: 'userInfo',
-              success: (res) => {
-                console.log('getStorage得到的数据是 = ', res.data)
-                console.log(res.data)
-                // this.userInfo = res.data
-              }
-            })
-          },
-          fail: function () {
-            // session_key 已经失效，需要重新执行登录流程
-            // 重新登录
-            //  获取临时登录凭证（code）
             wx.login({
               // 访问微信 server 成功获取code后 微信返回的数据res
-              success: function (res) {
+              success: (res) => {
                 console.log('login success res = ', res)
                 // let fly = new Fly()
                 // 访问kjob-server给从微信server得到的code和userInfo数据
@@ -276,27 +264,83 @@ export default {
                 //   code: res.code,
                 //   wx_follower: follower
                 // })
+
+                // 微信app用户登录，wx.login成功之后调用，获取或创建系统内用户
                 wechatAppLogin({
                   code: res.code,
                   wx_follower: follower
-                }).then(function (data) {
+                }).then((data) => {
                   console.log('访问kjob 给code和整理后得userInfo后,得到的数据 = ', data)
-                  follower.id = data.id
-                  console.log('添加Id后的follower数据是 = ', follower)
-                  wx.setStorage({
-                    key: 'userInfo',
-                    data: follower,
-                    success: () => {
-                      console.log('userInfo 存储成功了!!!')
-                    },
-                    fail: () => {
-                      console.log('userInfo 存储失败了*******')
-                    }
-                  })
+                  // 根据从KJob server得到的用户id,请求KJob Server 得到用户数据
+                  getWxFollower(data.id).then((res) => {
+                    // console.log(res);
+                    // 得到当前用户微信数保和KJob用户信息保持到userInfoForAPI中
+                    this.userInfoForAPI = res;
+                    // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+                    wx.setStorage({
+                      key: 'userInfoForAPI',
+                      data: this.userInfoForAPI,
+                      success: (res) => {
+                        console.log('setStorage data 后得 res = ', res);
+                        console.log('userInfoForAPI 存储成功了!!!')
+                      },
+                      fail: () => {
+                        console.log('userInfoForAPI 存储失败了*******')
+                      }
+                    })
+                  }).catch((err) => {
+                    console.log("API - getWxFollower 错误 = ", err);
+                  });
+                }).catch(function (error) {
+                  console.log('Fly 错误: = ', error)
                 })
-                  .catch(function (error) {
-                    console.log('Fly 错误: = ', error)
-                  })
+              }
+            })
+          },
+          fail: () => {
+            // session_key 已经失效，需要重新执行登录流程
+            // 重新登录
+            //  获取临时登录凭证（code）
+            wx.login({
+              // 访问微信 server 成功获取code后 微信返回的数据res
+              success: (res) => {
+                console.log('login success res = ', res)
+                // let fly = new Fly()
+                // 访问kjob-server给从微信server得到的code和userInfo数据
+                // fly.post('https://kjob-api.firecart.cn/api/v1/wechat_app/login/', {
+                //   code: res.code,
+                //   wx_follower: follower
+                // })
+
+                // 微信app用户登录，wx.login成功之后调用，获取或创建系统内用户
+                wechatAppLogin({
+                  code: res.code,
+                  wx_follower: follower
+                }).then((data) => {
+                  console.log('访问kjob 给code和整理后得userInfo后,得到的数据 = ', data)
+                  // 根据从KJob server得到的用户id,请求KJob Server 得到用户数据
+                  getWxFollower(data.id).then((res) => {
+                    // console.log(res);
+                    // 得到当前用户微信数保和KJob用户信息保持到userInfoForAPI中
+                    this.userInfoForAPI = res;
+                    // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+                    wx.setStorage({
+                      key: 'userInfoForAPI',
+                      data: this.userInfoForAPI,
+                      success: (res) => {
+                        console.log('setStorage data 后得 res = ', res);
+                        console.log('userInfoForAPI 存储成功了!!!')
+                      },
+                      fail: () => {
+                        console.log('userInfoForAPI 存储失败了*******')
+                      }
+                    })
+                  }).catch((err) => {
+                    console.log("API - getWxFollower 错误 = ", err);
+                  });
+                }).catch(function (error) {
+                  console.log('Fly 错误: = ', error)
+                })
               }
             })
           }
@@ -327,11 +371,16 @@ export default {
       console.log('地区1', res)
       this.pickerRegionArray = regions
       console.log('地区2', this.pickerRegionArray)
+    }).catch(function (error) {
+      console.log('error', error)
     })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
       this.pickerJobArray = res
+    }).catch(function (error) {
+      console.log('error', error)
     })
+    this.pickerRegionArray = regions
 
   },
 

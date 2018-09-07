@@ -23,7 +23,7 @@
       <div class="bottom-button">
         <button class="releaseWorkerInfo" type="primary" @click="releaseJobInfo">免费发布招工</button>
       </div>
-    </div>    
+    </div>
   </div>
 </template>
 
@@ -32,6 +32,8 @@
 export default {
   data () {
     return {
+      // ************当前用户信息需要的数据************
+      userInfoForAPI: null,
     }
   },
 
@@ -44,15 +46,43 @@ export default {
     wx.setNavigationBarTitle({
       title: '免费发布'
     })
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
+    })
   },
   methods: {
     releaseWorkerInfo () {
       console.log('免费发布找活信息****')
       wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
+
+      // // 根据当前用户信息判读是否进行了身份证认证和电话认证
+      // if (this.userInfoForAPI.id_num_identified_at !== null || this.userInfoForAPI.mobile_identified_at !== null) {
+      //   wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
+      // } else {
+      //   wx.showModal({
+      //     content: '请先进行身份证认证和电话认证,之后才能发布信息!',
+      //     showCancel: false
+      //   })
+      // }
     },
     releaseJobInfo () {
       console.log('免费发布招工信息%%%')
       wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
+
+      // 根据当前用户信息判读是否进行了身份证认证和电话认证
+      // if (this.userInfoForAPI.id_num_identified_at !== null || this.userInfoForAPI.mobile_identified_at !== null) {
+      //   wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
+      // } else {
+      //   wx.showModal({
+      //     content: '请先进行身份证认证和电话认证,之后才能发布信息!',
+      //     showCancel: false
+      //   })
+      // }
     }
   }
 }
@@ -78,7 +108,7 @@ page {
       // }
       .top-text {
         font-size: 35rpx;
-        color: #b8b8b8;        
+        color: #b8b8b8;
       }
       .top-button {
         width: 80%;
@@ -98,7 +128,7 @@ page {
       // }
       .bottom-text {
         font-size: 35rpx;
-        color: #b8b8b8;        
+        color: #b8b8b8;
       }
       .bottom-button {
         width: 80%;
@@ -106,7 +136,7 @@ page {
           background-color: #ff8040;
         }
       }
-    }  
+    }
   }
 }
 </style>

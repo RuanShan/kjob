@@ -37,7 +37,6 @@
     <!-- 列表单元 第四行 START -->
     <div class="fourth-section">
       <button class="verify-button" type="primary" @click="verifyButton" :disabled="buttonDisabled">验&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证</button>
-      <button @click="getUserInfo">get USERINFO</button>
     </div>
     <!-- 列表单元 第四行 END -->
 
@@ -57,6 +56,9 @@ import Fly from 'flyio/dist/npm/wx'
 export default {
   data () {
     return {
+      // ************当前用户信息需要的数据************
+      userInfoForAPI: null,
+
       realName: '', // 用户输入的真实姓名
       cardIdNum: '', // 用户输入的身份证号码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
@@ -74,6 +76,13 @@ export default {
     })
     wx.setNavigationBarTitle({
       title: '身份证认证'
+    })
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data
+      }
     })
   },
 
@@ -115,12 +124,14 @@ export default {
         .then(function (response) {
           console.log('then........')
           console.log(response)
+          // 成功认证
           if (response.id !== '') {
             wx.showToast({
               title: '成功',
               icon: 'success',
               duration: 2000
             })
+            // 跳转到上一个页面
             wx.navigateBack({ delta: 1 })
           }
         })
@@ -133,24 +144,6 @@ export default {
             showCancel: false
           })
         })
-    },
-    getUserInfo () {
-      wx.getStorage({
-        key: 'userInfo',
-        success: (res) => {
-          console.log('res = ', res)
-          console.log('res.data = ', res.data)
-          // this.Data = res.data
-        }
-      })
-      wx.getStorage({
-        key: 'userInfo',
-        success: (res) => {
-          console.log('res', res)
-          console.log('res.data', res.data)
-          this.userInfo = res.data
-        }
-      })
     }
   },
 
