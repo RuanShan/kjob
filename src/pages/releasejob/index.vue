@@ -405,11 +405,12 @@ export default {
     // **********免费发布找活按钮点击处理函数-----跳转到找活页面************
     freeRelease () {
       console.log('免费发布找活了.....')
+      let job = {}
       let dataToServer = {}
       // dataToServer.name = this.title // 招工名称
       dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
-      dataToServer.district_id = this.district_fullname // 招工地点
-      dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
+      // dataToServer.district_id = this.district_fullname // 招工地点
+      // dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
       dataToServer.quantity = this.numOfPeople // 招工人数
       dataToServer.pay = this.pay // 工资标准
       dataToServer.description = this.description // 招工描述
@@ -424,7 +425,9 @@ export default {
             showCancel: false
           })
         } else { // 转换数据,提交KJob
-          this.addJobInfo(dataToServer)
+          job.job = dataToServer
+          console.log(job);
+          this.addJobInfo(job)
           // wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
         }
       }
@@ -442,8 +445,8 @@ export default {
     },
 
     // *************************添加招工信息******************************
-    addJobInfo (dataToServer) {
-      addJob(dataToServer).then((res) => {
+    addJobInfo (job) {
+      addJob(job).then((res) => {
         console.log('addJobInfo => ', res);
       }).catch((err) => {
         console.log(err);
@@ -486,13 +489,13 @@ export default {
       this.textAreaDisplay = true;
     },
 
-    // ***************时间筛选方法***************
+    // ****************************时间筛选方法***********************************
     showPickerForTime () {
       this.textAreaDisplay = false;
       this.$refs.mpvuePickerForTime.show();
     },
 
-    /* ********时间筛选mpvuePicker点击确定事件处理函数******************** */
+    /* ********时间筛选mpvuePicker点击确定事件处理函数******** */
     onConfirmForTime (e) {
       console.log(e);
       this.textAreaDisplay = true;
