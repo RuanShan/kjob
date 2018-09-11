@@ -2,6 +2,7 @@
   <div class="content">
     <!-- 第一大行 ===> START -->
     <div class="first-line">
+      <img class="background-img" src="../../../resources/images/timg.jpg">
       <div class="one---row">
         <img style="width: 120rpx; height: 120rpx;" :src='item.headimgurl'>
       </div>
@@ -103,15 +104,24 @@
       </div>
       <div class="two---row">
         <div>
-          2018年-04月 -25日 ~ 今   北京市   
+          2018年-04月 -25日 ~ 今 北京市
         </div>
         <div>
           描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息;
         </div>
-        <div class="work-image">
+        <!-- <div class="work-image">
           <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
           <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
           <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
+        </div> -->
+        <div class="image-upload">
+          <div class="pre-div-image">
+            <block v-for="(item, index) in files" :key="index">
+              <div class="uploader-pre-image" @click="predivImage" :id="item">
+                <image class="uploader__img" :src="item" mode="aspectFill" />
+              </div>
+            </block>
+          </div>
         </div>
       </div>
     </div>
@@ -130,6 +140,11 @@
 export default {
   data () {
     return {
+      files: [
+        '../../../resources/images/bkg.jpg',
+        '../../../resources/images/timg.jpg',
+        '../../../resources/images/boss.png'
+      ],
       item: null, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
@@ -180,7 +195,18 @@ export default {
           })
         }
       })
-    }
+    },
+
+    // *********************预览图片处理函数************************
+    // ***调用wx.previewImage***
+    // ***************************************************************
+    predivImage (e) {
+      console.log(e)
+      wx.previewImage({
+        current: e.currentTarget.id, // 当前显示图片的http链接
+        urls: this.files // 需要预览的图片http链接列表
+      })
+    },
   }
 }
 </script>
@@ -193,11 +219,19 @@ page {
     height: 100%;
     .first-line {
       height: 20%;
-      background-color: #10b4bc;
+      // background-color: #10b4bc;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      .background-img {
+        z-index: -1;
+        width: 750rpx;
+        // height: 500rpx;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
       .two---row {
         color: #ffffff;
         font-weight: bold;
@@ -292,6 +326,47 @@ page {
       }
       .two---row {
         padding: 25rpx;
+        .image-upload {
+          height: 300rpx;
+          background-color: #ffffff;
+          .uploader-input-box {
+            float: left;
+            position: relative;
+            margin-right: 9px;
+            margin-bottom: 9px;
+            width: 77px;
+            height: 77px;
+            // border: 1px solid #d9d9d9;
+            .add-image {
+              margin: 25rpx;
+              height: 200rpx;
+              width: 200rpx;
+              background-color: #ffffff;
+              border: solid 1rpx #0080ff;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+          .pre-div-image {
+            .uploader__img {
+              display: block;
+              width: 180rpx;
+              height: 180rpx;
+            }
+            .uploader-pre-image {
+              float: left;
+              margin: 25rpx;
+              .delet-button {
+                height: 50rpx;
+                display: flex;
+                align-items: center;
+                font-size: 40rpx;
+                justify-content: center;
+              }
+            }
+          }
+        }
         .work-image {
           display: flex;
           justify-content: space-around;

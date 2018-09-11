@@ -139,6 +139,12 @@ export const searchJobs = ( data ) => {
   //return fly.post(`${host}/api/v1/jobs/search`, qs.stringify(data))
 }
 
+// 今日在线招工人数和浏览次数
+export const getTodayCount = () => {
+  let params = {  url: '/api/v1/jobs/today' }
+  return get(params)
+}
+
 // 添加招工
 // 参数
 // {

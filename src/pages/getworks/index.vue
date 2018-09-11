@@ -34,23 +34,23 @@
 
       <scroll-view class="job-list" :style="computedHeightStyle" :scroll-y="true" @scrolltolower="scrolltolower" @scroll="scroll">
 
-        <div class="circular" v-for="item in jobList" :key="item" @click="detail(item)">
+        <div class="circular" v-for="item in jobs" :key="item" @click="detail(item)">
           <div class="top-----half">
             <div class="one---row">
               <div class="one-row-one">
-                {{item.city}}&nbsp;&nbsp;招&nbsp;-&nbsp;{{item.typeOfWork}}
+                {{item.city}}&nbsp;&nbsp;招&nbsp;-&nbsp;{{item.job_taxon_name}}
               </div>
               <div class="one-row-two">
                 <div class="typeOfWork">
-                  &nbsp;{{item.typeOfWork}}&nbsp;
+                  &nbsp;{{item.job_taxon_name}}&nbsp;
                 </div>
               </div>
             </div>
             <div class="two---row">
               <div class="two-row-one">
                 价格:&nbsp;&nbsp;&nbsp;&nbsp;
-                <div class="price">
-                  &nbsp;&nbsp;{{item.price}}
+                <div class="pay">
+                  &nbsp;&nbsp;{{item.pay}}
                 </div>
               </div>
               <div class="two-row-two">
@@ -73,10 +73,11 @@
             <div class="four---row">
               <div class="four-row-one">
                 <div class="image">
-                  <img style="width: 60rpx; height: 60rpx;" src="../../../resources/headImage/姜亿万.png">
+                  <img style="width: 60rpx; height: 60rpx;" src="../../../resources/icon/dateTime.png">
+                  <!-- <img style="width: 60rpx; height: 60rpx;" :src="userInfoForAPI.headimgurl"> -->
                 </div>
-                <div class="publishName">
-                  &nbsp;&nbsp;联系人&nbsp;&nbsp;-&nbsp;&nbsp;{{item.publishName}}
+                <div class="name">
+                  &nbsp;&nbsp;联系人&nbsp;&nbsp;-&nbsp;&nbsp;{{item.name}}
                 </div>
               </div>
               <div class="four-row-two">
@@ -100,7 +101,8 @@ import {
   getRegionTree,
   searchJobs,
   wechatAppLogin,
-  getWxFollower
+  getWxFollower,
+  getTodayCount,
 } from '../../http/api.js'
 import { regions } from '../../store/regions'
 
@@ -141,79 +143,18 @@ export default {
       },
       modeForJob: 'multiLinkageSelector',
       pickerJobArray: [],
-      pickerJobDefault: [1],
+      pickerJobDefault: [0, 0],
       deepLengthForJob: 2,
 
       // ************招工数量和浏览人数************
-      onLineworkersNum: '1234', // 招工数量
-      browsedTimes: '5678', // 浏览人数
+      onLineworkersNum: '', // 招工数量
+      browsedTimes: '', // 浏览人数
 
-      // ************招工列表************
-      jobList: [{
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万', // 联系人姓名
-        worksClass: '主体装修安装类', // 工作类
-        description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万', // 联系人姓名
-        worksClass: '主体装修安装类', // 工作类
-        description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万', // 联系人姓名
-        worksClass: '主体装修安装类', // 工作类
-        description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万', // 联系人姓名
-        worksClass: '主体装修安装类', // 工作类
-        description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
-      },
-      {
-        city: '广西河池', // 城市
-        typeOfWork: '抹灰工', // 工种
-        price: '6.5', // 价格
-        worksAmount: '7万平方米', // 工程量
-        state: '广西壮族自治区', // 省
-        releaseTime: '2018-06-06 10:55', // 时间
-        headImage: '', // 头像
-        publishName: '姜亿万', // 联系人姓名
-        worksClass: '主体装修安装类', // 工作类
-        description: '广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!广西河池市找工,6.5云,7万平方米,注意安全,大家好!'
-      }
-      ],
       // ************API数据************
       regionPickerData: [], //地区
       jobTaxonPickerData: [], //招工分类
-      jobs: [],
+      jobsTempData: null, // 数据格式化临时数据
+      jobs: [], // ************招工列表************
       end: null
     }
   },
@@ -382,6 +323,31 @@ export default {
     })
     this.pickerRegionArray = regions
 
+    // ******************今日在线招工人数和浏览次数******************
+    getTodayCount().then((res) => {
+      console.log('getTodayCount = ', res);
+      this.onLineworkersNum = res.job_count
+      this.browsedTimes = res.uv_count
+    }).catch((err) => {
+      console.log('getTodayCount = ', err);
+    })
+
+    // 获取招工列表
+    searchJobs().then((res) => {
+      console.log('获取招工类表 = ', res);
+      this.dataFormat(res.jobs)
+      console.log('dataFormat 后 = ', res.jobs);
+      this.jobs = res.jobs
+    }).catch((err) => {
+      console.log('err = ', err);
+    })
+
+  },
+  onShow () {
+    console.log('onShow 生命周期来了........');
+  },
+  onReady () {
+    console.log('onReady 生命周期来了........');
   },
 
   methods: {
@@ -404,6 +370,7 @@ export default {
         this.state.loading = false
         this.state.loadEnd = true
       }
+      this.dataFormat(data.jobs)
       this.jobs = this.jobs.concat(data.jobs)
       console.log("this.jobs.length=" + this.jobs.length)
     },
@@ -476,7 +443,20 @@ export default {
     scroll (e) {
       console.log(6)
       console.log(e)
-    }
+    },
+
+    // *******************数据格式化*******************
+    dataFormat (data) {
+      data.forEach((element) => {
+        let indexChar = element.district_fullname.indexOf('-')
+        let tempStr = element.district_fullname.substring(indexChar + 1)
+        indexChar = tempStr.indexOf('-')
+        element.city = tempStr.substring(0, indexChar) // city OK
+        indexChar = element.district_fullname.indexOf('-')
+        element.state = element.district_fullname.substring(0, indexChar)
+        element.releaseTime = element.created_at.substring(0, 10) + ' ' + element.created_at.substring(11, 16) // releaseTime OK
+      });
+    },
   }
 }
 </script>
@@ -597,7 +577,7 @@ page {
         .two-row-one {
           padding-left: 25rpx;
           display: flex;
-          .price {
+          .pay {
             color: #fc0a77;
           }
         }

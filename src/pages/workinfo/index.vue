@@ -78,6 +78,30 @@
     <!-- 第四大行 ===> END -->
 
     <!-- 第五大行 ===> START -->
+    <div class="third-line">
+      <div class="one---row">
+        <div class="one-row-left">
+          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/skill.png">
+        </div>
+        <div class="one-row-right">
+          &nbsp;&nbsp; 工程照片
+        </div>
+      </div>
+      <div class="two---row">
+        <div class="image-upload">
+          <div class="pre-div-image">
+            <block v-for="(item, index) in files" :key="index">
+              <div class="uploader-pre-image" @click="predivImage" :id="item">
+                <image class="uploader__img" :src="item" mode="aspectFill" />
+              </div>
+            </block>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 第五大行 ===> END -->
+
+    <!-- 第六大行 ===> START -->
     <div class="fifth-line">
       <div class="one---row">
         <div class="one-row-left">
@@ -88,13 +112,13 @@
         </div>
       </div>
     </div>
-    <!-- 第五大行 ===> END -->
+    <!-- 第六大行 ===> END -->
 
-    <!-- 第六大行 ===> START -->
+    <!-- 第七大行 ===> START -->
     <div class="sixth-line">
       <button class="calling" type="primary" @click="calling">点击拨打电话</button>
     </div>
-    <!-- 第六大行 ===> END -->
+    <!-- 第七大行 ===> END -->
   </div>
 </template>
 
@@ -103,6 +127,11 @@
 export default {
   data () {
     return {
+       files: [
+        '../../../resources/images/bkg.jpg',
+        '../../../resources/images/timg.jpg',
+        '../../../resources/images/boss.png'
+      ],
       item: null, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
@@ -162,7 +191,17 @@ export default {
           })
         }
       })
-    }
+    },
+     // *********************预览图片处理函数************************
+    // ***调用wx.previewImage***
+    // ***************************************************************
+    predivImage (e) {
+      console.log(e)
+      wx.previewImage({
+        current: e.currentTarget.id, // 当前显示图片的http链接
+        urls: this.files // 需要预览的图片http链接列表
+      })
+    },
   }
 }
 </script>
@@ -260,6 +299,47 @@ page {
       .two---row {
         padding: 25rpx;
         font-size: 25rpx;
+         .image-upload {
+          height: 300rpx;
+          background-color: #ffffff;
+          .uploader-input-box {
+            float: left;
+            position: relative;
+            margin-right: 9px;
+            margin-bottom: 9px;
+            width: 77px;
+            height: 77px;
+            // border: 1px solid #d9d9d9;
+            .add-image {
+              margin: 25rpx;
+              height: 200rpx;
+              width: 200rpx;
+              background-color: #ffffff;
+              border: solid 1rpx #0080ff;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+          .pre-div-image {
+            .uploader__img {
+              display: block;
+              width: 180rpx;
+              height: 180rpx;
+            }
+            .uploader-pre-image {
+              float: left;
+              margin: 25rpx;
+              .delet-button {
+                height: 50rpx;
+                display: flex;
+                align-items: center;
+                font-size: 40rpx;
+                justify-content: center;
+              }
+            }
+          }
+        }
       }
     }
     .fourth-line {

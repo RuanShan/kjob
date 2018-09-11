@@ -5,11 +5,11 @@
       <img class="background-img" src="/resources/images/bkg.jpg">
       <div class="one-colum">
         <!-- <img style="width: 160rpx; height: 160rpx;" src="/resources/headImage/姜亿万.png"> -->
-        <img style="width: 160rpx; height: 160rpx;" :src="userInfo.headimgurl">
+        <img style="width: 160rpx; height: 160rpx;" :src="userInfoForAPI.headimgurl">
       </div>
       <div class="two-colum">
         <div class="name">
-          {{userInfo.nickname}}
+          {{userInfoForAPI.nickname}}
         </div>
       </div>
     </div>
@@ -45,7 +45,9 @@
 export default {
   data () {
     return {
-      userInfo: [] // 当前微信用户信息
+      // userInfo: [] // 当前微信用户信息
+      // ************当前用户信息需要的数据************
+      userInfoForAPI: null,
     }
   },
 
@@ -59,11 +61,11 @@ export default {
       title: '我的'
     })
     wx.getStorage({
-      key: 'userInfo',
+      key: 'userInfoForAPI',
       success: (res) => {
         console.log('res', res)
         console.log('res.data', res.data)
-        this.userInfo = res.data
+        this.userInfoForAPI = res.data
       }
     })
   },

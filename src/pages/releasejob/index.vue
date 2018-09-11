@@ -42,8 +42,8 @@
       </div>
       <!-- 列表单元 招工类型 END -->
 
-      <!-- 列表单元 找活区域 START -->
-      <div class="my-info-list">
+      <!-- 列表单元 招工地点 START -->
+      <!-- <div class="my-info-list">
         <div class="one-and-two-col">
           <div class="icon">
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
@@ -59,8 +59,29 @@
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
           </div>
         </div>
+      </div> -->
+      <!-- 列表单元 招工地点 END -->
+
+      <!-- 列表单元 招工地点 START -->
+      <div class="my-info-list">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            招工地点
+          </div>
+        </div>
+        <picker mode="region" :value="cityIndex" @change="cityChoose">
+          <div class="three-col">
+            <div class="input-choose">{{regionFullName}}</div>
+            <div class="chose-icon">
+              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
+            </div>
+          </div>
+        </picker>
       </div>
-      <!-- 列表单元 找活区域 END -->
+      <!-- 列表单元 招工地点 END -->
 
       <!-- 列表单元 工种选择 START -->
       <div class="my-info-list">
@@ -74,7 +95,7 @@
         </div>
         <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
         <div class="three-col" @click="showPickerForJob">
-          <div class="input-choose">{{job_taxon_id}}</div>
+          <div class="input-choose">{{profession}}</div>
           <div class="chose-icon">
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/arrows.png">
           </div>
@@ -279,6 +300,10 @@ export default {
       allWorkDisplay: false, // 选择包工显示
 
       // ************地区筛选数据************
+      cityIndex: ['辽宁省', '大连市', '中山区'],
+      regionFullName: '请选择',
+
+      // ************地区筛选数据************
       modeForRegion: 'multiLinkageSelector',
       pickerRegionArray: [],
       pickerRegionDefault: [0, 0],
@@ -286,7 +311,8 @@ export default {
       district_fullname: '请选择', // 用户选择的省市区,和在页面中显示的作用
 
       // ************工种筛选数据**************
-      job_taxon_id: '请选择', // 工种类别'装修类-木工'
+      profession: '请选择', // 工种类别'装修类-木工'
+      job_taxon_id: '', // 接口需要的数据
       modeForJob: 'multiLinkageSelector',
       pickerJobArray: [],
       pickerJobDefault: [0, 0],
@@ -395,62 +421,29 @@ export default {
         this.allWorkDisplay = true
       }
     },
-   
+
     // ************找活描述中,textArray 输入处理函数***************
     textAreaInput (e) {
       console.log(e.target.value)
       this.description = e.target.value
     },
 
-    // **********免费发布找活按钮点击处理函数-----跳转到找活页面************
-    freeRelease () {
-      console.log('免费发布找活了.....')
-      let job = {}
-      let dataToServer = {}
-      // dataToServer.name = this.title // 招工名称
-      dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
-      // dataToServer.district_id = this.district_fullname // 招工地点
-      // dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
-      dataToServer.quantity = this.numOfPeople // 招工人数
-      dataToServer.pay = this.pay // 工资标准
-      dataToServer.description = this.description // 招工描述
-      // dataToServer.work_images_attributes = this.files  // 照片
-      // dataToServer.expire_in = this.releaseTime // 发布时间
-      if (this.worker_type === '点工') {
-        dataToServer.worker_type = 'parttime' // 招工类型-点工
-        // 如果没有填全,弹窗
-        if (this.title === '' || this.district_fullname == '请选择' || this.job_taxon_id === '请选择' || this.numOfPeople === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
-          wx.showModal({
-            content: '请填入必填信息,方能提交保存!',
-            showCancel: false
-          })
-        } else { // 转换数据,提交KJob
-          job.job = dataToServer
-          console.log(job);
-          this.addJobInfo(job)
-          // wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
-        }
-      }
-      if (this.worker_type === '包工') {
-        dataToServer.worker_type = 'contract' // 招工类型-包工
-        if (this.title === '' || this.district_fullname == '请选择' || this.job_taxon_id === '请选择' || this.numOfPeople === '' || this.numOfAmount === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
-          wx.showModal({
-            content: '请填入必填信息,方能提交保存!',
-            showCancel: false
-          })
-        } else {
-          wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
-        }
-      }
-    },
 
-    // *************************添加招工信息******************************
-    addJobInfo (job) {
-      addJob(job).then((res) => {
-        console.log('addJobInfo => ', res);
-      }).catch((err) => {
-        console.log(err);
-      })
+
+
+    // *************************小程序picker 确定处理函数******************************
+    cityChoose (e) {
+      console.log('小程序Picker 点击确认事件', e.mp.detail.value);
+      let tempDistrict = ''
+      // 从数组中提取字符串
+      for (let index = 0; index <= 2; index++) {
+        if (index !== 0) {
+          tempDistrict += '-'
+        }
+        tempDistrict += e.mp.detail.value[index]
+      }
+      this.regionFullName = tempDistrict
+      console.log(tempDistrict);
     },
 
     // ***************地区筛选方法***************
@@ -481,7 +474,11 @@ export default {
     onConfirmForJob (e) {
       console.log(e);
       this.textAreaDisplay = true;
-      this.job_taxon_id = e.label
+      this.profession = e.label
+      let n = e.value[0]
+      let p = e.value[1]
+      this.job_taxon_id = this.pickerJobArray[n].children[p].value
+      console.log('this.job_taxon_id = ', this.job_taxon_id);
     },
 
     onCancelForJob (e) {
@@ -548,6 +545,85 @@ export default {
       console.log(index)
       this.files.splice(this.files.findIndex(item => item.id === index), 1)
       this.addImageCount--
+    },
+
+
+    // **********免费发布找活按钮点击处理函数-----跳转到找活页面************
+    freeRelease () {
+      console.log('免费发布找活了.....')
+      let job = {}
+      let dataToServer = {}
+      // dataToServer.name = this.title // 招工名称
+      // dataToServer.work_images_attributes = this.files  // 照片
+      dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
+      dataToServer.district_fullname = this.regionFullName // 招工地点
+      dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
+      dataToServer.quantity = this.numOfPeople // 招工人数
+      dataToServer.pay = this.pay // 工资标准
+      dataToServer.numOfAmount = this.numOfAmount // 工程数量
+      dataToServer.description = this.description // 招工描述
+      dataToServer.expire_in = this.releaseTime.substring(0, 2) // 发布时间
+      console.log('dataToServer = ', dataToServer);
+
+      if (this.worker_type === '点工') {
+        dataToServer.worker_type = 'parttime' // 招工类型-点工
+        // 点工中没有'numOfAmount'属性,故需要删除
+        delete dataToServer.numOfAmount
+        // 如果没有填全,弹窗
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.numOfPeople === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+          // console.log('this.title = ', this.title);
+          // console.log('this.regionFullName = ', this.regionFullName);
+          // console.log('this.profession = ', this.profession);
+          // console.log('this.numOfPeople = ', this.numOfPeople);
+          // console.log('this.pay = ', this.pay);
+          // console.log('this.description = ', this.description);
+          // console.log('this.files = ', this.files);
+          // console.log('this.releaseTime = ', this.releaseTime);
+
+          wx.showModal({
+            content: '请填入必填信息,方能提交保存!',
+            showCancel: false
+          })
+        } else { // 转换数据,提交KJob
+          job.job = dataToServer
+          console.log(job);
+          this.addJobInfo(job)
+          // wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+        }
+      }
+      if (this.worker_type === '包工') {
+        dataToServer.worker_type = 'contract' // 招工类型-包工
+        // 点工中没有'pay'属性,故需要删除
+        delete dataToServer.pay
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.numOfPeople === '' || this.numOfAmount === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+          // console.log('this.title = ', this.title);
+          // console.log('this.regionFullName = ', this.regionFullName);
+          // console.log('this.profession = ', this.profession);
+          // console.log('this.numOfPeople = ', this.numOfPeople);
+          // console.log('this.pay = ', this.pay);
+          // console.log('this.description = ', this.description);
+          // console.log('this.files = ', this.files);
+          // console.log('this.releaseTime = ', this.releaseTime);
+          wx.showModal({
+            content: '请填入必填信息,方能提交保存!',
+            showCancel: false
+          })
+        } else { // 转换数据,提交KJob
+          job.job = dataToServer
+          console.log(job);
+          this.addJobInfo(job)
+          // wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+        }
+      }
+    },
+
+    // *************************添加招工信息API******************************
+    addJobInfo (job) {
+      addJob(job).then((res) => {
+        console.log('addJobInfo => ', res);
+      }).catch((err) => {
+        console.log(err);
+      })
     },
   },
 
