@@ -6,7 +6,7 @@
         <input class="wx-input" maxlength="11" type="number" placeholder="请填当前手机号码" v-model="phoneNum" />
       </div>
       <div class="two-column">
-        <button class="verify-phone" type="default" @click="getverifyCode">免费获取验证码</button>
+        <button class="verify-phone" type="default" @click="getverifyCode">{{getCode}}</button>
       </div>
     </div>
     <!-- 列表单元 第一行 END -->
@@ -49,12 +49,16 @@
 </template>
 
 <script>
-import Fly from 'flyio/dist/npm/wx'
+import {
+  // identifyMobile,
+  getVerifyCode
+} from '../../http/api.js'
 
 export default {
   data () {
     return {
       phoneNum: null, // 用户输入的手机号码
+      getCode: '免费获取验证码', // 1.显示字样; 2.点击按钮后计时,并显示时间
       verifyCode: '', // 用户输入的收到的验证码
       inputVerifyCode: '', // 用户输入的校验码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
@@ -95,18 +99,13 @@ export default {
         if (phoneReg.test(this.phoneNum)) { // 根据规则校验
           console.log('手机号码----合法')
           // 访问kjob-server给从微信server得到的code和userInfo数据
-          let fly = new Fly()
-          fly.post(
-            'https://kjob-api.firecart.cn/sms',
-            {
-              mobile: this.phoneNum
-            }
-          ).then((response) => {
+          let data = { mobile: this.phoneNum }
+          getVerifyCode(data).then((response) => {
             console.log('收到的response = ', response)
             // console.log('根据手机号码得到的kjob的校验码 = ', response.code)
-            this.verifyCode = response.data.sms.code
+            this.verifyCode = response.sms.code
           }).catch(function (error) {
-            console.log('Fly 错误: = ', error)
+            console.log('获取手机验证码失败 = ', error)
           })
         } else { // 非法号码
           console.log('手机号码----非非非非非非法')

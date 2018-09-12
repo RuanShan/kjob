@@ -51,7 +51,9 @@
 </template>
 
 <script>
-import Fly from 'flyio/dist/npm/wx'
+import {
+  identifyIdnum
+} from '../../http/api.js'
 
 export default {
   data () {
@@ -114,36 +116,45 @@ export default {
         })
         return false
       }
-      let fly = new Fly()
-      fly.post(
-        'https://kjob-api.firecart.cn/api/v1/wx_followers/1/identify_id_num',
-        {
-          id_num: this.cardIdNum,
-          realname: this.realName
-        })
-        .then(function (response) {
-          console.log('then........')
-          console.log(response)
-          // 成功认证
-          if (response.id !== '') {
-            wx.showToast({
-              title: '成功',
-              icon: 'success',
-              duration: 2000
-            })
-            // 跳转到上一个页面
-            wx.navigateBack({ delta: 1 })
-          }
-        })
-        .catch(function (error) {
-          console.log('catch........')
-          console.log(error)
-          // 提示框
-          wx.showModal({
-            content: '认证未通过,请重新检查!',
-            showCancel: false
+      let data = {
+        id_num: this.cardIdNum,
+        realname: this.realName
+      }
+      // API 函数 身份证验证
+      identifyIdnum(data).then((response) => {
+        console.log('then........')
+        console.log(response)
+        // 成功认证
+        if (response.id !== '') {
+          // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+          wx.setStorage({
+            key: 'userInfoForAPI',
+            data: this.userInfoForAPI,
+            success: (res) => {
+              console.log('setStorage data 后得 res = ', res);
+              console.log('userInfoForAPI 存储成功了!!!')
+            },
+            fail: () => {
+              console.log('userInfoForAPI 存储失败了*******')
+            }
           })
+          wx.showToast({
+            title: '成功',
+            icon: 'success',
+            duration: 2000
+          })
+          // 跳转到上一个页面
+          wx.navigateBack({ delta: 1 })
+        }
+      }).catch((error) => {
+        console.log('catch........')
+        console.log(error)
+        // 提示框
+        wx.showModal({
+          content: '认证未通过,请重新检查!',
+          showCancel: false
         })
+      })
     }
   },
 

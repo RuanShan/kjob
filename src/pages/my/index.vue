@@ -60,12 +60,12 @@ export default {
     wx.setNavigationBarTitle({
       title: '我的'
     })
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
       success: (res) => {
-        console.log('res', res)
-        console.log('res.data', res.data)
-        this.userInfoForAPI = res.data
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
       }
     })
   },
@@ -75,7 +75,16 @@ export default {
     // ***跳转到身份证认证界面***
     // ***************************************************************
     toIDCard () {
-      wx.navigateTo({ url: '../idcard/main' })
+      // 检查是否已经身份认证过了
+      if (this.userInfoForAPI.id_num_identified_at != null) {
+        // 提示框
+        wx.showModal({
+          content: '您的身份已经认证过了,无需再次认证',
+          showCancel: false
+        })
+      } else {
+        wx.navigateTo({ url: '../idcard/main' })
+      }
     },
 
     // *********************点击手机号码认证处理函数************************

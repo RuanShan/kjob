@@ -297,6 +297,7 @@ export const addApplicant = ( data ) => {
 //     }
 // }
 export const getVerifyCode = ( data ) => {
+  // console.log( "data=", data)
   let params = {  url: '/sms', data: data }
   return post( params )
 }

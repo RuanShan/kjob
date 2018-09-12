@@ -38,7 +38,7 @@
           <div class="top-----half">
             <div class="one---row">
               <div class="one-row-one">
-                {{item.city}}&nbsp;&nbsp;招&nbsp;-&nbsp;{{item.job_taxon_name}}
+                {{item.city}}&nbsp;招-{{item.job_taxon_name}}
               </div>
               <div class="one-row-two">
                 <div class="typeOfWork">
@@ -73,7 +73,7 @@
             <div class="four---row">
               <div class="four-row-one">
                 <div class="image">
-                  <img style="width: 60rpx; height: 60rpx;" src="../../../resources/icon/dateTime.png">
+                  <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/dateTime.png">
                   <!-- <img style="width: 60rpx; height: 60rpx;" :src="userInfoForAPI.headimgurl"> -->
                 </div>
                 <div class="name">
@@ -332,7 +332,7 @@ export default {
       console.log('getTodayCount = ', err);
     })
 
-    // 获取招工列表
+    // ******************获取招工列表******************
     searchJobs().then((res) => {
       console.log('获取招工类表 = ', res);
       this.dataFormat(res.jobs)
@@ -550,7 +550,7 @@ page {
         .one-row-one {
           // width: 70%;
           padding-left: 25rpx;
-          font-size: 50rpx;
+          font-size: 40rpx;
           font-weight: bold;
         }
         .one-row-two {
@@ -629,6 +629,9 @@ page {
         .four-row-one {
           display: flex;
           align-items: center;
+          .name {
+            font-size: 35rpx;
+          }
           // width: 70%;
         }
         .four-row-two {

@@ -514,6 +514,7 @@ export default {
         sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album'], // 可以指定来源是相册还是相机，默认二者都有
         success: function (res) {
+          console.log('chooseImage = ', res);
           // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
           _this.files = _this.files.concat(res.tempFilePaths)
         },
@@ -553,8 +554,7 @@ export default {
       console.log('免费发布找活了.....')
       let job = {}
       let dataToServer = {}
-      // dataToServer.name = this.title // 招工名称
-      // dataToServer.work_images_attributes = this.files  // 照片
+      dataToServer.name = this.title // 招工名称
       dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
       dataToServer.district_fullname = this.regionFullName // 招工地点
       dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
@@ -563,6 +563,7 @@ export default {
       dataToServer.numOfAmount = this.numOfAmount // 工程数量
       dataToServer.description = this.description // 招工描述
       dataToServer.expire_in = this.releaseTime.substring(0, 2) // 发布时间
+      // dataToServer.job_images_attributes = this.files.map((file) => { return { attachment: file }})  // 照片
       console.log('dataToServer = ', dataToServer);
 
       if (this.worker_type === '点工') {
@@ -579,7 +580,8 @@ export default {
           // console.log('this.description = ', this.description);
           // console.log('this.files = ', this.files);
           // console.log('this.releaseTime = ', this.releaseTime);
-
+          // console.log('this.name = ', this.name);
+          console.log('dataToServer = ', dataToServer);
           wx.showModal({
             content: '请填入必填信息,方能提交保存!',
             showCancel: false
@@ -620,9 +622,56 @@ export default {
     // *************************添加招工信息API******************************
     addJobInfo (job) {
       addJob(job).then((res) => {
-        console.log('addJobInfo => ', res);
+        console.log('addJobInfo res => ', res);
+        let successUp = 0; //成功
+        let failUp = 0; //失败
+        let length = this.files.length; //总数
+        let count = 0; //第几张
+        let id = res.id; // API 需要的 id
+        this.uploadOneByOne(this.files, successUp, failUp, count, length, id);
       }).catch((err) => {
         console.log(err);
+      })
+    },
+
+    /**
+  * 采用递归的方式上传
+  */
+    uploadOneByOne (imgPaths, successUp, failUp, count, length, id) {
+      console.log('uploadOneByOne -> id = ',id);
+      let that = this;
+      wx.showLoading({
+        title: '正在上传第' + count + '张',
+      })
+      wx.uploadFile({
+        url: 'https://tapi.getstore.cn/api/v1/images/', //仅为示例，非真实的接口地址
+        filePath: imgPaths[count],
+        name: 'image[attachment]',  //示例，使用顺序给文件命名
+        formData: { 'image[job_id]': id },
+        success: (e) => {
+          successUp++;//成功+1
+          console.log('上传成功' + successUp);
+        },
+        fail: (e) => {
+          failUp++;//失败+1
+        },
+        complete: (e) => {
+          count++;//下一张
+          if (count == length) {
+            //上传完毕，作一下提示
+            console.log('上传成功' + successUp + ',' + '失败' + failUp);
+            wx.showToast({
+              title: '上传成功' + successUp,
+              icon: 'success',
+              duration: 2000
+            })
+            wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+          } else {
+            //递归调用，上传下一张
+            that.uploadOneByOne(imgPaths, successUp, failUp, count, length,id);
+            console.log('正在上传第' + count + '张');
+          }
+        }
       })
     },
   },
