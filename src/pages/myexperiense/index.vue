@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="info-must">
+      <div class="base-info">基本信息(必填)</div>
       <!-- 列表单元 项目名称 START -->
       <div class="my-info-list">
         <div class="one-and-two-col">
@@ -82,10 +83,12 @@
           </div>
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" @input="textAreaInput"  maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          <textarea class="text-array" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
         </div>
       </div>
       <!-- 列表单元 经历描述 END -->
+
+      <div class="base-info">选填信息(可不填)</div>
 
       <!-- 列表单元 添加施工照片 START -->
       <div class="on-and-down">
@@ -133,6 +136,7 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
+import { addCustomerWork } from '../../http/api.js'
 
 export default {
   components: {
@@ -140,6 +144,7 @@ export default {
   },
   data () {
     return {
+      userInfoForAPI: null,
       title: '', // 输入的项目名称
       startDate: '请选择',
       endDate: '请选择',
@@ -150,7 +155,11 @@ export default {
       // ************图片预览数据************
       files: [], // 图片保存位置
       addImageDisplay: true, // 图片添加显示开关
-      addImageCount: 0 // 图片添加计数器
+      addImageCount: 0, // 图片组的每个小照片的添加计数器
+      returnPageData: { // 返回给我的找活页面数据对象
+        count: 0, // 保存按钮点击的计数器
+        imagesArray: [], // 图片保存API返回图片地址数组
+      }
     }
   },
 
@@ -164,6 +173,14 @@ export default {
     })
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
+    })
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
     })
   },
 
@@ -248,8 +265,110 @@ export default {
     // 免费发布找活按钮点击处理函数-----跳转到找活页面
     freeRelease () {
       console.log('保存,我的经验')
-      wx.redirectTo({ url: '../releasemy/main' }) // 跳转到发布找活页面
-    }
+      if (this.title === '' || this.startDate === '请选择' || this.endDate === '请选择' || this.district_fullname === '请选择' || this.description === '') {
+        wx.showModal({
+          content: '请填入必填信息,方能提交保存!',
+          showCancel: false
+        })
+      } else {
+        let customer_work = this.dataFormat();
+        // 添加工作经验API
+        addCustomerWork({ customer_work }).then((res) => {
+          console.log('addCustomerWork res = ', res);
+          // 如果添加了图片,上传图片
+          if (this.files.length !== 0) {
+            let successUp = 0; //成功
+            let failUp = 0; //失败
+            let length = this.files.length; //总数
+            let count = 0; //第几张
+            let id = res.id; // API 需要的 id
+            this.uploadOneByOne(this.files, successUp, failUp, count, length, id) // 上传图片
+          }
+        }).catch((err) => { console.log(err); })
+        this.returnPageData.count++ // 点击了几次保存按钮的计数器
+        // 1.把API的图片地址存起来; 2.把计算器加1,保存起来
+        wx.setStorage({
+          key: 'experienseItem',
+          data: this.returnPageData,
+          success: () => {
+            console.log('experienseItem 存储成功了!!!')
+          },
+          fail: () => {
+            console.log('experienseItem 存储失败了*******')
+          }
+        })
+        wx.redirectTo({ url: '../releasemy/main' }) // 跳转到发布找活页面
+      }
+    },
+
+    // To API 数据格式化
+    dataFormat () {
+      let customer_work = {}
+      customer_work.name = this.title
+      customer_work.start_at = this.startDate
+      customer_work.end_at = this.endDate
+      customer_work.description = this.description
+      customer_work.district_fullname = this.district_fullname
+      customer_work.customer_id = this.userInfoForAPI.customer_id
+      return customer_work
+    },
+
+    /**
+  * 采用递归的方式上传
+  */
+    uploadOneByOne (imgPaths, successUp, failUp, count, length, id) {
+      console.log('uploadOneByOne -> id = ', id);
+      let that = this;
+      wx.showLoading({
+        title: '正在上传第' + count + '张',
+      })
+      wx.uploadFile({
+        url: 'https://tapi.getstore.cn/api/v1/images/', //
+        filePath: imgPaths[count],
+        name: 'image[attachment]',  //示例，使用顺序给文件命名
+        formData: { 'image[customer_work_id]': id },
+        success: (e) => {
+          successUp++;//成功+1
+          console.log('上传成功' + successUp);
+          console.log('uploadFile success e = ', e);
+          // 每次成功都要把API返回的地址保存
+          console.log(e.data.original_url); // 
+          //????????? 第一个问题:  不知道为什么 undefined 
+          //????????? 第二个问题:  我希望在uploadOneByOne()后把数据保存起来给后面的页面使用,但是,这是个异步操作,停不下来.不知道该如何了?
+          //
+          this.returnPageData.imagesArray.push(e.data.original_url)
+          wx.setStorage({
+            key: 'experienseItem',
+            data: this.returnPageData,
+            success: () => {
+              console.log('experienseItem 存储成功了!!!')
+            },
+            fail: () => {
+              console.log('experienseItem 存储失败了*******')
+            }
+          })
+        },
+        fail: (e) => {
+          failUp++;//失败+1
+        },
+        complete: (e) => {
+          count++;//下一张
+          if (count == length) {
+            //上传完毕，作一下提示
+            console.log('上传成功' + successUp + ',' + '失败' + failUp);
+            wx.showToast({
+              title: '上传成功' + successUp,
+              icon: 'success',
+              duration: 2000
+            })
+          } else {
+            //递归调用，上传下一张
+            that.uploadOneByOne(imgPaths, successUp, failUp, count, length, id);
+            console.log('正在上传第' + count + '张');
+          }
+        }
+      })
+    },
   },
 
   watch: {
@@ -272,6 +391,10 @@ export default {
 page {
   height: 100%;
   background-color: #f0f0f0;
+  .base-info {
+    font-size: 25rpx;
+    margin: 10rpx 25rpx;
+  }
   .base-info {
     height: 25rpx;
     background-color: #f0f0f0;

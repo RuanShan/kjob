@@ -4,11 +4,11 @@
     <div class="first-line">
       <div class="one---row">
         <div class="one-row-left">
-          {{item.city}}&nbsp;&nbsp;招&nbsp;-&nbsp;{{item.typeOfWork}}
+          {{item.state}}&nbsp;{{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
         </div>
         <div class="one-row-right">
           <div class="worksClass">
-            &nbsp;{{item.worksClass}}&nbsp;
+            &nbsp;{{item.job_taxon_parent_name}}&nbsp;
           </div>
         </div>
       </div>
@@ -16,13 +16,13 @@
         <div class="two-row-left">
           价格:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="price">
-            &nbsp;&nbsp;{{item.price}}
+            &nbsp;&nbsp;{{item.pay}}
           </div>
         </div>
         <div class="two-row-right">
           工程量:
           <div class="worksAmount">
-            &nbsp;&nbsp;{{item.worksAmount}}
+            &nbsp;&nbsp;{{item.pay_desc}}
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
         </div>
       </div>
       <div class="two---row">
-        {{item.worksClass}}&nbsp;-&nbsp;{{item.typeOfWork}}
+        {{item.job_taxon_parent_name}}&nbsp;-&nbsp;{{item.job_taxon_name}}
       </div>
     </div>
     <!-- 第三大行 ===> END -->
@@ -71,7 +71,7 @@
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/phone.png">
         </div>
         <div class="one-row-right">
-          &nbsp;&nbsp; 联系人 &nbsp;-&nbsp;{{item.publishName}}
+          &nbsp;&nbsp; 联系人 &nbsp;-&nbsp;{{item.customer_realname}}
         </div>
       </div>
     </div>
@@ -127,12 +127,10 @@
 export default {
   data () {
     return {
-       files: [
-        '../../../resources/images/bkg.jpg',
-        '../../../resources/images/timg.jpg',
-        '../../../resources/images/boss.png'
-      ],
+      files: [],
+      phoneNumber: '', // 电话号码 来自API
       item: null, // 接收到的招工列表的JoSon数据
+      item2: null, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
     }
@@ -149,8 +147,15 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    // 得到getWorks页面跳转过来的数据,并解析
-    this.item = JSON.parse(option.dataObj) // 解析得到对象
+    wx.getStorage({
+      key: 'worksItem',
+      success: (res) => {
+        console.log(res.data)
+        this.item = res.data
+        this.files = (this.item.job_images.map((element) => { return element.original_url }))
+        this.phoneNumber = this.item.customer_mobile
+      }
+    })
     wx.getSystemInfo({
       success: (res) => {
         console.log(res.windowHeight) // 获取可使用窗口高度
@@ -161,20 +166,10 @@ export default {
   },
 
   methods: {
-    getData () {
-      console.log('开始接收数据了')
-      wx.getStorage({
-        key: 'abc',
-        success: (res) => {
-          console.log(res.data)
-          this.Data = res.data
-        }
-      })
-    },
     // 拨打电话按钮,时间处理函数
     calling: function () {
       wx.makePhoneCall({
-        phoneNumber: '12345678900', // 此号码并非真实电话号码，仅用于测试
+        phoneNumber: this.phoneNumber, // 来自API
         success: function () {
           console.log('拨打电话OK！')
         },
@@ -184,15 +179,12 @@ export default {
             content: '电话拨打失败,请检查手机设置或权限!',
             showCancel: false,
             success: function (res) {
-              // if (res.confirm) {
-              //   console.log('用户点击确定')
-              // }
             }
           })
         }
       })
     },
-     // *********************预览图片处理函数************************
+    // *********************预览图片处理函数************************
     // ***调用wx.previewImage***
     // ***************************************************************
     predivImage (e) {
@@ -225,12 +217,13 @@ page {
         justify-content: space-between;
         .one-row-left {
           padding-left: 25rpx;
-          font-size: 50rpx;
+          font-size: 40rpx;
           font-weight: bold;
         }
         .one-row-right {
           padding-right: 25rpx;
           .worksClass {
+            margin-top: 15rpx;
             font-size: 25rpx;
             border-radius: 30rpx;
             background-color: #97cbff;
@@ -299,7 +292,7 @@ page {
       .two---row {
         padding: 25rpx;
         font-size: 25rpx;
-         .image-upload {
+        .image-upload {
           height: 300rpx;
           background-color: #ffffff;
           .uploader-input-box {
@@ -331,7 +324,7 @@ page {
               float: left;
               margin: 25rpx;
               .delet-button {
-                height: 50rpx;
+                height: 40rpx;
                 display: flex;
                 align-items: center;
                 font-size: 40rpx;

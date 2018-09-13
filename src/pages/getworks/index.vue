@@ -7,8 +7,6 @@
         <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="2" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
-        <!-- <button @click="showPicker">工种筛选</button>
-        <mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueArray="mulLinkageTwoPicker" :pickerValueDefault='pickerValueDefault' @onConfirm="onConfirm"></mpvue-picker> -->
         <button @click="showPickerForJob">工种筛选</button>
         <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onChange="onChangeForJob" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
       </div>
@@ -432,8 +430,18 @@ export default {
     detail (item) {
       console.log('工作详情页面 !!!')
       console.log('item = ', item)
+      wx.setStorage({
+        key: 'worksItem',
+        data: item,
+        success: () => {
+          console.log('worksItem 存储成功了!!!')
+        },
+        fail: () => {
+          console.log('worksItem 存储失败了*******')
+        }
+      })
       wx.navigateTo({
-        url: '../workinfo/main?dataObj=' + JSON.stringify(item)
+        url: '../workinfo/main'
       }) // 当前点击的item,数据传递给招工详情页面
     },
     scrolltolower () {

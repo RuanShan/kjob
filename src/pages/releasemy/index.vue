@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="three-col" @click="age">
-          <div class="input-choose">{{age}}</div>
+          <div class="input-choose">{{userInfoForAPI.computed_age}}</div>
           <div class="chose-icon">
             岁
           </div>
@@ -303,7 +303,7 @@ export default {
     return {
       userInfoForAPI: null, // 当前用户信息
       age: '28', // 年龄,来自用户信息
-      sex: '男', // 性别 , ,来自用户信息
+      sex: '', // 性别 , ,来自用户信息
       nation: '请选择', // 名族,输入
       members: '请选择', // 个人或班组,输入
       // district: '', // 找活区域,输入
@@ -419,6 +419,11 @@ export default {
       success: (res) => {
         console.log('userInfoForAPI 获取成功了!!!')
         this.userInfoForAPI = res.data;
+        if (this.userInfoForAPI.gender === 1) {
+          this.sex = '男'
+        } else {
+          this.sex = '女'
+        }
       }
     })
     /* *************get kjob server 得到全国地区数据*************** */
@@ -617,6 +622,7 @@ export default {
         })
       } else { // 转换数据,提交KJob
         let applicant = this.dataTidy();
+        console.log('applicant ==== > ',applicant);
         addApplicant(applicant).then((res) => {
           console.log('addApplicant 后 得到的 res = ', res);
         }).catch((err) => {
@@ -632,15 +638,16 @@ export default {
       let numForProfession = 1
       let dataToServer = {}
       let tempArrayFroProfession = []; // 为了得到工种需要的临时数组
-      // dataToServer.headimgurl = this.userInfoForAPI.headimgurl
+      dataToServer.headimgurl = this.userInfoForAPI.headimgurl
       dataToServer.customer_id = this.userInfoForAPI.id
-      // dataToServer.realname = this.userInfoForAPI.realname
-      // dataToServer.mobile = this.userInfoForAPI.mobile
-      // dataToServer.nation = this.nation
-      // dataToServer.age =  userInfoForAPI.age // 恐怕是没有
-      // dataToServer.resultReleaseTime = this.resultReleaseTime // 恐怕是没有
-      // dataToServer.members = this.members // 个人或班组
-      // dataToServer.description = this.description
+      dataToServer.realname = this.userInfoForAPI.realname
+      dataToServer.computed_age = this.userInfoForAPI.computed_age
+      dataToServer.mobile = this.userInfoForAPI.mobile
+      dataToServer.nation = this.nation
+      dataToServer.gender = this.userInfoForAPI.gender // 恐怕是没有
+      dataToServer.expire_in = this.resultReleaseTime // 恐怕是没有
+      dataToServer.members = this.members // 个人或班组
+      dataToServer.description = this.description
 
       // 因为API需要地区是字符串不是数组,所以需要把数组中的每个元素分别付给API需要的字符串属性
       this.resultRegionArray.forEach((value) => {

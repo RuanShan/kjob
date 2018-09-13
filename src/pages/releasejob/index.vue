@@ -104,7 +104,7 @@
       <!-- 列表单元 工种选择 END -->
 
       <!-- 列表单元 招工人数 START -->
-      <div class="my-info-list">
+      <div class="my-info-list" v-if="timeWorkDisplay">
         <div class="one-and-two-col">
           <div class="icon">
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
@@ -114,7 +114,7 @@
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" maxlength="10" type="number" placeholder="多少人?只能数字" v-model="numOfPeople" />
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少人?只能数字" v-model="pay_desc" />
         </div>
       </div>
       <!-- 列表单元 招工人数 END -->
@@ -135,7 +135,7 @@
       </div>
       <!-- 列表单元 工资标准 END -->
 
-      <!-- 列表单元 招工人数 START -->
+      <!-- 列表单元 工程数量 START -->
       <div class="my-info-list" v-if="allWorkDisplay">
         <div class="one-and-two-col">
           <div class="icon">
@@ -146,10 +146,26 @@
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" maxlength="10" type="number" placeholder="多少量?只能数字" v-model="numOfAmount" /> &nbsp;&nbsp;平方米
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少量?只能数字" v-model="pay_desc" /> &nbsp;&nbsp;平方米
         </div>
       </div>
-      <!-- 列表单元 招工人数 END -->
+      <!-- 列表单元 工程数量 END -->
+
+      <!-- 列表单元 单位价格 START -->
+      <div class="my-info-list" v-if="allWorkDisplay">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            单位价格
+          </div>
+        </div>
+        <div class="three-col">
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少钱?只能数字" v-model="pay" />&nbsp;&nbsp;元
+        </div>
+      </div>
+      <!-- 列表单元 单位价格 END -->
 
       <!-- 列表单元 招工描述 START -->
       <div class="on-and-down">
@@ -349,8 +365,8 @@ export default {
         { name: '包工', value: '1' }
       ],
       worker_type: '点工', // 招工类型
-      numOfPeople: '', // 输入招工人数
-      numOfAmount: '', // 输入工程量
+      // numOfPeople: '', // 输入招工人数
+      pay_desc: '', // 输入工程量和输入招工人数
       pay: '', // 输入的工资标准
       description: '', // 招工描述 输入
       textAreaDisplay: true, // 招工描述显示开关
@@ -558,9 +574,9 @@ export default {
       dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
       dataToServer.district_fullname = this.regionFullName // 招工地点
       dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
-      dataToServer.quantity = this.numOfPeople // 招工人数
+      dataToServer.quantity = this.pay_desc // 招工人数
       dataToServer.pay = this.pay // 工资标准
-      dataToServer.numOfAmount = this.numOfAmount // 工程数量
+      dataToServer.pay_desc = this.pay_desc // 工程数量
       dataToServer.description = this.description // 招工描述
       dataToServer.expire_in = this.releaseTime.substring(0, 2) // 发布时间
       // dataToServer.job_images_attributes = this.files.map((file) => { return { attachment: file }})  // 照片
@@ -568,14 +584,12 @@ export default {
 
       if (this.worker_type === '点工') {
         dataToServer.worker_type = 'parttime' // 招工类型-点工
-        // 点工中没有'numOfAmount'属性,故需要删除
-        delete dataToServer.numOfAmount
         // 如果没有填全,弹窗
-        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.numOfPeople === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.pay_desc === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
           // console.log('this.title = ', this.title);
           // console.log('this.regionFullName = ', this.regionFullName);
           // console.log('this.profession = ', this.profession);
-          // console.log('this.numOfPeople = ', this.numOfPeople);
+          // console.log('this.pay_desc = ', this.pay_desc);
           // console.log('this.pay = ', this.pay);
           // console.log('this.description = ', this.description);
           // console.log('this.files = ', this.files);
@@ -595,13 +609,11 @@ export default {
       }
       if (this.worker_type === '包工') {
         dataToServer.worker_type = 'contract' // 招工类型-包工
-        // 点工中没有'pay'属性,故需要删除
-        delete dataToServer.pay
-        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.numOfPeople === '' || this.numOfAmount === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.pay_desc === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
           // console.log('this.title = ', this.title);
           // console.log('this.regionFullName = ', this.regionFullName);
           // console.log('this.profession = ', this.profession);
-          // console.log('this.numOfPeople = ', this.numOfPeople);
+          // console.log('this.pay_desc = ', this.pay_desc);
           // console.log('this.pay = ', this.pay);
           // console.log('this.description = ', this.description);
           // console.log('this.files = ', this.files);
@@ -638,13 +650,13 @@ export default {
   * 采用递归的方式上传
   */
     uploadOneByOne (imgPaths, successUp, failUp, count, length, id) {
-      console.log('uploadOneByOne -> id = ',id);
+      console.log('uploadOneByOne -> id = ', id);
       let that = this;
       wx.showLoading({
         title: '正在上传第' + count + '张',
       })
       wx.uploadFile({
-        url: 'https://tapi.getstore.cn/api/v1/images/', //仅为示例，非真实的接口地址
+        url: 'https://tapi.getstore.cn/api/v1/images/', //
         filePath: imgPaths[count],
         name: 'image[attachment]',  //示例，使用顺序给文件命名
         formData: { 'image[job_id]': id },
@@ -668,7 +680,7 @@ export default {
             wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
           } else {
             //递归调用，上传下一张
-            that.uploadOneByOne(imgPaths, successUp, failUp, count, length,id);
+            that.uploadOneByOne(imgPaths, successUp, failUp, count, length, id);
             console.log('正在上传第' + count + '张');
           }
         }
