@@ -33,17 +33,17 @@ const host = config.host
 
 // 通用的get请求
 export const get = (params) => {
-    return fly.get(`${host}${params.url}`, qs.stringify(params.data))
+  return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
 
 // 通用的post请求
 export const post = (params) => {
-    return fly.post(`${host}${params.url}`, qs.stringify(params.data))
+  return fly.post(`${host}${params.url}`, qs.stringify(params.data))
 }
 
 // 通用的post请求
 export const deleteRequest = (params) => {
-    return fly.delete(`${host}${params.url}`, qs.stringify(params.data))
+  return fly.delete(`${host}${params.url}`, qs.stringify(params.data))
 }
 
 // 微信app用户登录，wx.login成功之后调用，获取或创建系统内用户
@@ -57,9 +57,12 @@ export const deleteRequest = (params) => {
 //     "ret": 0 失败 0，成功 1
 // }
 export const wechatAppLogin = (data) => {
-  let params = {  url: '/api/v1/wechat_app/login/', data: data }
+  let params = {
+    url: '/api/v1/wechat_app/login/',
+    data: data
+  }
   return post(params)
-    //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
+  //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
 
 // 取得区域信息列表，数据适用mpvue-picker
@@ -82,15 +85,19 @@ export const wechatAppLogin = (data) => {
 //   }]
 // }]
 export const getRegionTree = () => {
-  let params = {  url: '/api/v1/provinces/tree' }
+  let params = {
+    url: '/api/v1/provinces/tree'
+  }
   return get(params)
-    //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
+  //return fly.get(`${host}${params.url}`, qs.stringify(params.data))
 }
 
 // 取得工种分类列表，数据适用mpvue-picker
 export const getJobTaxonTree = () => {
-  let params = {  url: '/api/v1/job_taxons/tree' }
-    return get(params)
+  let params = {
+    url: '/api/v1/job_taxons/tree'
+  }
+  return get(params)
 }
 
 // 招工列表
@@ -133,15 +140,20 @@ export const getJobTaxonTree = () => {
 //         }
 //     ]
 // }
-export const searchJobs = ( data ) => {
-  let params = {  url: '/api/v1/jobs/search', data: data }
-  return post( params )
+export const searchJobs = (data) => {
+  let params = {
+    url: '/api/v1/jobs/search',
+    data: data
+  }
+  return post(params)
   //return fly.post(`${host}/api/v1/jobs/search`, qs.stringify(data))
 }
 
 // 今日在线招工人数和浏览次数
 export const getTodayCount = () => {
-  let params = {  url: '/api/v1/jobs/today' }
+  let params = {
+    url: '/api/v1/jobs/today'
+  }
   return get(params)
 }
 
@@ -174,9 +186,12 @@ export const getTodayCount = () => {
 //     "created_at": "2018-09-04T10:52:16.000+08:00",
 //     "updated_at": "2018-09-04T10:52:16.000+08:00"
 // }
-export const addJob = ( data ) => {
-  let params = {  url: '/api/v1/jobs', data: data }
-  return post( params )
+export const addJob = (data) => {
+  let params = {
+    url: '/api/v1/jobs',
+    data: data
+  }
+  return post(params)
 }
 
 // 取得小程序用户信息，包括工作经验
@@ -212,7 +227,9 @@ export const addJob = ( data ) => {
 //     ]
 // }
 export const getWxFollower = (id) => {
-  let params = {  url: '/api/v1/wx_followers/'+id }
+  let params = {
+    url: '/api/v1/wx_followers/' + id
+  }
   return get(params)
 }
 
@@ -242,9 +259,19 @@ export const getWxFollower = (id) => {
 //     "district_fullname": "北京市-东城区",
 //     "work_images": []
 // }
-export const addCustomerWork = ( data ) => {
-  let params = {  url: '/api/v1/customer_works', data: data }
-  return post( params )
+export const addCustomerWork = (data) => {
+  let params = {
+    url: '/api/v1/customer_works/',
+    data: data
+  }
+  return post(params)
+}
+// 删除工作经历
+export const delCustomerWork = (id) => {
+  let params = {
+    url: '/api/v1/customer_works/' + id
+  }
+  return deleteRequest(params)
 }
 
 // 找活列表
@@ -262,9 +289,12 @@ export const addCustomerWork = ( data ) => {
 //     },
 //     "jobs": []
 // }
-export const searchApplicants = ( data ) => {
-  let params = {  url: '/api/v1/applicants/search', data: data }
-  return post( params )
+export const searchApplicants = (data) => {
+  let params = {
+    url: '/api/v1/applicants/search',
+    data: data
+  }
+  return post(params)
 }
 
 // 添加找活
@@ -279,9 +309,12 @@ export const searchApplicants = ( data ) => {
 //     "created_at": "2018-09-04T09:27:11.000+08:00",
 //     "updated_at": "2018-09-04T09:27:11.000+08:00"
 // }
-export const addApplicant = ( data ) => {
-  let params = {  url: '/api/v1/applicants', data: data }
-  return post( params )
+export const addApplicant = (data) => {
+  let params = {
+    url: '/api/v1/applicants',
+    data: data
+  }
+  return post(params)
 }
 
 // 获取短信验证码
@@ -296,10 +329,13 @@ export const addApplicant = ( data ) => {
 //         "send_at": "2018-09-03T20:24:20.769+08:00"
 //     }
 // }
-export const getVerifyCode = ( data ) => {
+export const getVerifyCode = (data) => {
   // console.log( "data=", data)
-  let params = {  url: '/sms', data: data }
-  return post( params )
+  let params = {
+    url: '/sms',
+    data: data
+  }
+  return post(params)
 }
 
 // 手机信息认证
@@ -307,9 +343,12 @@ export const getVerifyCode = ( data ) => {
 //  mobile:13322280797
 //  code:28283
 
-export const identifyMobile = ( data ) => {
-  let params = {  url: '/api/v1/wx_followers/1/identify_mobile', data: data }
-  return post( params )
+export const identifyMobile = (data) => {
+  let params = {
+    url: '/api/v1/wx_followers/1/identify_mobile',
+    data: data
+  }
+  return post(params)
 }
 
 // 身份证实名验证
@@ -317,7 +356,10 @@ export const identifyMobile = ( data ) => {
 //  id_num:211204198803240012
 //  realname:卡卡
 
-export const identifyIdnum = ( data ) => {
-  let params = {  url: '/api/v1/wx_followers/1/identify_id_num', data: data }
-  return post( params )
+export const identifyIdnum = (data) => {
+  let params = {
+    url: '/api/v1/wx_followers/1/identify_id_num',
+    data: data
+  }
+  return post(params)
 }
