@@ -274,10 +274,69 @@
     <!-- info-must END -->
 
     <div class="base-info">经验(可不填)</div>
-    <!-- 列表单元 找活描述 START -->
-    <div class="info-option" @click="toMyExperiense">
-      点击展开选项
+
+    <div class="info-must">
+      <!-- 列表单元 工作经历 START -->
+      <div class="my-info-list">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            工作经历
+          </div>
+        </div>
+        <div class="three-col" @click="experienceAdd">
+          <div class="input-choose">请选择(Max 3个)</div>
+          <div class="chose-icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/adding.png">
+          </div>
+        </div>
+      </div>
+      <!-- 列表单元 工作经历 END -->
+
+      <!-- 列表单元 工作经历选择动态显示列表  START -->
+      <div style="border-bottom: solid 1rpx #808080;" @click="experienceDetails(index)" v-for="(item, index) in experienseArray" :key="index">
+        <div class="my-info-list-experiense">
+          <div class="one-and-two-col">
+            <div class="icon">
+              <div style="font-size: 40rpx">
+                {{item.name}}
+              </div>
+              <div>
+                {{item.start_at}}&nbsp;-&nbsp;;{{item.end_at}}
+              </div>
+            </div>
+            <div class="text">
+            </div>
+          </div>
+          <div class="three-col" @click.stop="deleteExperiense(index)">
+            <div class="work-type-choose">
+              删除
+            </div>
+            <div class="chose-icon">
+              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/minus.png">
+            </div>
+          </div>
+        </div>
+        <!-- <div class="image-upload">
+          <div class="pre-div-image">
+            <block v-for="(ele, count) in experienseImages[count]" :key="count">
+              <div class="uploader-pre-image" @click.stop="viewImage()" :id="ele">
+                <image class="uploader__img" :src="ele" mode="aspectFill" />
+              </div>
+            </block>
+          </div>
+        </div> -->
+      </div>
+      <!-- 列表单元  工作经历选择动态显示列表   END -->
+
     </div>
+
+    <!-- 列表单元 找活描述 START -->
+    <!-- <div class="info-option" @click="toMyExperiense">
+      点击展开选项
+    </div> -->
     <!-- 列表单元 找活描述 END -->
 
     <div class="base-info"></div>
@@ -292,7 +351,8 @@ import mpvuePicker from 'mpvue-picker'
 import {
   getRegionTree,
   getJobTaxonTree,
-  addApplicant
+  addApplicant,
+  delCustomerWork
 } from '../../http/api.js'
 
 export default {
@@ -398,7 +458,13 @@ export default {
           value: 2
         }
       ],
+      files: [], // 图片显示目录
 
+      // ****************工作经验变量*******************
+      experienceCount: 0, // 工作经验计数器
+      // experienceDsiplay: true, // 动态显示工作经历开关
+      experienseArray: [], // 工作经历数据存储数组
+      experienseImages: [], // 经过整理的工作经历照片 
     }
   },
 
@@ -419,11 +485,17 @@ export default {
       success: (res) => {
         console.log('userInfoForAPI 获取成功了!!!')
         this.userInfoForAPI = res.data;
+        // 判断 男 女
         if (this.userInfoForAPI.gender === 1) {
           this.sex = '男'
         } else {
           this.sex = '女'
         }
+        // 把工作经历给出去
+        this.experienseArray = this.userInfoForAPI.customer_works
+        this.experienseArray.forEach((value, index) => {
+          this.experienseImages[index] = value.work_images.map((ele) => { return ele.original_url })
+        })
       }
     })
     /* *************get kjob server 得到全国地区数据*************** */
@@ -622,7 +694,7 @@ export default {
         })
       } else { // 转换数据,提交KJob
         let applicant = this.dataTidy();
-        console.log('applicant ==== > ',applicant);
+        console.log('applicant ==== > ', applicant);
         addApplicant(applicant).then((res) => {
           console.log('addApplicant 后 得到的 res = ', res);
         }).catch((err) => {
@@ -682,6 +754,123 @@ export default {
       applicant.applicant = dataToServer;
       console.log(applicant);
       return applicant;
+    },
+
+    // *********************预览图片处理函数************************
+    // ***调用wx.previewImage***
+    // ***************************************************************
+    predivImage (e) {
+      console.log(e)
+      wx.previewImage({
+        current: e.currentTarget.id, // 当前显示图片的http链接
+        urls: this.files // 需要预览的图片http链接列表
+      })
+    },
+
+    // *********************预览图片处理函数************************
+    // ***调用wx.previewImage***
+    // ***************************************************************
+    viewImage (e) {
+      console.log(e)
+      // console.log(count)
+      wx.previewImage({
+        current: e.currentTarget.id, // 当前显示图片的http链接
+        urls: this.experienseImages // 需要预览的图片http链接列表
+      })
+    },
+
+    // *********************工作经验"+"号处理函数************************
+    // ***如果3次添加工作经验,弹窗提示***
+    // ***************************************************************
+    experienceAdd () {
+      // this.experienceDsiplay = true
+      this.experienceCount++
+      if (this.experienceCount === 4) { // 多余3次点击了
+        this.experienceCount = 3  // 变成3,好做下次判断
+        wx.showModal({
+          content: '最多只能添加3个工种经验',
+          showCancel: false
+        })
+      } else { // 没有到达3次,跳转我的工作经验
+        if (this.experienseArray.length === 0) {
+          wx.setStorage({
+            key: 'experienseItem',
+            data: null,
+            success: (res) => {
+              console.log('experienseItem data 后得 res = ', res);
+              console.log('experienseItem 存储成功了!!!')
+              wx.navigateTo({ url: '../myexperiense/main' }) // 跳转到我的经验页面
+            },
+            fail: () => {
+              console.log('experienseItem 存储失败了*******')
+            }
+          })
+        }
+      }
+    },
+
+    // *********************工作经验"-"号处理函数************************
+    // ***点一次,计数器减一个***
+    // ***************************************************************
+    deleteExperiense (index) {
+      let id = this.experienseArray[index].id
+      console.log(' id = ', id);
+      wx.showModal({
+        title: '提示',
+        content: '确定要删除这条工作经历吗?',
+        success: (res) => {
+          if (res.confirm) { // 点击确定
+            console.log('用户点击确定')
+            // 提交API 删除当前工作经历 , 1.成功后弹showToast成功,计数器减; 2.失败后弹showToast失败
+            delCustomerWork(id).then((res) => {
+              // 弹showToast
+              wx.showToast({
+                title: '成功',  //标题
+                icon: 'success',  //图标，支持"success"、"loading"
+                duration: 2000, //提示的延迟时间，单位毫秒，默认：1500
+                mask: true,  //是否显示透明蒙层，防止触摸穿透，默认：false
+              })
+              // this.experienceCount--
+              // if (this.experienceCount <= 0) {
+              //   this.experienceDsiplay = false
+              // }
+              // 删除数据从数组
+              this.experienseArray.splice(this.experienseArray.findIndex(item => item.id === index), 1)
+            }).catch((err) => {
+              console.log(err);
+              wx.showToast({
+                title: '未删除',  //标题
+                icon: 'loading',  //图标，支持"success"、"loading"
+                duration: 2000, //提示的延迟时间，单位毫秒，默认：1500
+                mask: true,  //是否显示透明蒙层，防止触摸穿透，默认：false
+              })
+            })
+          } else if (res.cancel) {  // 点击取消
+            console.log('用户点击取消')
+          }
+        }
+      })
+    },
+
+    // *********************工作经历点击详情处理函数************************
+    // ***进入我的工作经历页面***
+    // ***************************************************************
+    experienceDetails (index) {
+      console.log('experienceDetails index = ', index);
+      let experienseItem = this.experienseArray[index]
+      // 
+      wx.setStorage({
+        key: 'experienseItem',
+        data: experienseItem,
+        success: (res) => {
+          console.log('experienseItem data 后得 res = ', res);
+          console.log('experienseItem 存储成功了!!!')
+          wx.navigateTo({ url: '../myexperiense/main' }) // 跳转到我的经验页面
+        },
+        fail: () => {
+          console.log('experienseItem 存储失败了*******')
+        }
+      })
     }
   }
 }
@@ -706,6 +895,9 @@ page {
       border-bottom: solid 1rpx #808080;
       .one-and-two-col {
         display: flex;
+        .icon {
+          font-size: 25rpx;
+        }
         .text {
           margin-left: 25rpx;
         }
@@ -721,6 +913,76 @@ page {
             color: #ffffff;
             font-size: 30rpx;
             margin: auto 0;
+          }
+        }
+      }
+    }
+    .my-info-list-experiense {
+      display: flex;
+      padding: 25rpx 25rpx 10rpx 25rpx;
+      justify-content: space-between;
+      .one-and-two-col {
+        display: flex;
+        .icon {
+          font-size: 25rpx;
+        }
+        .text {
+          margin-left: 25rpx;
+        }
+      }
+      .three-col {
+        display: flex;
+        .work-type-choose {
+          display: flex;
+          font-size: 35rpx;
+          .work-taxon {
+            border-radius: 20rpx;
+            background-color: #0080ff;
+            border: solid 2rpx #006ddb;
+            color: #ffffff;
+            font-size: 30rpx;
+            margin: auto 0;
+          }
+        }
+      }
+      .image-upload {
+        height: 300rpx;
+        background-color: #ffffff;
+        .uploader-input-box {
+          float: left;
+          position: relative;
+          margin-right: 9px;
+          margin-bottom: 9px;
+          width: 77px;
+          height: 77px;
+          // border: 1px solid #d9d9d9;
+          .add-image {
+            margin: 25rpx;
+            height: 200rpx;
+            width: 200rpx;
+            background-color: #ffffff;
+            border: solid 1rpx #0080ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+        .pre-div-image {
+          .uploader__img {
+            display: block;
+            width: 200rpx;
+            height: 200rpx;
+          }
+          .uploader-pre-image {
+            float: left;
+            margin: 25rpx;
+            .delet-button {
+              height: 50rpx;
+              display: flex;
+              align-items: center;
+              font-size: 40rpx;
+              justify-content: center;
+            }
           }
         }
       }
