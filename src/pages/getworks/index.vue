@@ -3,7 +3,7 @@
     <!-- 筛选 ===> START -->
     <div class="sizer">
       <div class="position-select">
-        <button @click="showPickerForRegion">地区筛选</button>
+        <button @click="showPickerForRegion">{{selectedRegionName}}</button>
         <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="2" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
@@ -115,12 +115,16 @@ export default {
       state: {
         q: {
           page: 0,
-          perPage: 6
+          perPage: 6,
+          districtId: 0,
+          jobTaxonId: 0
         },
         loading: true,
         loadEnd: false,
-        noData: false
+        noData: false,
       },
+      selectedRegionName: '地区筛选',
+      selectedTaxonName: '工种筛选',
       // ************当前用户信息需要的数据************
       userInfoForAPI: null,
       // ************网络请求需要的数据************
@@ -331,15 +335,16 @@ export default {
     })
 
     // ******************获取招工列表******************
-    searchJobs().then((res) => {
-      console.log('获取招工类表 = ', res);
-      this.dataFormat(res.jobs)
-      console.log('dataFormat 后 = ', res.jobs);
-      this.jobs = res.jobs
-    }).catch((err) => {
-      console.log('err = ', err);
-    })
+    // searchJobs().then((res) => {
+    //   console.log('获取招工类表 = ', res);
+    //   this.dataFormat(res.jobs)
+    //   console.log('dataFormat 后 = ', res.jobs);
+    //   this.jobs = res.jobs
+    // }).catch((err) => {
+    //   console.log('err = ', err);
+    // })
 
+    this.loadJobs()
   },
   onShow () {
     console.log('onShow 生命周期来了........');
@@ -349,9 +354,24 @@ export default {
   },
 
   methods: {
+    loadJobs(){
+      this.state.q.page = 0
+      this.jobs = []
+      this.loadMoreJob()
+    },
+    buildParams(){
+      let params = { q: { page: this.state.q.page, per_page: this.state.q.perPage } }
+      if( this.state.q.jobTaxonId >0 ){
+        params.q.job_taxon_id_eq = this.state.q.jobTaxonId
+      }
+      if( this.state.q.districtId >0 ){
+        params.q.district_id_eq = this.state.q.districtId
+      }
+      return params
+    },
     async loadMoreJob () {
       this.state.q.page += 1
-      let params = { page: this.state.q.page, per_page: this.state.q.perPage }
+      let params = this.buildParams()
       let data = await searchJobs(params)
 
       console.log(data)
@@ -380,8 +400,17 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForRegion (e) {
-      console.log("yes, calling onConfirmForRegion")
-      console.log(e);
+      console.log( "yes, calling onConfirmForRegion" )
+      console.log( e );
+      this.state.q.districtId  = this.pickerRegionArray[e.value[0]].children[e.value[1]].value
+      if( this.state.q.districtId == 0 ){
+        //全部
+        this.selectedRegionName = '地区筛选'
+      }else{
+        this.selectedRegionName = e.label.split('-')[1]
+      }
+
+      this.loadJobs()
     },
     // CityChange (e) {
     //   console.log('选中的城市为：' + e.mp.detail.value)

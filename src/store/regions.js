@@ -1,5 +1,15 @@
 export const regions = [
     {
+        "value": 0,
+        "label": "全部",
+        "children": [
+            {
+                "value": 0,
+                "label": "全部"
+            }
+        ]
+    },
+    {
         "value": 1,
         "label": "北京市",
         "children": [
