@@ -61,17 +61,6 @@
             {{item.job_taxon3_name}}
           </div>
         </div>
-        <div class="tpye-of-work">
-          <div class="job-item">
-            {{item.job1_name}}
-          </div>
-          <div class="job-item" v-show="item.job2_name">
-            {{item.job2_name}}
-          </div>
-          <div class="job-item" v-show="item.job3_name">
-            {{item.job3_name}}
-          </div>
-        </div>
       </div>
     </div>
     <!-- 第三大行 ===> END -->
@@ -102,12 +91,12 @@
           &nbsp;&nbsp; 工作经历
         </div>
       </div>
-      <div class="two---row">
+      <div class="two---row" v-for="(work, i ) in computedCustomerWorks" :key="work.id">
         <div>
-          2018年-04月 -25日 ~ 今 北京市
+          {{work.start_at}} ~ {{work.end_at}} {{work.district_fullname}}
         </div>
         <div>
-          描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息; 描述信息;
+          {{work.desription}}
         </div>
         <!-- <div class="work-image">
           <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
@@ -116,14 +105,16 @@
         </div> -->
         <div class="image-upload">
           <div class="pre-div-image">
-            <block v-for="(item, index) in files" :key="index">
+            <block v-for="(item, j) in work.work_images" :key="item.created_at" >
               <div class="uploader-pre-image" @click="predivImage" :id="item">
-                <image class="uploader__img" :src="item" mode="aspectFill" />
+                <image class="uploader__img" :src="item.original_url" mode="aspectFill" />
               </div>
             </block>
           </div>
         </div>
       </div>
+
+      <div  class="two---row" v-show="computedCustomerWorks.length==0"> 暂无经验 </div>
     </div>
     <!-- 第五大行 ===> END -->
 
@@ -164,7 +155,12 @@ export default {
     })
     this.item = JSON.parse(option.dataObj) // 解析得到对象
   },
-
+  computed:{
+    computedCustomerWorks(){
+      let works = this.item.customer_works || []
+      return works
+    }
+  },
   methods: {
     getData () {
       console.log('开始接收数据了')
