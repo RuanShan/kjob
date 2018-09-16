@@ -87,6 +87,7 @@ import {
   searchApplicants
 } from '../../http/api.js'
 import { regions } from '../../store/regions'
+ 
 export default {
   components: {
     mpvuePicker
@@ -247,7 +248,7 @@ export default {
          }
          this.state.loading = false
          this.dataFormat(data.applicants)
-         this.peopleList = this.peopleList.concat(data.applicants)
+         this.peopleList = this.uniquelizeObjs(this.peopleList.concat( data.applicants))
          console.log("this.peopleList.length=" + this.peopleList.length)
 
        }
@@ -351,13 +352,21 @@ console.log('key=',key, 'element[key]',element[key], 'element.name', element.rea
 
     scrolltolower () {
       this.loadMoreJob()
-      console.log(7)
     },
     scroll (e) {
-      console.log(6)
-      console.log(e)
-    },
 
+    },
+    uniquelizeObjs(objs){
+      var keys = {}
+      var newObjs = new Array();
+      objs.forEach((obj)=>{
+        if( !keys[obj.id]){
+          newObjs.push( obj )
+          keys[obj.id] = true
+        }
+      })
+      return newObjs;
+    }
 
   },
   computed: {

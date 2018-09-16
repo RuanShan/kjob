@@ -298,9 +298,7 @@ export default {
         console.log('height=' + res.windowHeight);
         console.log('width=' + res.windowWidth);
         console.log('statusBarHeight=' + res.statusBarHeight);
-
         this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92 + 36 )
-
       }
     })
     console.log("on loaded...")
@@ -391,7 +389,7 @@ export default {
           this.state.loadEnd = true
         }
         this.dataFormat(data.jobs)
-        this.jobs = this.jobs.concat(data.jobs)
+        this.jobs = this.uniquelizeObjs( this.jobs.concat( data.jobs ))
         console.log("this.jobs.length=" + this.jobs.length)
       }
     },
@@ -510,6 +508,17 @@ export default {
         element.releaseTime = element.created_at.substring(0, 10) + ' ' + element.created_at.substring(11, 16) // releaseTime OK
       });
     },
+    uniquelizeObjs(objs){
+      var keys = {}
+      var newObjs = new Array();
+      objs.forEach((obj)=>{
+        if( !keys[obj.id]){
+          newObjs.push( obj )
+          keys[obj.id] = true
+        }
+      })
+      return newObjs;
+    }
   }
 }
 </script>
