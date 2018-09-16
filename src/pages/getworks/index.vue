@@ -7,7 +7,7 @@
         <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="2" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
-        <button @click="showPickerForJob">工种筛选</button>
+        <button @click="showPickerForJob">{{selectedTaxonName}}</button>
         <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onChange="onChangeForJob" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
       </div>
     </div>
@@ -319,6 +319,8 @@ export default {
     })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
+      let all = { value:0, label:'全部', children: [{value:0, label:'全部'}] }
+      res.unshift( all )
       this.pickerJobArray = res
     }).catch(function (error) {
       console.log('error', error)
@@ -424,6 +426,16 @@ export default {
     ******************** */
     onConfirmForJob (e) {
       console.log(e)
+      this.state.q.jobTaxonId  = this.pickerJobArray[e.value[0]].children[e.value[1]].value
+      if( this.state.q.jobTaxonId == 0 ){
+        //全部
+        this.selectedTaxonName = '工种筛选'
+      }else{
+        this.selectedTaxonName = e.label.split('-')[1]
+      }
+
+      this.loadJobs()
+
     },
 
     onCancelForRegion (e) {
