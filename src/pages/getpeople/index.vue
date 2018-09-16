@@ -15,7 +15,7 @@
 
     <!-- 列表概览 ===> START -->
     <div class="list">
-      <scroll-view class="job-list" :style="computedHeightStyle" :scroll-y="true" @scrolltolower="scrolltolower" @scroll="scroll">
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scroll="scroll" lower-threshold="50" >
 
         <div class="circular" v-for="item in peopleList" :key="item" @click="detail(item)">
           <div class="div-left">
@@ -100,7 +100,7 @@ export default {
           comboDistrictId: 0,
           jobTaxonId: 0
         },
-        loading: true,
+        loading: false,
         loadEnd: false,
         noData: false,
       },
@@ -185,9 +185,27 @@ export default {
     // }).catch((err) => {
     //   console.log(err);
     // })
+    // 获取系统信息
+    wx.getSystemInfo({
+      success: (res) => {
+        console.log(res);
+        // 可使用窗口宽度、高度
+        console.log('height=' + res.windowHeight);
+        console.log('width=' + res.windowWidth);
+        // 计算主体部分高度,单位为px
+        //that.setData({
+        // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
+        //  second_height: res.windowHeight - res.windowWidth / 750 * (92+36 + 98)
+        //})
+        this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92 )
+
+      }
+    })
     this.loadData()
   },
-
+  onPullDownRefresh(e){
+    console.log( "onPullDownRefresh", e)
+  },
   methods: {
     loadData(){
       this.state.q.page = 0
@@ -195,9 +213,9 @@ export default {
       this.loadMoreJob()
     },
     buildParams(){
-      let params = { q: { page: this.state.q.page, per_page: this.state.q.perPage } }
+      let params = {  page: this.state.q.page, per_page: this.state.q.perPage, q:{}   }
       if( this.state.q.jobTaxonId >0 ){
-        // job_taxon_id
+        // job_taxon_id: 工种，job_taxon1_id, job_taxon2_id, job_taxon3_id
         params.q.job_taxon_id = this.state.q.jobTaxonId
       }
       // '0-0' => 0
@@ -207,27 +225,32 @@ export default {
       return params
     },
      async loadMoreJob () {
-      this.state.q.page += 1
-      let params = this.buildParams()
-      let data = await searchApplicants(params)
+       if( !this.state.loading  )
+       {
+         this.state.loading = true
+         this.state.q.page += 1
+         let params = this.buildParams()
+         let data = await searchApplicants(params)
 
-      console.log(data)
-      if (data.applicants.length === 0) {
-        this.state.loading = false
-        this.state.q.page -= 1
-        if (this.state.q.page === 0) {
-          this.state.noData = true
-        } else {
-          this.state.loadEnd = true
-        }
-        return
-      } else if (data.length < this.state.q.perPage) {
-        this.state.loading = false
-        this.state.loadEnd = true
-      }
-      this.dataFormat(data.applicants)
-      this.peopleList = this.peopleList.concat(data.applicants)
-      console.log("this.peopleList.length=" + this.peopleList.length)
+         console.log(data)
+         if (data.applicants.length === 0) {
+           this.state.loading = false
+           this.state.q.page -= 1
+           if (this.state.q.page === 0) {
+             this.state.noData = true
+           } else {
+             this.state.loadEnd = true
+           }
+           return
+         } else if (data.length < this.state.q.perPage) {
+           this.state.loadEnd = true
+         }
+         this.state.loading = false
+         this.dataFormat(data.applicants)
+         this.peopleList = this.peopleList.concat(data.applicants)
+         console.log("this.peopleList.length=" + this.peopleList.length)
+
+       }
     },
 
     // 点击展开详情,打开详情页面
@@ -334,11 +357,13 @@ console.log('key=',key, 'element[key]',element[key], 'element.name', element.rea
       console.log(6)
       console.log(e)
     },
+
+
   },
   computed: {
     computedHeightStyle () {
-      //return `height:${this.scrollViewHeight}px`
-      return `height:500px`
+      return `height:${this.scrollViewHeight}px`
+      //return `height:500px`
     }
   }
 }

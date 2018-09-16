@@ -30,7 +30,7 @@
     <!-- 列表概览 ===> START -->
     <div id="job-list-wrap" class="list">
 
-      <scroll-view class="job-list" :style="computedHeightStyle" :scroll-y="true" @scrolltolower="scrolltolower" @scroll="scroll">
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="50" @scrolltolower="scrolltolower" @scroll="scroll">
 
         <div class="circular" v-for="item in jobs" :key="item" @click="detail(item)">
           <div class="top-----half">
@@ -119,7 +119,7 @@ export default {
           comboDistrictId: 0,
           jobTaxonId: 0
         },
-        loading: true,
+        loading: false,
         loadEnd: false,
         noData: false,
       },
@@ -162,8 +162,8 @@ export default {
   },
   computed: {
     computedHeightStyle () {
-      //return `height:${this.scrollViewHeight}px`
-      return `height:500px`
+      return `height:${this.scrollViewHeight}px`
+      //return `height:500px`
     }
   },
   async onLoad () {
@@ -297,13 +297,9 @@ export default {
         // 可使用窗口宽度、高度
         console.log('height=' + res.windowHeight);
         console.log('width=' + res.windowWidth);
-        // 计算主体部分高度,单位为px
-        //that.setData({
-        // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
-        //  second_height: res.windowHeight - res.windowWidth / 750 * (92+36 + 98)
-        //})
+        console.log('statusBarHeight=' + res.statusBarHeight);
 
-        this.scrollViewHeight = res.windowHeight - res.statusBarHeight - res.windowWidth / 750 * (92 + 32 + 98)
+        this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92 + 36 )
 
       }
     })
@@ -354,7 +350,9 @@ export default {
   onReady () {
     console.log('onReady 生命周期来了........');
   },
-
+  onPullDownRefresh(e){
+    console.log( "onPullDownRefresh", e)
+  },
   methods: {
     loadJobs(){
       this.state.q.page = 0
@@ -362,7 +360,7 @@ export default {
       this.loadMoreJob()
     },
     buildParams(){
-      let params = { q: { page: this.state.q.page, per_page: this.state.q.perPage } }
+      let params = { page: this.state.q.page, per_page: this.state.q.perPage,  q: {}  }
       if( this.state.q.jobTaxonId >0 ){
         params.q.job_taxon_id_eq = this.state.q.jobTaxonId
       }
@@ -373,27 +371,29 @@ export default {
       return params
     },
     async loadMoreJob () {
-      this.state.q.page += 1
-      let params = this.buildParams()
-      let data = await searchJobs(params)
+      if( !this.state.loading  )  {
+        this.state.q.page += 1
+        let params = this.buildParams()
+        let data = await searchJobs(params)
 
-      console.log(data)
-      if (data.jobs.length === 0) {
-        this.state.loading = false
-        this.state.q.page -= 1
-        if (this.state.q.page === 0) {
-          this.state.noData = true
-        } else {
+        console.log(data)
+        if (data.jobs.length === 0) {
+          this.state.loading = false
+          this.state.q.page -= 1
+          if (this.state.q.page === 0) {
+            this.state.noData = true
+          } else {
+            this.state.loadEnd = true
+          }
+          return
+        } else if (data.length < this.state.q.perPage) {
+          this.state.loading = false
           this.state.loadEnd = true
         }
-        return
-      } else if (data.length < this.state.q.perPage) {
-        this.state.loading = false
-        this.state.loadEnd = true
+        this.dataFormat(data.jobs)
+        this.jobs = this.jobs.concat(data.jobs)
+        console.log("this.jobs.length=" + this.jobs.length)
       }
-      this.dataFormat(data.jobs)
-      this.jobs = this.jobs.concat(data.jobs)
-      console.log("this.jobs.length=" + this.jobs.length)
     },
     // ***************地区筛选方法***************
     showPickerForRegion () {
@@ -546,7 +546,8 @@ page {
   height: 36rpx;
   width: 100%;
   background-color: #ebebeb;
-  border: 1px solid #c0c0c0;
+  border-bottom: 1px solid #c0c0c0;
+  border-top: 1px solid #c0c0c0;
   display: flex;
   flex-direction: row;
   // position:fixed;

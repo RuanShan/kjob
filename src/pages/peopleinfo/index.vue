@@ -51,7 +51,7 @@
       </div>
       <div class="two---row">
         <div class="work-class">
-          <div class="work-class-item">
+          <div class="work-class-item" v-show="item.job_taxon1_name">
             {{item.job_taxon1_name}}
           </div>
           <div class="work-class-item" v-show="item.job_taxon2_name">
