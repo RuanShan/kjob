@@ -3,11 +3,11 @@
     <!-- 筛选 ===> START -->
     <div class="sizer">
       <div class="position-select">
-        <button @click="showPickerForRegion">地区筛选</button>
+        <button @click="showPickerForRegion">{{selectedRegionName}}</button>
         <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
       </div>
       <div class="work-select">
-        <button @click="showPickerForJob">工种筛选</button>
+        <button @click="showPickerForJob">{{selectedTaxonName}}</button>
         <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
       </div>
     </div>
@@ -41,14 +41,14 @@
               </div>
             </div>
             <div class="left-bottom">
-              <div class="job-item">
-                {{item.job1_name}}
+              <div class="job-item" v-show="item.job_taxon1_name">
+                {{item.job_taxon1_name}}
               </div>
-              <div class="job-item" v-show="item.job2_name">
-                {{item.job2_name}}
+              <div class="job-item" v-show="item.job_taxon2_name">
+                {{item.job_taxon2_name}}
               </div>
-              <div class="job-item" v-show="item.job3_name">
-                {{item.job3_name}}
+              <div class="job-item" v-show="item.job_taxon3_name">
+                {{item.job_taxon3_name}}
               </div>
             </div>
           </div>
@@ -93,6 +93,19 @@ export default {
   },
   data () {
     return {
+      state: {
+        q: {
+          page: 0,
+          perPage: 6,
+          comboDistrictId: 0,
+          jobTaxonId: 0
+        },
+        loading: true,
+        loadEnd: false,
+        noData: false,
+      },
+      selectedRegionName: '地区筛选',
+      selectedTaxonName: '工种筛选',
       // ************地区筛选数据************
       modeForRegion: 'multiLinkageSelector',
       pickerRegionArray: [],
@@ -128,9 +141,9 @@ export default {
         //   'customer_realname': '',
         //   'district1': '北京市-北京市', // 地址 "district1_fullname": "北京市-北京市-东城区", 0~8
         //   'job_taxon1_name': '主体土建类', // 工种类 ****
-        //   'job1_name': '木工', // 工种 ****
-        //   'job2_name': '强弱电安装工', // 工种 ****
-        //   'job3_name': '防水保温工' // 工种 ****
+        //   'job_taxon1_name': '木工', // 工种 ****
+        //   'job_taxon2_name': '强弱电安装工', // 工种 ****
+        //   'job_taxon3_name': '防水保温工' // 工种 ****
         // }
       ]
     }
@@ -146,8 +159,6 @@ export default {
       title: '找活列表'
     })
 
-    this.loadMoreJob()
-
     /* *************get kjob server 得到全国地区数据*************** */
     // getRegionTree().then(res => {
     //   console.log('地区', res)
@@ -160,28 +171,48 @@ export default {
     /* *************get kjob server 得到工种数据*************** */
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
+      let all = { value:0, label:'全部', children: [{value:0, label:'全部'}] }
+      res.unshift( all )
       this.pickerJobArray = res
     }).catch(function (error) {
       console.log('error', error)
     })
     /* *************get kjob server 得到找活列表数据*************** */
-    searchApplicants().then((res) => {
-      console.log('获得找活列表 = ', res.jobs);
-      this.dataFormat(res.jobs)
-      this.peopleList = res.jobs
-    }).catch((err) => {
-      console.log(err);
-    })
+    // searchApplicants().then((res) => {
+    //   console.log('获得找活列表 = ', res.jobs);
+    //   this.dataFormat(res.jobs)
+    //   this.peopleList = res.jobs
+    // }).catch((err) => {
+    //   console.log(err);
+    // })
+    this.loadData()
   },
 
   methods: {
+    loadData(){
+      this.state.q.page = 0
+      this.peopleList = []
+      this.loadMoreJob()
+    },
+    buildParams(){
+      let params = { q: { page: this.state.q.page, per_page: this.state.q.perPage } }
+      if( this.state.q.jobTaxonId >0 ){
+        // job_taxon_id
+        params.q.job_taxon_id = this.state.q.jobTaxonId
+      }
+      // '0-0' => 0
+      if( parseInt( this.state.q.comboDistrictId )> 0 ){
+        params.q.combo_district_id = this.state.q.comboDistrictId
+      }
+      return params
+    },
      async loadMoreJob () {
       this.state.q.page += 1
-      let params = { page: this.state.q.page, per_page: this.state.q.perPage }
+      let params = this.buildParams()
       let data = await searchApplicants(params)
 
       console.log(data)
-      if (data.jobs.length === 0) {
+      if (data.applicants.length === 0) {
         this.state.loading = false
         this.state.q.page -= 1
         if (this.state.q.page === 0) {
@@ -194,9 +225,9 @@ export default {
         this.state.loading = false
         this.state.loadEnd = true
       }
-      this.dataFormat(data.jobs)
-      this.jobs = this.jobs.concat(data.jobs)
-      console.log("this.jobs.length=" + this.jobs.length)
+      this.dataFormat(data.applicants)
+      this.peopleList = this.peopleList.concat(data.applicants)
+      console.log("this.peopleList.length=" + this.peopleList.length)
     },
 
     // 点击展开详情,打开详情页面
@@ -215,6 +246,18 @@ export default {
     ******************** */
     onConfirmForRegion (e) {
       console.log(e);
+      //
+      let provinceId = this.pickerRegionArray[e.value[0]].value
+      let cityId = this.pickerRegionArray[e.value[0]].children[e.value[1]].value
+      this.state.q.comboDistrictId  = `${provinceId}-${cityId}`
+      if( parseInt( this.state.q.comboDistrictId ) == 0 ){
+        //全部
+        this.selectedRegionName = '地区筛选'
+      }else{
+        this.selectedRegionName = e.label.split('-')[1]
+      }
+
+      this.loadData()
     },
     onCancelForRegion (e) {
       console.log(e);
@@ -228,7 +271,16 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForJob (e) {
-      console.log(e);
+      console.log(e)
+      this.state.q.jobTaxonId  = this.pickerJobArray[e.value[0]].children[e.value[1]].value
+      if( this.state.q.jobTaxonId == 0 ){
+        //全部
+        this.selectedTaxonName = '工种筛选'
+      }else{
+        this.selectedTaxonName = e.label.split('-')[1]
+      }
+
+      this.loadData()
     },
     onCancelForJob (e) {
       console.log(e);
@@ -252,6 +304,13 @@ export default {
           element.district3 = element.district3_fullname.substring(0, indexChar) // district3
         } else {
           element.district3 = false
+        }
+        for(let i=0;i <3; i++){
+          let key = 'job_taxon'+(i+1)+'_fullname'
+console.log('key=',key, 'element[key]',element[key], 'element.name', element.realname)
+          if (element[key]) {
+            element['job_taxon'+(i+1)+'_name'] = element[key].split('-')[1]
+          }
         }
         // 格式化发布时间
         element.releaseTime = element.created_at.substring(0, 10)

@@ -116,7 +116,7 @@ export default {
         q: {
           page: 0,
           perPage: 6,
-          districtId: 0,
+          comboDistrictId: 0,
           jobTaxonId: 0
         },
         loading: true,
@@ -366,8 +366,9 @@ export default {
       if( this.state.q.jobTaxonId >0 ){
         params.q.job_taxon_id_eq = this.state.q.jobTaxonId
       }
-      if( this.state.q.districtId >0 ){
-        params.q.district_id_eq = this.state.q.districtId
+      console.log('this.state.q.comboDistrictId', this.state.q.comboDistrictId)
+      if( parseInt(this.state.q.comboDistrictId) >0 ){
+        params.q.combo_district_id_start = this.state.q.comboDistrictId
       }
       return params
     },
@@ -404,8 +405,11 @@ export default {
     onConfirmForRegion (e) {
       console.log( "yes, calling onConfirmForRegion" )
       console.log( e );
-      this.state.q.districtId  = this.pickerRegionArray[e.value[0]].children[e.value[1]].value
-      if( this.state.q.districtId == 0 ){
+      let provinceId = this.pickerRegionArray[e.value[0]].value
+      let cityId = this.pickerRegionArray[e.value[0]].children[e.value[1]].value
+      this.state.q.comboDistrictId  = `${provinceId}-${cityId}`
+
+      if( parseInt(this.state.q.comboDistrictId) == 0  ){
         //全部
         this.selectedRegionName = '地区筛选'
       }else{
