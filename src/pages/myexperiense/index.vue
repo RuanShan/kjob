@@ -292,7 +292,7 @@ export default {
     // ***************************************************************
     deleteImage (index) {
       console.log(index)
-      this.files.splice(this.files.findIndex(item => item.id === index), 1)
+      this.files.splice(index, 1)
       this.addImageCount--
     },
 
