@@ -296,7 +296,7 @@
       <!-- 列表单元 工作经历 END -->
 
       <!-- 列表单元 工作经历选择动态显示列表  START -->
-      <div style="border-bottom: solid 1rpx #808080;" @click="experienceDetails(index)" v-for="(item, index) in experienseArray" :key="index">
+      <div style="border-bottom: solid 1rpx #808080;" v-for="(item, index) in experienseArray" :key="index">
         <div class="my-info-list-experiense">
           <div class="one-and-two-col">
             <div class="icon">
@@ -308,6 +308,14 @@
               </div>
             </div>
             <div class="text">
+            </div>
+          </div>
+          <div class="three-col" @click.stop="experienceDetails(index)">
+            <div class="work-type-choose">
+              查看
+            </div>
+            <div class="chose-icon">
+              <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/edit.png">
             </div>
           </div>
           <div class="three-col" @click.stop="deleteExperiense(index)">
@@ -352,7 +360,8 @@ import {
   getRegionTree,
   getJobTaxonTree,
   addApplicant,
-  delCustomerWork
+  delCustomerWork,
+  getWxFollower
 } from '../../http/api.js'
 
 export default {
@@ -469,6 +478,8 @@ export default {
   },
 
   async onLoad (option) {
+    console.log('onLoad...........');
+
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
@@ -479,25 +490,51 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI,然后根据id取云端userInfoFroAPI,再根据从云端取回来的数据存入本地userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
       success: (res) => {
         console.log('userInfoForAPI 获取成功了!!!')
         this.userInfoForAPI = res.data;
-        // 判断 男 女
-        if (this.userInfoForAPI.gender === 1) {
-          this.sex = '男'
-        } else {
-          this.sex = '女'
-        }
-        // 把工作经历给出去
-        this.experienseArray = this.userInfoForAPI.customer_works
-        this.experienseArray.forEach((value, index) => {
-          this.experienseImages[index] = value.work_images.map((ele) => { return ele.original_url })
+        // 根据从KJob server得到的用户id,请求KJob Server 得到用户数据
+        getWxFollower(this.userInfoForAPI.id).then((res) => {
+          // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+          wx.setStorage({
+            key: 'userInfoForAPI',
+            data: res,
+            success: (res) => {
+              console.log('setStorage data 后得 res = ', res);
+              console.log('userInfoForAPI 存储成功了!!!')
+              wx.getStorage({
+                key: 'userInfoForAPI',
+                success: (res) => {
+                  console.log('userInfoForAPI 获取成功了!!!')
+                  this.userInfoForAPI = res.data;
+                  // 判断 男 女
+                  if (this.userInfoForAPI.gender === 1) {
+                    this.sex = '男'
+                  } else {
+                    this.sex = '女'
+                  }
+                  // 把工作经历给出去
+                  this.experienseArray = this.userInfoForAPI.customer_works
+                  this.experienseArray.forEach((value, index) => {
+                    this.experienseImages[index] = value.work_images.map((ele) => { return ele.original_url })
+                  })
+                }
+              })
+            },
+            fail: () => {
+              console.log('userInfoForAPI 存储失败了*******')
+            }
+          })
+        }).catch((err) => {
+          console.log(err);
         })
       }
     })
+
     /* *************get kjob server 得到全国地区数据*************** */
     getRegionTree().then(res => {
       console.log('地区', res)
@@ -512,6 +549,10 @@ export default {
     }).catch(function (error) {
       console.log('error', error)
     })
+  },
+
+  async onShow () {
+    console.log('noShow...........');
   },
 
   methods: {
@@ -783,29 +824,13 @@ export default {
     // ***如果3次添加工作经验,弹窗提示***
     // ***************************************************************
     experienceAdd () {
-      // this.experienceDsiplay = true
-      this.experienceCount++
-      if (this.experienceCount === 4) { // 多余3次点击了
-        this.experienceCount = 3  // 变成3,好做下次判断
+      if (this.experienseArray.length === 3) { // 多余3次点击了
         wx.showModal({
           content: '最多只能添加3个工种经验',
           showCancel: false
         })
       } else { // 没有到达3次,跳转我的工作经验
-        if (this.experienseArray.length === 0) {
-          wx.setStorage({
-            key: 'experienseItem',
-            data: null,
-            success: (res) => {
-              console.log('experienseItem data 后得 res = ', res);
-              console.log('experienseItem 存储成功了!!!')
-              wx.navigateTo({ url: '../myexperiense/main' }) // 跳转到我的经验页面
-            },
-            fail: () => {
-              console.log('experienseItem 存储失败了*******')
-            }
-          })
-        }
+        wx.navigateTo({ url: '../myexperiense/main?isView=false' }) // 跳转到我的经验页面
       }
     },
 
@@ -830,12 +855,43 @@ export default {
                 duration: 2000, //提示的延迟时间，单位毫秒，默认：1500
                 mask: true,  //是否显示透明蒙层，防止触摸穿透，默认：false
               })
-              // this.experienceCount--
-              // if (this.experienceCount <= 0) {
-              //   this.experienceDsiplay = false
-              // }
               // 删除数据从数组
-              this.experienseArray.splice(this.experienseArray.findIndex(item => item.id === index), 1)
+              this.experienseArray.splice(index, 1)
+              let userID = this.userInfoForAPI.id
+              // 清空storage
+              wx.clearStorage({
+                success: () => {
+                  getWxFollower(userID).then((res) => {
+                    // this.userInfoForAPI = res
+                    // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+                    wx.setStorage({
+                      key: 'userInfoForAPI',
+                      data: res,
+                      success: (res) => {
+                        console.log('setStorage 删除数据 后得 res = ', res);
+                        wx.getStorage({
+                          key: 'userInfoForAPI',
+                          success: (res) => {
+                            console.log('userInfoForAPI 获取成功了!!!')
+                            this.userInfoForAPI = res.data;
+                            // 把工作经历给出去
+                            this.experienseArray = this.userInfoForAPI.customer_works
+                            this.experienseArray.forEach((value, index) => {
+                              this.experienseImages[index] = value.work_images.map((ele) => { return ele.original_url })
+                            })
+                          }
+                        })
+                      },
+                      fail: () => {
+                        console.log('userInfoForAPI 存储失败了*******')
+                      }
+                    })
+                  }).catch((err) => {
+                    console.log(err);
+                  })
+                }
+              })
+
             }).catch((err) => {
               console.log(err);
               wx.showToast({
@@ -858,14 +914,14 @@ export default {
     experienceDetails (index) {
       console.log('experienceDetails index = ', index);
       let experienseItem = this.experienseArray[index]
-      // 
+      // 保存storage experienseItem
       wx.setStorage({
         key: 'experienseItem',
         data: experienseItem,
         success: (res) => {
           console.log('experienseItem data 后得 res = ', res);
           console.log('experienseItem 存储成功了!!!')
-          wx.navigateTo({ url: '../myexperiense/main' }) // 跳转到我的经验页面
+          wx.navigateTo({ url: '../myexperiense/main?isView=true' }) // 跳转到我的经验页面
         },
         fail: () => {
           console.log('experienseItem 存储失败了*******')

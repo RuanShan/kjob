@@ -46,6 +46,11 @@ export const deleteRequest = (params) => {
   return fly.delete(`${host}${params.url}`, qs.stringify(params.data))
 }
 
+// 通用的post请求
+export const put = (params) => {
+  return fly.put(`${host}${params.url}`, qs.stringify(params.data))
+}
+
 // 微信app用户登录，wx.login成功之后调用，获取或创建系统内用户
 // 参数
 //   code: 微信小程序登录后 code
@@ -272,6 +277,14 @@ export const delCustomerWork = (id) => {
     url: '/api/v1/customer_works/' + id
   }
   return deleteRequest(params)
+}
+// 修改工作经历
+export const putCustomerWork = (id, data) => {
+  let params = {
+    url: '/api/v1/customer_works/' + id,
+    data: data
+  }
+  return put(params)
 }
 
 // 找活列表

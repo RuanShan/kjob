@@ -107,7 +107,7 @@
             <block v-for="(item, index) in files" :key="index">
               <div class="uploader-pre-image" @click="predivImage" :id="item">
                 <image class="uploader__img" :src="item" mode="aspectFill" />
-                <button class="delet-button" @click.stop="deleteImage(index)">删除</button>
+                <button v-if="saveButtonDisplay" class="delet-button" @click.stop="deleteImage(index)">删除</button>
               </div>
             </block>
           </div>
@@ -125,7 +125,7 @@
       <div class="base-info"></div>
 
       <!-- 列表单元 免费发布招工 START -->
-      <div class="skip">
+      <div class="skip" v-if="saveButtonDisplay">
         <button class="save" type="primary" @click="save">保存</button>
         <!-- <button class="save" type="primary" @click="test">测试</button> -->
       </div>
@@ -137,7 +137,7 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
-import { addCustomerWork, getWxFollower } from '../../http/api.js'
+import { addCustomerWork } from '../../http/api.js'
 
 export default {
   components: {
@@ -147,6 +147,7 @@ export default {
     return {
       userInfoForAPI: null,
       experienseItem: null, // 来自我的找活数据
+      isView: false, // 上一个页面是否点击查看按钮标志位
       title: '', // 输入的项目名称
       startDate: '请选择',
       endDate: '请选择',
@@ -158,6 +159,7 @@ export default {
       files: [], // 图片保存位置
       addImageDisplay: true, // 图片添加显示开关
       addImageCount: 0, // 图片组的每个小照片的添加计数器
+      saveButtonDisplay: true // 保存按钮显示开关
     }
   },
 
@@ -180,26 +182,39 @@ export default {
         this.userInfoForAPI = res.data;
       }
     })
-    // 程序进入当前页面后,experienseItem
-    wx.getStorage({
-      key: 'experienseItem',
-      success: (res) => {
-        console.log('experienseItem 获取成功了!!!')
-        console.log(res);
-        if (res.data === null) {
-          return
-        } else {
-          this.experienseItem = res.data;
-          this.title = this.experienseItem.name // 项目名称
-          this.startDate = this.experienseItem.start_at // 项目开始时间
-          this.endDate = this.experienseItem.end_at // 项目结束时间
-          this.description = this.experienseItem.description // 项目描述
-          this.district_fullname = this.experienseItem.district_fullname // 项目地点
-          this.files = this.experienseItem.work_images.map((element) => { return element.original_url }) // 施工照片
-          this.addImageCount = this.files.length  // 重置图片计数器
+    console.log('option = ', option);
+    if (option.isView === "true") {
+      this.isView = true  // 点击了查看
+      this.saveButtonDisplay = false
+      wx.getStorage({
+        key: 'experienseItem',
+        success: (res) => {
+          console.log('experienseItem 获取成功了!!!')
+          console.log(res);
+          if (res.data === null) {
+            return
+          } else {
+            this.experienseItem = res.data;
+            this.title = this.experienseItem.name // 项目名称
+            this.startDate = this.experienseItem.start_at // 项目开始时间
+            this.endDate = this.experienseItem.end_at // 项目结束时间
+            this.description = this.experienseItem.description // 项目描述
+            this.district_fullname = this.experienseItem.district_fullname // 项目地点
+            this.files = this.experienseItem.work_images.map((element) => { return element.original_url }) // 施工照片
+            this.addImageCount = this.files.length  // 重置图片计数器
+          }
         }
-      }
-    })
+      })
+    } else {
+      this.isView = false // 不是查看
+      this.experienseItem = null;
+      this.title = '' // 项目名称
+      this.startDate = '请选择' // 项目开始时间
+      this.endDate = '请选择' // 项目结束时间
+      this.description = '' // 项目描述
+      this.district_fullname = '请选择' // 项目地点
+      this.files = []
+    }
   },
 
   methods: {
@@ -236,7 +251,7 @@ export default {
     textAreaInput (e) {
       console.log(e.target.value)
       this.description = e.target.value
-      this.description = this.experienseItem.description
+      // this.description = this.experienseItem.description
     },
 
     // *********************点击添加图片处理函数************************
@@ -290,7 +305,8 @@ export default {
           content: '请填入必填信息,方能提交保存!',
           showCancel: false
         })
-      } else { // 判断有没有选择图片
+      } else {
+        // 判断有没有选择图片
         if (this.files.length !== 0) { // 选择了图片,传图片
           let customer_work = this.dataFormat();
           // 添加工作经验API
@@ -303,7 +319,6 @@ export default {
             let id = res.id; // API 需要的 id
             this.uploadOneByOne(this.files, successUp, failUp, count, length, id) // 上传图片
           }).catch((err) => { console.log(err); })
-
         } else { // 没有选择图片,值传文字数据
           let customer_work = this.dataFormat();
           // 添加工作经验API
@@ -347,6 +362,8 @@ export default {
           // console.log('uploadFile success e = ', e);
         },
         fail: (e) => {
+          console.log('uploadFile   e = ', e);
+
           failUp++;//失败+1
         },
         complete: (e) => {
@@ -359,27 +376,6 @@ export default {
               icon: 'success',
               duration: 2000
             })
-            // 更新storege
-            // 根据从KJob server得到的用户id,请求KJob Server 得到用户数据
-            getWxFollower(this.userInfoForAPI.id).then((res) => {
-              // console.log(res);
-              // 得到当前用户微信数保和KJob用户信息保持到userInfoForAPI中
-              this.userInfoForAPI = res;
-              // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
-              wx.setStorage({
-                key: 'userInfoForAPI',
-                data: this.userInfoForAPI,
-                success: (res) => {
-                  console.log('setStorage data 后得 res = ', res);
-                  console.log('userInfoForAPI 存储成功了!!!')
-                },
-                fail: () => {
-                  console.log('userInfoForAPI 存储失败了*******')
-                }
-              })
-            }).catch((err) => {
-              console.log("API - getWxFollower 错误 = ", err);
-            });
             wx.redirectTo({ url: '../releasemy/main' }) // 跳转到发布找活页面
           } else {
             //递归调用，上传下一张
@@ -389,6 +385,8 @@ export default {
         }
       })
     },
+
+    // ********************************************************
   },
 
   watch: {
