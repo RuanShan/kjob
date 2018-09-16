@@ -54,14 +54,14 @@
           </div>
           <div class="div-right">
             <div class="right-top">
-              <div v-show="item.district2">
-                {{item.district2}}
+              <div v-show="item.district2_name">
+                {{item.district2_name}}
               </div>
-              <div>
-                {{item.district1}}
+              <div v-show="item.district1_name">
+                {{item.district1_name}}
               </div>
-              <div v-show="item.district3">
-                {{item.district3}}
+              <div v-show="item.district3_name">
+                {{item.district3_name}}
               </div>
             </div>
             <div class="right-bottom">
@@ -87,7 +87,7 @@ import {
   searchApplicants
 } from '../../http/api.js'
 import { regions } from '../../store/regions'
- 
+
 export default {
   components: {
     mpvuePicker
@@ -247,8 +247,11 @@ export default {
            this.state.loadEnd = true
          }
          this.state.loading = false
+         console.log("before dataFormat")
          this.dataFormat(data.applicants)
+         console.log("before uniquelizeObjs")
          this.peopleList = this.uniquelizeObjs(this.peopleList.concat( data.applicants))
+         console.log("after uniquelizeObjs")
          console.log("this.peopleList.length=" + this.peopleList.length)
 
        }
@@ -313,25 +316,15 @@ export default {
     // *******************数据格式化*******************
     dataFormat (data) {
       data.forEach((element) => {
-        let indexChar = this.find(element.district1_fullname, '-', 1)
-        element.district1 = element.district1_fullname.substring(0, indexChar) // district1
-        // 判断返回的对象中是否存在district2_fullname,如果存在格式化;不存在给假
-        if (element.hasOwnProperty('district2_fullname')) {
-          indexChar = this.find(element.district2_fullname, '-', 1)
-          element.district2 = element.district2_fullname.substring(0, indexChar) // district2
-        } else {
-          element.district2 = false
+        for(let i=0;i <3; i++){
+          let key = 'district'+(i+1)+'_fullname'
+          if (element[key]) {
+            element['district'+(i+1)+'_name'] = element[key].split('-')[1]
+          }
         }
-        // 判断返回的对象中是否存在district3_fullname,如果存在格式化;不存在给假
-        if (element.hasOwnProperty('district3_fullname')) {
-          indexChar = this.find(element.district3_fullname, '-', 1)
-          element.district3 = element.district3_fullname.substring(0, indexChar) // district3
-        } else {
-          element.district3 = false
-        }
+
         for(let i=0;i <3; i++){
           let key = 'job_taxon'+(i+1)+'_fullname'
-console.log('key=',key, 'element[key]',element[key], 'element.name', element.realname)
           if (element[key]) {
             element['job_taxon'+(i+1)+'_name'] = element[key].split('-')[1]
           }
@@ -359,6 +352,7 @@ console.log('key=',key, 'element[key]',element[key], 'element.name', element.rea
     uniquelizeObjs(objs){
       var keys = {}
       var newObjs = new Array();
+      console.log( "objs=", objs)
       objs.forEach((obj)=>{
         if( !keys[obj.id]){
           newObjs.push( obj )
