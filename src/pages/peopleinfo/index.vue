@@ -270,13 +270,13 @@ page {
           display: flex;
           font-size: 30rpx;
           .work-class-item {
-            margin: 25rpx;
+            margin: 25rpx 15rpx;
             text-align: center;
             border-radius: 30rpx;
             border: solid 1rpx #c0c0c0;
             background-color: #e6e6e6;
-            width: 150rpx;
-            padding: 0rpx 18rpx;
+            width: 218rpx;
+            padding: 0rpx 1rpx;
             height: 40rpx;
           }
         }

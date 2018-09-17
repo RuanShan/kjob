@@ -741,7 +741,7 @@ export default {
         }).catch((err) => {
           console.log(err);
         })
-        // wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
+        wx.reLaunch({ url: '../getworks/main' }) // 跳转到发布找活页面
       }
     },
 
