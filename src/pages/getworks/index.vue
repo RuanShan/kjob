@@ -30,9 +30,9 @@
     <!-- 列表概览 ===> START -->
     <div id="job-list-wrap" class="list">
 
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="50" @scrolltolower="scrolltolower" @scroll="scroll">
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="150" @scrolltolower="scrolltolower" >
 
-        <div class="circular" v-for="item in jobs" :key="item" @click="detail(item)">
+        <div class="circular" v-for="item in jobs" :key="item.id" @click="detail(item)">
           <div class="top-----half">
             <div class="one---row">
               <div class="one-row-one">
@@ -75,7 +75,7 @@
                   <!-- <img style="width: 60rpx; height: 60rpx;" :src="userInfoForAPI.headimgurl"> -->
                 </div>
                 <div class="name">
-                  &nbsp;&nbsp;联系人&nbsp;&nbsp;-&nbsp;&nbsp;{{item.name}}
+                  &nbsp;&nbsp;联系人&nbsp;&nbsp;-&nbsp;&nbsp;{{item.customer_realname}}
                 </div>
               </div>
               <div class="four-row-two">
@@ -96,7 +96,7 @@ import mpvuePicker from 'mpvue-picker'
 // import Fly from 'flyio/dist/npm/wx'
 import {
   getJobTaxonTree,
-  getRegionTree,
+  //getRegionTree,
   searchJobs,
   wechatAppLogin,
   getWxFollower,
@@ -115,7 +115,7 @@ export default {
       state: {
         q: {
           page: 0,
-          perPage: 6,
+          perPage: 20,
           comboDistrictId: 0,
           jobTaxonId: 0
         },
@@ -302,15 +302,14 @@ export default {
       }
     })
     console.log("on loaded...")
-    this.loadMoreJob()
 
-    getRegionTree().then(res => {
-      console.log('地区1', res)
-      this.pickerRegionArray = regions
-      console.log('地区2', this.pickerRegionArray)
-    }).catch(function (error) {
-      console.log('error', error)
-    })
+    // getRegionTree().then(res => {
+    //   console.log('地区1', res)
+    //   this.pickerRegionArray = regions
+    //   console.log('地区2', this.pickerRegionArray)
+    // }).catch(function (error) {
+    //   console.log('error', error)
+    // })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
       let all = { value:0, label:'全部', children: [{value:0, label:'全部'}] }
@@ -370,11 +369,13 @@ export default {
     },
     async loadMoreJob () {
       if( !this.state.loading  )  {
+        wx.showLoading("数据加载中...")
         this.state.q.page += 1
         let params = this.buildParams()
         let data = await searchJobs(params)
-
-        console.log(data)
+        wx.hideLoading()
+        let now = new Date()
+        console.log("getMilliseconds()", now.getSeconds(),now.getMilliseconds())
         if (data.jobs.length === 0) {
           this.state.loading = false
           this.state.q.page -= 1
@@ -390,7 +391,7 @@ export default {
         }
         this.dataFormat(data.jobs)
         this.jobs = this.uniquelizeObjs( this.jobs.concat( data.jobs ))
-        console.log("this.jobs.length=" + this.jobs.length)
+        console.log("getMilliseconds()", now.getSeconds(),now.getMilliseconds())
       }
     },
     // ***************地区筛选方法***************
@@ -489,22 +490,14 @@ export default {
     },
     scrolltolower () {
       this.loadMoreJob()
-      console.log(7)
-    },
-    scroll (e) {
-      console.log(6)
-      console.log(e)
-    },
-
+     },
+    scroll (e) {   },
     // *******************数据格式化*******************
     dataFormat (data) {
       data.forEach((element) => {
-        let indexChar = element.district_fullname.indexOf('-')
-        let tempStr = element.district_fullname.substring(indexChar + 1)
-        indexChar = tempStr.indexOf('-')
-        element.city = tempStr.substring(0, indexChar) // city OK
-        indexChar = element.district_fullname.indexOf('-')
-        element.state = element.district_fullname.substring(0, indexChar)
+        let regions = element.district_fullname.split('-')
+        element.city = regions[1] // city OK
+        element.state = regions[0]
         element.releaseTime = element.created_at.substring(0, 10) + ' ' + element.created_at.substring(11, 16) // releaseTime OK
       });
     },
