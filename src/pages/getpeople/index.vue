@@ -233,7 +233,7 @@ export default {
          let params = this.buildParams()
          let data = await searchApplicants(params)
 
-         console.log(data)
+         console.log('searchApplicants data = ',data)
          if (data.applicants.length === 0) {
            this.state.loading = false
            this.state.q.page -= 1
@@ -465,12 +465,12 @@ page {
           }
           .left-top-two-bottom {
             color: #afafaf;
-            width: 400rpx;
+            width: 412rpx;
             height: 50%;
             // display: flex;
             // justify-content: center;
             // align-items: center;
-            font-size: 32rpx;
+            font-size: 29rpx;
             // background-color: #c0c0c0;
           }
         }
@@ -489,7 +489,7 @@ page {
           border-radius: 30rpx;
           border: solid 1rpx #c0c0c0;
           background-color: #e6e6e6;
-          width: 180rpx;
+          width: 211rpx;
           padding: 0rpx 18rpx;
           height: 40rpx;
         }

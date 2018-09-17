@@ -30,7 +30,7 @@
     <!-- 列表概览 ===> START -->
     <div id="job-list-wrap" class="list">
 
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="50" @scrolltolower="scrolltolower" @scroll="scroll">
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y lower-threshold="50" @scrolltolower="scrolltolower" @scroll="scroll">
 
         <div class="circular" v-for="item in jobs" :key="item" @click="detail(item)">
           <div class="top-----half">
@@ -298,7 +298,7 @@ export default {
         console.log('height=' + res.windowHeight);
         console.log('width=' + res.windowWidth);
         console.log('statusBarHeight=' + res.statusBarHeight);
-        this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92 + 36 )
+        this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92 + 36)
       }
     })
     console.log("on loaded...")
@@ -313,8 +313,8 @@ export default {
     })
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
-      let all = { value:0, label:'全部', children: [{value:0, label:'全部'}] }
-      res.unshift( all )
+      let all = { value: 0, label: '全部', children: [{ value: 0, label: '全部' }] }
+      res.unshift(all)
       this.pickerJobArray = res
     }).catch(function (error) {
       console.log('error', error)
@@ -348,33 +348,32 @@ export default {
   onReady () {
     console.log('onReady 生命周期来了........');
   },
-  onPullDownRefresh(e){
-    console.log( "onPullDownRefresh", e)
+  onPullDownRefresh (e) {
+    console.log("onPullDownRefresh", e)
   },
   methods: {
-    loadJobs(){
+    loadJobs () {
       this.state.q.page = 0
       this.jobs = []
       this.loadMoreJob()
     },
-    buildParams(){
-      let params = { page: this.state.q.page, per_page: this.state.q.perPage,  q: {}  }
-      if( this.state.q.jobTaxonId >0 ){
+    buildParams () {
+      let params = { page: this.state.q.page, per_page: this.state.q.perPage, q: {} }
+      if (this.state.q.jobTaxonId > 0) {
         params.q.job_taxon_id_eq = this.state.q.jobTaxonId
       }
       console.log('this.state.q.comboDistrictId', this.state.q.comboDistrictId)
-      if( parseInt(this.state.q.comboDistrictId) >0 ){
+      if (parseInt(this.state.q.comboDistrictId) > 0) {
         params.q.combo_district_id_start = this.state.q.comboDistrictId
       }
       return params
     },
     async loadMoreJob () {
-      if( !this.state.loading  )  {
+      if (!this.state.loading) {
         this.state.q.page += 1
         let params = this.buildParams()
         let data = await searchJobs(params)
-
-        console.log(data)
+        console.log('searchJobs data = ', data)
         if (data.jobs.length === 0) {
           this.state.loading = false
           this.state.q.page -= 1
@@ -389,7 +388,7 @@ export default {
           this.state.loadEnd = true
         }
         this.dataFormat(data.jobs)
-        this.jobs = this.uniquelizeObjs( this.jobs.concat( data.jobs ))
+        this.jobs = this.uniquelizeObjs(this.jobs.concat(data.jobs))
         console.log("this.jobs.length=" + this.jobs.length)
       }
     },
@@ -401,16 +400,16 @@ export default {
     // 因为console.log(e)返回的是数组下标,故需要自己判断处理
     ******************** */
     onConfirmForRegion (e) {
-      console.log( "yes, calling onConfirmForRegion" )
-      console.log( e );
+      console.log("yes, calling onConfirmForRegion")
+      console.log(e);
       let provinceId = this.pickerRegionArray[e.value[0]].value
       let cityId = this.pickerRegionArray[e.value[0]].children[e.value[1]].value
-      this.state.q.comboDistrictId  = `${provinceId}-${cityId}`
+      this.state.q.comboDistrictId = `${provinceId}-${cityId}`
 
-      if( parseInt(this.state.q.comboDistrictId) == 0  ){
+      if (parseInt(this.state.q.comboDistrictId) == 0) {
         //全部
         this.selectedRegionName = '地区筛选'
-      }else{
+      } else {
         this.selectedRegionName = e.label.split('-')[1]
       }
 
@@ -428,11 +427,11 @@ export default {
     ******************** */
     onConfirmForJob (e) {
       console.log(e)
-      this.state.q.jobTaxonId  = this.pickerJobArray[e.value[0]].children[e.value[1]].value
-      if( this.state.q.jobTaxonId == 0 ){
+      this.state.q.jobTaxonId = this.pickerJobArray[e.value[0]].children[e.value[1]].value
+      if (this.state.q.jobTaxonId == 0) {
         //全部
         this.selectedTaxonName = '工种筛选'
-      }else{
+      } else {
         this.selectedTaxonName = e.label.split('-')[1]
       }
 
@@ -508,12 +507,12 @@ export default {
         element.releaseTime = element.created_at.substring(0, 10) + ' ' + element.created_at.substring(11, 16) // releaseTime OK
       });
     },
-    uniquelizeObjs(objs){
+    uniquelizeObjs (objs) {
       var keys = {}
       var newObjs = new Array();
-      objs.forEach((obj)=>{
-        if( !keys[obj.id]){
-          newObjs.push( obj )
+      objs.forEach((obj) => {
+        if (!keys[obj.id]) {
+          newObjs.push(obj)
           keys[obj.id] = true
         }
       })
