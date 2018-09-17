@@ -518,10 +518,12 @@ export default {
                     this.sex = '女'
                   }
                   // 把工作经历给出去
-                  this.experienseArray = this.userInfoForAPI.customer_works
-                  this.experienseArray.forEach((value, index) => {
-                    this.experienseImages[index] = value.work_images.map((ele) => { return ele.original_url })
-                  })
+                  if (this.userInfoForAPI.hasOwnProperty('customer_works')) {
+                    this.experienseArray = this.userInfoForAPI.customer_works
+                    this.experienseArray.forEach((value, index) => {
+                      this.experienseImages[index] = value.work_images.map((ele) => { return ele.original_url })
+                    })
+                  }
                 }
               })
             },
