@@ -15,7 +15,7 @@
 
     <!-- 列表概览 ===> START -->
     <div class="list">
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scroll="scroll" lower-threshold="50" >
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scroll="scroll" lower-threshold="50">
 
         <div class="circular" v-for="item in peopleList" :key="item" @click="detail(item)">
           <div class="div-left">
@@ -72,7 +72,7 @@
             </div>
           </div>
         </div>
-        </scroll-view>
+      </scroll-view>
     </div>
     <!-- 列表概览 ===> END -->
 
@@ -172,20 +172,13 @@ export default {
     /* *************get kjob server 得到工种数据*************** */
     getJobTaxonTree().then(res => {
       console.log('用工分类', res);
-      let all = { value:0, label:'全部', children: [{value:0, label:'全部'}] }
-      res.unshift( all )
+      let all = { value: 0, label: '全部', children: [{ value: 0, label: '全部' }] }
+      res.unshift(all)
       this.pickerJobArray = res
     }).catch(function (error) {
       console.log('error', error)
     })
-    /* *************get kjob server 得到找活列表数据*************** */
-    // searchApplicants().then((res) => {
-    //   console.log('获得找活列表 = ', res.jobs);
-    //   this.dataFormat(res.jobs)
-    //   this.peopleList = res.jobs
-    // }).catch((err) => {
-    //   console.log(err);
-    // })
+
     // 获取系统信息
     wx.getSystemInfo({
       success: (res) => {
@@ -198,70 +191,98 @@ export default {
         // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
         //  second_height: res.windowHeight - res.windowWidth / 750 * (92+36 + 98)
         //})
-        this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92 )
-
+        this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92)
       }
     })
     this.loadData()
   },
-  onPullDownRefresh(e){
-    console.log( "onPullDownRefresh", e)
+
+  async onShow () {
+    console.log('onShow 了 ..........');
+    // 删除storage
+    // wx.removeStorage({
+    //   key: 'peopleDetailItem',
+    //   success: (res) => {
+    //     console.log('删除peopleDetailItem,成功了......')
+    //   }
+    // })
+  },
+
+  onPullDownRefresh (e) {
+    console.log("onPullDownRefresh", e)
   },
   methods: {
-    loadData(){
+    loadData () {
       this.state.q.page = 0
       this.peopleList = []
       this.loadMoreJob()
     },
-    buildParams(){
-      let params = {  page: this.state.q.page, per_page: this.state.q.perPage, q:{}   }
-      if( this.state.q.jobTaxonId >0 ){
+    buildParams () {
+      let params = { page: this.state.q.page, per_page: this.state.q.perPage, q: {} }
+      if (this.state.q.jobTaxonId > 0) {
         // job_taxon_id: 工种，job_taxon1_id, job_taxon2_id, job_taxon3_id
         params.q.job_taxon_id = this.state.q.jobTaxonId
       }
       // '0-0' => 0
-      if( parseInt( this.state.q.comboDistrictId )> 0 ){
+      if (parseInt(this.state.q.comboDistrictId) > 0) {
         params.q.combo_district_id = this.state.q.comboDistrictId
       }
       return params
     },
-     async loadMoreJob () {
-       if( !this.state.loading  )
-       {
-         this.state.loading = true
-         this.state.q.page += 1
-         let params = this.buildParams()
-         let data = await searchApplicants(params)
+    async loadMoreJob () {
+      if (!this.state.loading) {
+        this.state.loading = true
+        this.state.q.page += 1
+        let params = this.buildParams()
+        let data = await searchApplicants(params)
 
-         console.log('searchApplicants data = ',data)
-         if (data.applicants.length === 0) {
-           this.state.loading = false
-           this.state.q.page -= 1
-           if (this.state.q.page === 0) {
-             this.state.noData = true
-           } else {
-             this.state.loadEnd = true
-           }
-           return
-         } else if (data.length < this.state.q.perPage) {
-           this.state.loadEnd = true
-         }
-         this.state.loading = false
-         console.log("before dataFormat")
-         this.dataFormat(data.applicants)
-         console.log("before uniquelizeObjs")
-         this.peopleList = this.uniquelizeObjs(this.peopleList.concat( data.applicants))
-         console.log("after uniquelizeObjs")
-         console.log("this.peopleList.length=" + this.peopleList.length)
+        console.log('searchApplicants data = ', data)
+        if (data.applicants.length === 0) {
+          this.state.loading = false
+          this.state.q.page -= 1
+          if (this.state.q.page === 0) {
+            this.state.noData = true
+          } else {
+            this.state.loadEnd = true
+          }
+          return
+        } else if (data.length < this.state.q.perPage) {
+          this.state.loadEnd = true
+        }
+        this.state.loading = false
+        console.log("before dataFormat")
+        this.dataFormat(data.applicants)
+        console.log("before uniquelizeObjs")
+        this.peopleList = this.uniquelizeObjs(this.peopleList.concat(data.applicants))
+        console.log("after uniquelizeObjs")
+        console.log("this.peopleList.length=" + this.peopleList.length)
 
-       }
+      }
     },
 
     // 点击展开详情,打开详情页面
     detail (item) {
       console.log(' 找活详情页面 !!!')
       console.log('item = ', item)
-      wx.navigateTo({ url: '../peopleinfo/main?dataObj=' + JSON.stringify(item) }) // 当前点击的item,数据传递给招工详情页面
+      // let detailData = JSON.stringify(item);
+      // 存storage 
+      wx.setStorageSync({
+        key: "peopleDetail",
+        data: item,
+        success: (res) => {
+          console.log('peopleDetailItem data 后得 res = ', res);
+          console.log('peopleDetailItem 存储成功了!!!')
+        },
+        fail: () => {
+          console.log('peopleDetailItem 存储失败了*******')
+        }
+      })
+      
+      // wx.navigateTo({ url: '../peopleinfo/main?detailData=' + detailData }) // 当前点击的item,数据传递给招工详情页面
+      // wx.navigateTo({ url: '../peopleinfo/main?dataObj=' + JSON.stringify(item) }) // 当前点击的item,数据传递给招工详情页面
+      // console.log('JSON.stringify(item)');
+      
+      wx.navigateTo({ url: '../peopleinfo/main' }) // 当前点击的item,数据传递给招工详情页面
     },
 
     // ***************地区筛选方法***************
@@ -276,11 +297,11 @@ export default {
       //
       let provinceId = this.pickerRegionArray[e.value[0]].value
       let cityId = this.pickerRegionArray[e.value[0]].children[e.value[1]].value
-      this.state.q.comboDistrictId  = `${provinceId}-${cityId}`
-      if( parseInt( this.state.q.comboDistrictId ) == 0 ){
+      this.state.q.comboDistrictId = `${provinceId}-${cityId}`
+      if (parseInt(this.state.q.comboDistrictId) == 0) {
         //全部
         this.selectedRegionName = '地区筛选'
-      }else{
+      } else {
         this.selectedRegionName = e.label.split('-')[1]
       }
 
@@ -299,11 +320,11 @@ export default {
     ******************** */
     onConfirmForJob (e) {
       console.log(e)
-      this.state.q.jobTaxonId  = this.pickerJobArray[e.value[0]].children[e.value[1]].value
-      if( this.state.q.jobTaxonId == 0 ){
+      this.state.q.jobTaxonId = this.pickerJobArray[e.value[0]].children[e.value[1]].value
+      if (this.state.q.jobTaxonId == 0) {
         //全部
         this.selectedTaxonName = '工种筛选'
-      }else{
+      } else {
         this.selectedTaxonName = e.label.split('-')[1]
       }
 
@@ -316,17 +337,17 @@ export default {
     // *******************数据格式化*******************
     dataFormat (data) {
       data.forEach((element) => {
-        for(let i=0;i <3; i++){
-          let key = 'district'+(i+1)+'_fullname'
+        for (let i = 0; i < 3; i++) {
+          let key = 'district' + (i + 1) + '_fullname'
           if (element[key]) {
-            element['district'+(i+1)+'_name'] = element[key].split('-')[1]
+            element['district' + (i + 1) + '_name'] = element[key].split('-')[1]
           }
         }
 
-        for(let i=0;i <3; i++){
-          let key = 'job_taxon'+(i+1)+'_fullname'
+        for (let i = 0; i < 3; i++) {
+          let key = 'job_taxon' + (i + 1) + '_fullname'
           if (element[key]) {
-            element['job_taxon'+(i+1)+'_name'] = element[key].split('-')[1]
+            element['job_taxon' + (i + 1) + '_name'] = element[key].split('-')[1]
           }
         }
         // 格式化发布时间
@@ -349,13 +370,13 @@ export default {
     scroll (e) {
 
     },
-    uniquelizeObjs(objs){
+    uniquelizeObjs (objs) {
       var keys = {}
       var newObjs = new Array();
-      console.log( "objs=", objs)
-      objs.forEach((obj)=>{
-        if( !keys[obj.id]){
-          newObjs.push( obj )
+      console.log("objs=", objs)
+      objs.forEach((obj) => {
+        if (!keys[obj.id]) {
+          newObjs.push(obj)
           keys[obj.id] = true
         }
       })

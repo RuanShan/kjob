@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <!-- 第一大行 ===> START -->
-    <div class="first-line">
+    <!-- <div class="first-line">
       <img class="background-img" src="../../../resources/images/timg.jpg">
       <div class="one---row">
         <img style="width: 120rpx; height: 120rpx;" :src='item.headimgurl'>
@@ -9,11 +9,11 @@
       <div class="two---row">
         {{item.realname}}
       </div>
-    </div>
+    </div> -->
     <!-- 第一大行 ===> END -->
 
     <!-- 第二大行 ===> START -->
-    <div class="second-line">
+    <!-- <div class="second-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/baseinfo.png">
@@ -36,11 +36,11 @@
           找&nbsp;活&nbsp;区&nbsp;域&nbsp;&nbsp;:&nbsp;&nbsp;{{item.district1_fullname}}
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 第二大行 ===> START -->
 
     <!-- 第三大行 ===> START -->
-    <div class="third-line">
+    <!-- <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/tpyeOfWork.png">
@@ -62,11 +62,11 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 第三大行 ===> END -->
 
     <!-- 第四大行 ===> START -->
-    <div class="fourth-line">
+    <!-- <div class="fourth-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/discription.png">
@@ -78,11 +78,11 @@
       <div class="two---row">
         {{item.description}}
       </div>
-    </div>
+    </div> -->
     <!-- 第四大行 ===> END -->
 
     <!-- 第五大行 ===> START -->
-    <div class="fifth-line">
+    <!-- <div class="fifth-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/work_line.png">
@@ -98,11 +98,6 @@
         <div>
           {{work.desription}}
         </div>
-        <!-- <div class="work-image">
-          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
-          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
-          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
-        </div> -->
         <div class="image-upload">
           <div class="pre-div-image">
             <block v-for="(item, j) in work.work_images" :key="item.created_at" >
@@ -115,7 +110,7 @@
       </div>
 
       <div  class="two---row" v-show="computedCustomerWorks.length==0"> 暂无经验 </div>
-    </div>
+    </div> -->
     <!-- 第五大行 ===> END -->
 
     <!-- 第六大行 ===> START -->
@@ -137,12 +132,13 @@ export default {
         '../../../resources/images/boss.png'
       ],
       item: null, // 接收到的招工列表的JoSon数据
+      peopleDetailItem: null, // getstorage  
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
     }
   },
 
-  async onLoad (option) {
+  onLoad (option) {
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
@@ -153,14 +149,31 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    this.item = JSON.parse(option.dataObj) // 解析得到对象
+    // this.item = JSON.parse(option.detailData) // 解析得到对象
+    // this.item = JSON.parse(option.dataObj) // 解析得到对象
+    console.log(this.item);
+
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorageSync({
+      key: "peopleDetail",
+      success: (res) => {
+        console.log('peopleDetailItem 获取成功了!!!')
+        this.peopleDetailItem = res.data;
+        this.item = res.data
+      },
+      fail: () => {
+        console.log('peopleDetailItem 获取失败了$$$$$$$$$$$$$$$')
+      }
+    })
   },
-  computed:{
-    computedCustomerWorks(){
+
+  computed: {
+    computedCustomerWorks () {
       let works = this.item.customer_works || []
       return works
     }
   },
+
   methods: {
     getData () {
       console.log('开始接收数据了')

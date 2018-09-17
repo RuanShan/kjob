@@ -488,6 +488,7 @@ export default {
         url: '../workinfo/main'
       }) // 当前点击的item,数据传递给招工详情页面
     },
+    
     scrolltolower () {
       this.loadMoreJob()
      },
