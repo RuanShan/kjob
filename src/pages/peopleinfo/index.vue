@@ -13,7 +13,7 @@
     <!-- 第一大行 ===> END -->
 
     <!-- 第二大行 ===> START -->
-    <div class="second-line">
+     <div class="second-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/baseinfo.png">
@@ -40,7 +40,7 @@
     <!-- 第二大行 ===> START -->
 
     <!-- 第三大行 ===> START -->
-    <div class="third-line">
+     <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/tpyeOfWork.png">
@@ -82,7 +82,7 @@
     <!-- 第四大行 ===> END -->
 
     <!-- 第五大行 ===> START -->
-    <div class="fifth-line">
+     <div class="fifth-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/work_line.png">
@@ -98,11 +98,6 @@
         <div>
           {{work.desription}}
         </div>
-        <!-- <div class="work-image">
-          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
-          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
-          <img style="width: 150rpx; height: 150rpx;" src="../../../resources/headImage/姜亿万.png">
-        </div> -->
         <div class="image-upload">
           <div class="pre-div-image">
             <block v-for="(item, j) in work.work_images" :key="item.created_at" >
@@ -115,7 +110,7 @@
       </div>
 
       <div  class="two---row" v-show="computedCustomerWorks.length==0"> 暂无经验 </div>
-    </div>
+    </div> 
     <!-- 第五大行 ===> END -->
 
     <!-- 第六大行 ===> START -->
@@ -155,14 +150,16 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    this.item = {} //JSON.parse(option.dataObj) // 解析得到对象
+    this.item = this.$store.state.applicant //JSON.parse(option.dataObj) // 解析得到对象
   },
-  computed:{
-    computedCustomerWorks(){
+
+  computed: {
+    computedCustomerWorks () {
       let works = this.item.customer_works || []
       return works
     }
   },
+
   methods: {
     getData () {
       console.log('开始接收数据了')

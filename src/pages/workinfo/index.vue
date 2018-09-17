@@ -136,7 +136,7 @@ export default {
     }
   },
 
-  async onLoad (option) {
+  onLoad (option) {
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
