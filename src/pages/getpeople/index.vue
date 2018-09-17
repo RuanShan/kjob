@@ -261,6 +261,7 @@ export default {
     detail (item) {
       console.log(' 找活详情页面 !!!')
       console.log('item = ', item)
+      this.$store.commit('setApplicant', { applicant: item })
       wx.navigateTo({ url: '../peopleinfo/main?dataObj=' + JSON.stringify(item) }) // 当前点击的item,数据传递给招工详情页面
     },
 

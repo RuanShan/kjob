@@ -136,13 +136,15 @@ export default {
         '../../../resources/images/timg.jpg',
         '../../../resources/images/boss.png'
       ],
-      item: null, // 接收到的招工列表的JoSon数据
+      item: {}, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
     }
   },
 
   async onLoad (option) {
+    console.log("peopleinfo onload is called..")
+    console.log( "this.store.applicant", this.$store.state.applicant )
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
@@ -153,7 +155,7 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    this.item = JSON.parse(option.dataObj) // 解析得到对象
+    this.item = {} //JSON.parse(option.dataObj) // 解析得到对象
   },
   computed:{
     computedCustomerWorks(){
