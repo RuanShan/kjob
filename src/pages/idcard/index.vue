@@ -81,13 +81,13 @@ export default {
     wx.setNavigationBarTitle({
       title: '身份证认证'
     })
-    wx.getStorage({
-      key: 'userInfoForAPI',
-      success: (res) => {
-        console.log('userInfoForAPI 获取成功了!!!')
-        this.userInfoForAPI = res.data
-      }
-    })
+    // wx.getStorage({
+    //   key: 'userInfoForAPI',
+    //   success: (res) => {
+    //     console.log('userInfoForAPI 获取成功了!!!')
+    //     this.userInfoForAPI = res.data
+    //   }
+    // })
   },
 
   methods: {
@@ -127,11 +127,11 @@ export default {
         console.log('then........')
         console.log(response)
         // 成功认证
-        if (response.id !== '') {
+        if (response.id) {
           // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
           wx.setStorage({
             key: 'userInfoForAPI',
-            data: this.userInfoForAPI,
+            data: response,
             success: (res) => {
               console.log('setStorage data 后得 res = ', res);
               console.log('userInfoForAPI 存储成功了!!!')

@@ -112,6 +112,19 @@ export default {
             if( response.ret == 1){
               //验证码获取成功
               console.log('获取手机验证码成功')
+              // 禁用,计时,然后变字样
+              this.getCodeButtonDis = true // 免费获取验证码按钮禁用
+              returnTimer = setInterval(() => {
+                this.timeNum--
+                this.getCode = "" + this.timeNum + "秒后重发"
+                console.log(this.getCode);
+                if (this.timeNum === 0) {
+                  this.getCodeButtonDis = false // 免费获取验证码按钮打开
+                  this.getCode = '免费获取验证码'
+                  this.timeNum = 60
+                  clearInterval(returnTimer)
+                }
+              }, 1000)
             }
             // console.log('根据手机号码得到的kjob的校验码 = ', response.code)
             //this.verifyCode = response.sms.code
@@ -119,19 +132,7 @@ export default {
             console.log('获取手机验证码失败 = ', error)
           })
 
-          // 禁用,计时,然后变字样
-          this.getCodeButtonDis = true // 免费获取验证码按钮禁用
-          returnTimer = setInterval(() => {
-            this.timeNum--
-            this.getCode = "" + this.timeNum + "秒后重发"
-            console.log(this.getCode);
-            if (this.timeNum === 0) {
-              this.getCodeButtonDis = false // 免费获取验证码按钮打开
-              this.getCode = '免费获取验证码'
-              this.timeNum = 60
-              clearInterval(returnTimer)
-            }
-          }, 1000)
+
         } else { // 非法号码
           console.log('手机号码----非非非非非非法')
           // 提示框
@@ -161,9 +162,26 @@ export default {
         })
       } else {
         // 验证码正确 -> 1.跳转; 2.存入状态
-        identifyMobile({mobile: this.phoneNum, code: this.inputVerifyCode}).then((res)=>{
-          //返回 WxFollower, 需要更新storeage
-          if (res.id) {
+        identifyMobile({mobile: this.phoneNum, code: this.inputVerifyCode}).then((response)=>{
+          if (response.id) {
+            //返回 WxFollower, 需要更新storeage
+            // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+            wx.setStorage({
+              key: 'userInfoForAPI',
+              data: response,
+              success: (res) => {
+                console.log('setStorage data 后得 res = ', res);
+                console.log('userInfoForAPI 存储成功了!!!')
+              },
+              fail: () => {
+                console.log('userInfoForAPI 存储失败了*******')
+              }
+            })
+            wx.showToast({
+              title: '成功',
+              icon: 'success',
+              duration: 2000
+            })
             wx.navigateBack({ delta: 1 })
           } else {
             // 提示框

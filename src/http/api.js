@@ -357,7 +357,7 @@ export const addApplicant = (data) => {
 export const getVerifyCode = (data) => {
   // console.log( "data=", data)
   let params = {
-    url: '/sms',
+    url: '/api/v1/wx_followers/1/send_vercode',
     data: data
   }
   return post(params)
