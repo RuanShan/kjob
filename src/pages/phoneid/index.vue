@@ -26,9 +26,11 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-section">
-      <checkbox-group class="checkbox-select" @change="checkboxChange">
-        <checkbox :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
-      </checkbox-group>
+      <label>
+        <checkbox-group class="checkbox-select" @change="checkboxChange">
+          <checkbox :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
+        </checkbox-group>
+      </label>
     </div>
     <!-- 列表单元 第三行 END -->
 
@@ -60,7 +62,7 @@ export default {
       phoneNum: null, // 用户输入的手机号码
       getCode: '免费获取验证码', // 1.显示字样; 2.点击按钮后计时,并显示时间
       getCodeButtonDis: false, // 免费获取验证吗按钮是否禁用开关
-      timeNum: 0, // 时间计时
+      timeNum: 60, // 时间计时
       verifyCode: '', // 用户输入的收到的验证码
       inputVerifyCode: '', // 用户输入的校验码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
@@ -86,6 +88,7 @@ export default {
     // ***用户输入的code和从kjob收到的code比较,相同->跳转;不同->弹窗***
     // ***************************************************************
     checkboxChange (e) {
+      console.log(e);
       console.log(e.mp.detail.value[0])
       this.checkBoxFlage = e.mp.detail.value[0]
     },
@@ -96,13 +99,13 @@ export default {
     freeGetverifyCode () {
       // 手机号码规则
       let phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/
-      let returnTime = null
+      let returnTimer = null
       console.log('点击了按钮')
       if (this.phoneNum !== null) { // 不为空,用户填写了数字
         if (phoneReg.test(this.phoneNum)) { // 根据规则校验
           console.log('手机号码----合法')
 
-           // 访问kjob-server给从微信server得到的code和userInfo数据
+          // 访问kjob-server给从微信server得到的code和userInfo数据
           let data = { mobile: this.phoneNum }
           getVerifyCode(data).then((response) => {
             console.log('收到的response = ', response)
@@ -118,15 +121,15 @@ export default {
 
           // 禁用,计时,然后变字样
           this.getCodeButtonDis = true // 免费获取验证码按钮禁用
-          returnTime = setInterval(() => {
-            this.timeNum++
+          returnTimer = setInterval(() => {
+            this.timeNum--
             this.getCode = "" + this.timeNum + "秒后重发"
             console.log(this.getCode);
-            if (this.timeNum === 60) {
+            if (this.timeNum === 0) {
               this.getCodeButtonDis = false // 免费获取验证码按钮打开
               this.getCode = '免费获取验证码'
-              this.timeNum = 0
-              clearInterval(returnTime)
+              this.timeNum = 60
+              clearInterval(returnTimer)
             }
           }, 1000)
         } else { // 非法号码
