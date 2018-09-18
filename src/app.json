@@ -6,7 +6,6 @@
       "pages/getpeople/main",
       "pages/freerelease/main",
       "pages/my/main",
-      "pages/test/main",
       "pages/releasemy/main",
       "pages/releasejob/main",
       "pages/myexperiense/main",
@@ -49,12 +48,6 @@
           "selectedIconPath": "/resources/tabBar/wode-s.png",
           "iconPath": "/resources/tabBar/wode.png",
           "text": "我的"
-        },
-        {
-          "pagePath": "pages/test/main",
-          "selectedIconPath": "/resources/tabBar/wode-s.png",
-          "iconPath": "/resources/tabBar/wode.png",
-          "text": "实验"
         }
       ]
     }
