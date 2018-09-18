@@ -293,7 +293,7 @@ page {
         padding: 25rpx;
         font-size: 25rpx;
         .image-upload {
-          height: 300rpx;
+          height: 228rpx;
           background-color: #ffffff;
           .uploader-input-box {
             float: left;

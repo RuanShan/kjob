@@ -58,31 +58,31 @@ export default {
   methods: {
     releaseWorkerInfo () {
       console.log('免费发布找活信息****')
-      wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
+      // wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
 
-      // // 根据当前用户信息判读是否进行了身份证认证和电话认证
-      // if (this.userInfoForAPI.id_num_identified_at !== null || this.userInfoForAPI.mobile_identified_at !== null) {
-      //   wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
-      // } else {
-      //   wx.showModal({
-      //     content: '请先进行身份证认证和电话认证,之后才能发布信息!',
-      //     showCancel: false
-      //   })
-      // }
+      // 根据当前用户信息判读是否进行了身份证认证和电话认证
+      if (this.userInfoForAPI.id_num_identified_at !== null || this.userInfoForAPI.mobile_identified_at !== null) {
+        wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
+      } else {
+        wx.showModal({
+          content: '请先进行身份证认证和电话认证,之后才能发布信息!',
+          showCancel: false
+        })
+      }
     },
     releaseJobInfo () {
       console.log('免费发布招工信息%%%')
-      wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
+      // wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
 
       // 根据当前用户信息判读是否进行了身份证认证和电话认证
-      // if (this.userInfoForAPI.id_num_identified_at !== null || this.userInfoForAPI.mobile_identified_at !== null) {
-      //   wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
-      // } else {
-      //   wx.showModal({
-      //     content: '请先进行身份证认证和电话认证,之后才能发布信息!',
-      //     showCancel: false
-      //   })
-      // }
+      if (this.userInfoForAPI.id_num_identified_at !== null || this.userInfoForAPI.mobile_identified_at !== null) {
+        wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
+      } else {
+        wx.showModal({
+          content: '请先进行身份证认证和电话认证,之后才能发布信息!',
+          showCancel: false
+        })
+      }
     }
   }
 }
