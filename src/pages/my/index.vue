@@ -17,22 +17,22 @@
 
     <!-- 列表单元 第二行 START -->
     <div class="second-row">
-      <div class="one-colum button-wrap" >
+      <div class="one-colum button-wrap">
         <button @click="toIDCard">
-        <img style="width: 120rpx; height: 120rpx;" src="/resources/icon/peopleID.png">
-        <div>身份认证</div>
+          <img style="width: 120rpx; height: 120rpx;" src="/resources/icon/peopleID.png">
+          <div>身份认证</div>
         </button>
       </div>
-      <div class="two-colum button-wrap" >
+      <div class="two-colum button-wrap">
         <button @click="toPhoneID">
-        <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/phoneID.png">
-        <div>手机认证</div>
+          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/phoneID.png">
+          <div>手机认证</div>
         </button>
       </div>
       <div class="three-colum button-wrap">
         <button open-type='share'>
-        <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/share.png">
-        <div>分享</div>
+          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/share.png">
+          <div>分享</div>
         </button>
       </div>
     </div>
@@ -97,7 +97,16 @@ export default {
     // ***跳转到手机认证界面***
     // ***************************************************************
     toPhoneID () {
-      wx.navigateTo({ url: '../phoneid/main' })
+      // 检查是否已经身份认证过了
+      if (this.userInfoForAPI.mobile_identified_at != null) {
+        // 提示框
+        wx.showModal({
+          content: '您的手机已经认证过了,无需再次认证',
+          showCancel: false
+        })
+      } else {
+        wx.navigateTo({ url: '../phoneid/main' })
+      }
     }
   }
 }
@@ -167,16 +176,16 @@ page {
       justify-content: center;
       align-items: center;
     }
-    .button-wrap{
-      button{
-        padding:0;
-        line-height:auto;
-        display:inline;
-        line-height:1;
-        border:none;
-        background:transparent;
+    .button-wrap {
+      button {
+        padding: 0;
+        line-height: auto;
+        display: inline;
+        line-height: 1;
+        border: none;
+        background: transparent;
       }
-      button::after{
+      button::after {
         border: none;
       }
     }

@@ -6,7 +6,7 @@
         <input class="wx-input" maxlength="11" type="number" placeholder="请填当前手机号码" v-model="phoneNum" />
       </div>
       <div class="two-column">
-        <button class="verify-phone" type="default" @click="getverifyCode">{{getCode}}</button>
+        <button class="verify-phone" type="default" @click="freeGetverifyCode" :disabled="getCodeButtonDis">{{getCode}}</button>
       </div>
     </div>
     <!-- 列表单元 第一行 END -->
@@ -59,6 +59,8 @@ export default {
     return {
       phoneNum: null, // 用户输入的手机号码
       getCode: '免费获取验证码', // 1.显示字样; 2.点击按钮后计时,并显示时间
+      getCodeButtonDis: false, // 免费获取验证吗按钮是否禁用开关
+      timeNum: 0, // 时间计时
       verifyCode: '', // 用户输入的收到的验证码
       inputVerifyCode: '', // 用户输入的校验码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
@@ -91,14 +93,16 @@ export default {
     // ***1.判断有没有电话号码: 1.1: 如果有->验证手机号码是否合法; 1.2: 如果没有->弹框***
     // ***1.1.1: 合法 提交到kjob server,得到code; 1.1.2: 不合法->弹窗***
     // ***************************************************************
-    getverifyCode () {
+    freeGetverifyCode () {
       // 手机号码规则
       let phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/
+      let returnTime = null
       console.log('点击了按钮')
       if (this.phoneNum !== null) { // 不为空,用户填写了数字
         if (phoneReg.test(this.phoneNum)) { // 根据规则校验
           console.log('手机号码----合法')
-          // 访问kjob-server给从微信server得到的code和userInfo数据
+
+           // 访问kjob-server给从微信server得到的code和userInfo数据
           let data = { mobile: this.phoneNum }
           getVerifyCode(data).then((response) => {
             console.log('收到的response = ', response)
@@ -107,6 +111,20 @@ export default {
           }).catch(function (error) {
             console.log('获取手机验证码失败 = ', error)
           })
+
+          // 禁用,计时,然后变字样
+          this.getCodeButtonDis = true // 免费获取验证码按钮禁用
+          returnTime = setInterval(() => {
+            this.timeNum++
+            this.getCode = "" + this.timeNum + "秒后重发"
+            console.log(this.getCode);
+            if (this.timeNum === 60) {
+              this.getCodeButtonDis = false // 免费获取验证码按钮打开
+              this.getCode = '免费获取验证码'
+              this.timeNum = 0
+              clearInterval(returnTime)
+            }
+          }, 1000)
         } else { // 非法号码
           console.log('手机号码----非非非非非非法')
           // 提示框
