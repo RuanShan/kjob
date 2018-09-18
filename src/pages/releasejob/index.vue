@@ -114,7 +114,7 @@
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" maxlength="10" type="number" placeholder="多少人?只能数字" v-model="pay_desc" />
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少人?只能数字" v-model="quantity" />
         </div>
       </div>
       <!-- 列表单元 招工人数 END -->
@@ -146,7 +146,7 @@
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" maxlength="10" type="number" placeholder="多少量?只能数字" v-model="pay_desc" /> &nbsp;&nbsp;平方米
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少量?只能数字" v-model="quantity" /> &nbsp;&nbsp;平方米
         </div>
       </div>
       <!-- 列表单元 工程数量 END -->
@@ -366,7 +366,7 @@ export default {
       ],
       worker_type: '点工', // 招工类型
       // numOfPeople: '', // 输入招工人数
-      pay_desc: '', // 输入工程量和输入招工人数
+      quantity: '', // 输入工程量和输入招工人数
       pay: '', // 输入的工资标准
       description: '', // 招工描述 输入
       textAreaDisplay: true, // 招工描述显示开关
@@ -574,9 +574,9 @@ export default {
       dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
       dataToServer.district_fullname = this.regionFullName // 招工地点
       dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
-      dataToServer.quantity = this.pay_desc // 招工人数
+      dataToServer.quantity = this.quantity // 招工人数或工程数量
       dataToServer.pay = this.pay // 工资标准
-      dataToServer.pay_desc = this.pay_desc // 工程数量
+      dataToServer.pay_desc = this.pay_desc
       dataToServer.description = this.description // 招工描述
       dataToServer.expire_in = this.releaseTime.substring(0, 2) // 发布时间
       // dataToServer.job_images_attributes = this.files.map((file) => { return { attachment: file }})  // 照片

@@ -13,7 +13,7 @@
     <!-- 第一大行 ===> END -->
 
     <!-- 第二大行 ===> START -->
-     <div class="second-line">
+    <div class="second-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/baseinfo.png">
@@ -40,7 +40,7 @@
     <!-- 第二大行 ===> START -->
 
     <!-- 第三大行 ===> START -->
-     <div class="third-line">
+    <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/tpyeOfWork.png">
@@ -82,7 +82,7 @@
     <!-- 第四大行 ===> END -->
 
     <!-- 第五大行 ===> START -->
-     <div class="fifth-line">
+    <div class="fifth-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/work_line.png">
@@ -91,26 +91,25 @@
           &nbsp;&nbsp; 工作经历
         </div>
       </div>
-      <div class="two---row" v-for="(work, i ) in computedCustomerWorks" :key="work.id">
-        <div>
-          {{work.start_at}} ~ {{work.end_at}} {{work.district_fullname}}
-        </div>
+      <div class="two---row" v-for="(work, index ) in computedCustomerWorks" :key="index">
+        <div> {{work.start_at}} ~ {{work.end_at}} </div>
+        <div>{{work.district_fullname}}</div>
         <div>
           {{work.desription}}
         </div>
         <div class="image-upload">
           <div class="pre-div-image">
-            <block v-for="(item, j) in work.work_images" :key="item.created_at" >
-              <div class="uploader-pre-image" @click="predivImage" :id="item">
-                <image class="uploader__img" :src="item.original_url" mode="aspectFill" />
+            <block v-for="(item, num) in files[index]" :key="num">
+              <div class="uploader-pre-image" @click="predivImage({urls:files[index],current:item})">
+                <image class="uploader__img" :src="item" mode="aspectFill" />
               </div>
             </block>
           </div>
         </div>
       </div>
 
-      <div  class="two---row" v-show="computedCustomerWorks.length==0"> 暂无经验 </div>
-    </div> 
+      <div class="two---row" v-show="computedCustomerWorks.length==0"> 暂无经验 </div>
+    </div>
     <!-- 第五大行 ===> END -->
 
     <!-- 第六大行 ===> START -->
@@ -126,11 +125,7 @@
 export default {
   data () {
     return {
-      files: [
-        '../../../resources/images/bkg.jpg',
-        '../../../resources/images/timg.jpg',
-        '../../../resources/images/boss.png'
-      ],
+      files: [],
       item: {}, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
@@ -139,7 +134,7 @@ export default {
 
   async onLoad (option) {
     console.log("peopleinfo onload is called..")
-    console.log( "this.store.applicant", this.$store.state.applicant )
+    console.log("this.store.applicant", this.$store.state.applicant)
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
@@ -151,6 +146,21 @@ export default {
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
     this.item = this.$store.state.applicant //JSON.parse(option.dataObj) // 解析得到对象
+    console.log('peopleInfo item = ', this.item);
+
+    let tempArray = []
+    this.item.customer_works.forEach(element => {
+      console.log('element = ', element);
+      element.work_images.forEach((ele) => {
+        console.log('work_images = ', ele);
+        tempArray.push(ele.original_url)
+        console.log('tempArray = ', tempArray);
+      })
+      this.files.push(tempArray)
+      tempArray = []
+    });
+
+    // this.files = (this.item.customer_works.map((element) => { return element.original_url }))
   },
 
   computed: {
@@ -196,10 +206,10 @@ export default {
     // ***调用wx.previewImage***
     // ***************************************************************
     predivImage (e) {
-      console.log(e)
+      console.log('e = ', e)
       wx.previewImage({
-        current: e.currentTarget.id, // 当前显示图片的http链接
-        urls: this.files // 需要预览的图片http链接列表
+        current: e.current, // 当前显示图片的http链接
+        urls: e.urls // 需要预览的图片http链接列表
       })
     },
   }
@@ -322,7 +332,7 @@ page {
       .two---row {
         padding: 25rpx;
         .image-upload {
-          height: 300rpx;
+          height: 236rpx;
           background-color: #ffffff;
           .uploader-input-box {
             float: left;
