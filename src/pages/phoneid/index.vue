@@ -26,9 +26,11 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-section">
-      <checkbox-group class="checkbox-select" @change="checkboxChange">
-        <checkbox :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
-      </checkbox-group>
+      <label >
+        <checkbox-group class="checkbox-select" @change="checkboxChange">
+          <checkbox :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
+        </checkbox-group>
+      </label>
     </div>
     <!-- 列表单元 第三行 END -->
 
@@ -86,6 +88,7 @@ export default {
     // ***用户输入的code和从kjob收到的code比较,相同->跳转;不同->弹窗***
     // ***************************************************************
     checkboxChange (e) {
+      console.log(e);
       console.log(e.mp.detail.value[0])
       this.checkBoxFlage = e.mp.detail.value[0]
     },
@@ -102,7 +105,7 @@ export default {
         if (phoneReg.test(this.phoneNum)) { // 根据规则校验
           console.log('手机号码----合法')
 
-           // 访问kjob-server给从微信server得到的code和userInfo数据
+          // 访问kjob-server给从微信server得到的code和userInfo数据
           let data = { mobile: this.phoneNum }
           getVerifyCode(data).then((response) => {
             console.log('收到的response = ', response)
