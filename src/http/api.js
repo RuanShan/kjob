@@ -342,6 +342,18 @@ export const addApplicant = (data) => {
 //         "send_at": "2018-09-03T20:24:20.769+08:00"
 //     }
 // }
+// {
+//     "status": 0,
+//     "sms": {
+//         "mobile": "1332228079",
+//         "validation_context": null,
+//         "errors": {
+//             "mobile": [
+//                 "电话号码不正确"
+//             ]
+//         }
+//     }
+// }
 export const getVerifyCode = (data) => {
   // console.log( "data=", data)
   let params = {
