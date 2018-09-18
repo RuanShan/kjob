@@ -13,6 +13,7 @@ var fly = new Fly
 // fly.config.timeout=10000
 // //设置请求基地址
 // fly.config.baseURL='https://wendux.github.io/'
+fly.config.withCredentials = true
 
 // 添加请求拦截器
 fly.interceptors.request.use((request) => {

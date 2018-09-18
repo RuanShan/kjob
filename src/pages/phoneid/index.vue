@@ -50,7 +50,7 @@
 
 <script>
 import {
-  // identifyMobile,
+  identifyMobile,
   getVerifyCode
 } from '../../http/api.js'
 
@@ -106,8 +106,12 @@ export default {
           let data = { mobile: this.phoneNum }
           getVerifyCode(data).then((response) => {
             console.log('收到的response = ', response)
+            if( response.ret == 1){
+              //验证码获取成功
+              console.log('获取手机验证码成功')
+            }
             // console.log('根据手机号码得到的kjob的校验码 = ', response.code)
-            this.verifyCode = response.sms.code
+            //this.verifyCode = response.sms.code
           }).catch(function (error) {
             console.log('获取手机验证码失败 = ', error)
           })
@@ -154,15 +158,19 @@ export default {
         })
       } else {
         // 验证码正确 -> 1.跳转; 2.存入状态
-        if (this.inputVerifyCode === this.verifyCode) {
-          wx.navigateBack({ delta: 1 })
-        } else {
-          // 提示框
-          wx.showModal({
-            content: '请输入正确的验证码',
-            showCancel: false
-          })
-        }
+        identifyMobile({mobile: this.phoneNum, code: this.inputVerifyCode}).then((res)=>{
+          //返回 WxFollower, 需要更新storeage
+          if (res.id) {
+            wx.navigateBack({ delta: 1 })
+          } else {
+            // 提示框
+            wx.showModal({
+              content: '请输入正确的验证码',
+              showCancel: false
+            })
+          }
+
+        })
       }
     }
   },
