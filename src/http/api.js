@@ -354,10 +354,10 @@ export const addApplicant = (data) => {
 //         }
 //     }
 // }
-export const getVerifyCode = (data) => {
+export const getVerifyCode = (id, data) => {
   // console.log( "data=", data)
   let params = {
-    url: '/api/v1/wx_followers/1/send_vercode',
+    url: '/api/v1/wx_followers/'+id+'/send_vercode',
     data: data
   }
   return post(params)
@@ -368,9 +368,9 @@ export const getVerifyCode = (data) => {
 //  mobile:13322280797
 //  code:28283
 
-export const identifyMobile = (data) => {
+export const identifyMobile = (id, data) => {
   let params = {
-    url: '/api/v1/wx_followers/1/identify_mobile',
+    url: '/api/v1/wx_followers/'+id+'/identify_mobile',
     data: data
   }
   return post(params)
@@ -381,9 +381,9 @@ export const identifyMobile = (data) => {
 //  id_num:211204198803240012
 //  realname:卡卡
 
-export const identifyIdnum = (data) => {
+export const identifyIdnum = (id, data) => {
   let params = {
-    url: '/api/v1/wx_followers/1/identify_id_num',
+    url: '/api/v1/wx_followers/'+id+'/identify_id_num',
     data: data
   }
   return post(params)

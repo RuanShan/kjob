@@ -81,15 +81,17 @@ export default {
     wx.setNavigationBarTitle({
       title: '身份证认证'
     })
-    // wx.getStorage({
-    //   key: 'userInfoForAPI',
-    //   success: (res) => {
-    //     console.log('userInfoForAPI 获取成功了!!!')
-    //     this.userInfoForAPI = res.data
-    //   }
-    // })
   },
-
+  onShow(){
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
+    })
+  },
   methods: {
     checkboxChange (e) {
       console.log(e.mp.detail.value[0])
@@ -123,7 +125,7 @@ export default {
         realname: this.realName
       }
       // API 函数 身份证验证
-      identifyIdnum(data).then((response) => {
+      identifyIdnum(this.userInfoForAPI.id, data).then((response) => {
         console.log('then........')
         console.log(response)
         // 成功认证

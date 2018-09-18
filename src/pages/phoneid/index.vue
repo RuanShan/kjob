@@ -59,6 +59,7 @@ import {
 export default {
   data () {
     return {
+      userInfoForAPI: null,
       phoneNum: null, // 用户输入的手机号码
       getCode: '免费获取验证码', // 1.显示字样; 2.点击按钮后计时,并显示时间
       getCodeButtonDis: false, // 免费获取验证吗按钮是否禁用开关
@@ -82,7 +83,16 @@ export default {
       title: '手机认证'
     })
   },
-
+  onShow(){
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
+    })
+  },
   methods: {
     // *********************点击验证按钮处理函数************************
     // ***用户输入的code和从kjob收到的code比较,相同->跳转;不同->弹窗***
@@ -107,7 +117,7 @@ export default {
 
           // 访问kjob-server给从微信server得到的code和userInfo数据
           let data = { mobile: this.phoneNum }
-          getVerifyCode(data).then((response) => {
+          getVerifyCode( this.userInfoForAPI.id, data).then((response) => {
             console.log('收到的response = ', response)
             if( response.ret == 1){
               //验证码获取成功
@@ -125,6 +135,11 @@ export default {
                   clearInterval(returnTimer)
                 }
               }, 1000)
+            }else{
+              wx.showModal({
+                content: '获取手机验证码失败,请晚些再试',
+                showCancel: false
+              })
             }
             // console.log('根据手机号码得到的kjob的校验码 = ', response.code)
             //this.verifyCode = response.sms.code
@@ -162,7 +177,7 @@ export default {
         })
       } else {
         // 验证码正确 -> 1.跳转; 2.存入状态
-        identifyMobile({mobile: this.phoneNum, code: this.inputVerifyCode}).then((response)=>{
+        identifyMobile( this.userInfoForAPI.id, {mobile: this.phoneNum, code: this.inputVerifyCode}).then((response)=>{
           if (response.id) {
             //返回 WxFollower, 需要更新storeage
             // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
@@ -191,7 +206,13 @@ export default {
             })
           }
 
-        })
+        }).catch(function (res) {
+          wx.showModal({
+            content: res.error,
+            showCancel: false
+          })
+          console.log(res);
+        });
       }
     }
   },

@@ -20,12 +20,14 @@
       <div class="one-colum button-wrap">
         <button @click="toIDCard">
           <img style="width: 120rpx; height: 120rpx;" src="/resources/icon/peopleID.png">
+          <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.id_num_identified_at" />
           <div>身份认证</div>
         </button>
       </div>
       <div class="two-colum button-wrap">
         <button @click="toPhoneID">
           <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/phoneID.png">
+          <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.mobile_identified_at" />
           <div>手机认证</div>
         </button>
       </div>
@@ -57,7 +59,7 @@ export default {
     }
   },
 
-  async onLoad () {
+  onLoad () {
     wx.showTabBar({ animation: true })
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
@@ -66,6 +68,9 @@ export default {
     wx.setNavigationBarTitle({
       title: '我的'
     })
+
+  },
+  onShow(){
     // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
@@ -75,7 +80,6 @@ export default {
       }
     })
   },
-
   methods: {
     // *********************点击身份认证处理函数************************
     // ***跳转到身份证认证界面***
@@ -188,6 +192,12 @@ page {
       button::after {
         border: none;
       }
+      .identified-icon{
+        position:absolute;
+        right:0px;
+        bottom:20px;
+      }
+
     }
   }
   .three-row {
