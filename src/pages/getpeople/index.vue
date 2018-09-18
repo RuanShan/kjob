@@ -17,7 +17,7 @@
     <div class="list">
       <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scroll="scroll" lower-threshold="50">
 
-        <div class="circular" v-for="item in peopleList" :key="item" @click="detail(item)">
+        <div class="circular" v-for="(item, i) in peopleList" :key="item.id" @click="detail(item)">
           <div class="div-left">
             <div class="left-top">
               <div class="left-top-one">
@@ -54,14 +54,8 @@
           </div>
           <div class="div-right">
             <div class="right-top">
-              <div v-show="item.district2_name">
-                {{item.district2_name}}
-              </div>
-              <div v-show="item.district1_name">
-                {{item.district1_name}}
-              </div>
-              <div v-show="item.district3_name">
-                {{item.district3_name}}
+              <div v-for="(cityName, j) in item.city_names" :key="cityName">
+                {{cityName}}
               </div>
             </div>
             <div class="right-bottom">
@@ -87,6 +81,7 @@ import {
   searchApplicants
 } from '../../http/api.js'
 import { regions } from '../../store/regions'
+import _ from 'lodash'
 
 export default {
   components: {
@@ -183,14 +178,6 @@ export default {
     wx.getSystemInfo({
       success: (res) => {
         console.log(res);
-        // 可使用窗口宽度、高度
-        console.log('height=' + res.windowHeight);
-        console.log('width=' + res.windowWidth);
-        // 计算主体部分高度,单位为px
-        //that.setData({
-        // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
-        //  second_height: res.windowHeight - res.windowWidth / 750 * (92+36 + 98)
-        //})
         this.scrollViewHeight = res.windowHeight - res.windowWidth / 750 * (92)
       }
     })
@@ -320,17 +307,21 @@ export default {
     // *******************数据格式化*******************
     dataFormat (data) {
       data.forEach((element) => {
+        let city_names = []
+        element.job_taxon_names = []
         for (let i = 0; i < 3; i++) {
           let key = 'district' + (i + 1) + '_fullname'
           if (element[key]) {
             element['district' + (i + 1) + '_name'] = element[key].split('-')[1]
+            city_names.push( element['district' + (i + 1) + '_name'] )
           }
         }
-
+        element.city_names = _.uniq( city_names )
         for (let i = 0; i < 3; i++) {
           let key = 'job_taxon' + (i + 1) + '_fullname'
           if (element[key]) {
             element['job_taxon' + (i + 1) + '_name'] = element[key].split('-')[1]
+            element.job_taxon_names.push( element['job_taxon' + (i + 1) + '_name'] )
           }
         }
         // 格式化发布时间
