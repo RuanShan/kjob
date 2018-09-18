@@ -45,16 +45,28 @@
               </div>
             </div>
             <div class="two---row">
-              <div class="two-row-one">
-                价格:&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="two-row-one" v-if="item.isPartTime">
+                工资标准:&nbsp;&nbsp;&nbsp;&nbsp;
                 <div class="pay">
-                  &nbsp;&nbsp;{{item.pay}}
+                  &nbsp;&nbsp;{{item.pay}}元/天
                 </div>
               </div>
-              <div class="two-row-two">
-                工程量:
+              <div class="two-row-one" v-if="!item.isPartTime">
+                单位价格:&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="pay">
+                  &nbsp;&nbsp;{{item.pay}}元
+                </div>
+              </div>
+              <div class="two-row-two" v-if="item.isPartTime">
+                招工人数:
                 <div class="worksAmount">
-                  &nbsp;&nbsp;{{item.worksAmount}}
+                  &nbsp;&nbsp;{{item.quantity}}
+                </div>
+              </div>
+              <div class="two-row-two" v-if="!item.isPartTime">
+                工程数量:
+                <div class="worksAmount">
+                  &nbsp;&nbsp;{{item.quantity}}平方米
                 </div>
               </div>
             </div>
@@ -488,7 +500,7 @@ export default {
         url: '../workinfo/main'
       }) // 当前点击的item,数据传递给招工详情页面
     },
-    
+
     scrolltolower () {
       this.loadMoreJob()
      },
@@ -499,6 +511,7 @@ export default {
         let regions = element.district_fullname.split('-')
         element.city = regions[1] // city OK
         element.state = regions[0]
+        element.isPartTime = element.worker_type == 'parttime'
         element.releaseTime = element.created_at.substring(0, 10) + ' ' + element.created_at.substring(11, 16) // releaseTime OK
       });
     },

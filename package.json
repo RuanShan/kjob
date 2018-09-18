@@ -11,8 +11,8 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "better-scroll": "^1.12.6",
     "flyio": "^0.6.0",
+    "lodash": "^4.17.11",
     "mpvue": "^1.0.11",
     "mpvue-picker": "^2.0.1",
     "qs": "^6.5.2",
