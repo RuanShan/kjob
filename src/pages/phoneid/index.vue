@@ -51,7 +51,7 @@
 <script>
 import {
   // identifyMobile,
-  // getVerifyCode
+  getVerifyCode
 } from '../../http/api.js'
 
 export default {
