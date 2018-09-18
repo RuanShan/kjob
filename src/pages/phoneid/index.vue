@@ -26,7 +26,7 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-section">
-      <label >
+      <label>
         <checkbox-group class="checkbox-select" @change="checkboxChange">
           <checkbox :value="cheItem.value" :checked="cheItem.checked" />{{cheItem.name}}
         </checkbox-group>
