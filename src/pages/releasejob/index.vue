@@ -374,7 +374,7 @@ export default {
     }
   },
 
-  async onLoad (option) {
+  onLoad (option) {
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
@@ -385,14 +385,7 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
-    wx.getStorage({
-      key: 'userInfoForAPI',
-      success: (res) => {
-        console.log('userInfoForAPI 获取成功了!!!')
-        this.userInfoForAPI = res.data;
-      }
-    })
+   
     /* *************get kjob server 得到全国地区数据*************** */
     getRegionTree().then(res => {
       console.log('地区', res)
@@ -406,6 +399,17 @@ export default {
       this.pickerJobArray = res
     }).catch(function (error) {
       console.log('error', error)
+    })
+  },
+
+  onShow () {
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
     })
   },
 

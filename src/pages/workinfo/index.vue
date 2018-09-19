@@ -147,6 +147,17 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
+
+    wx.getSystemInfo({
+      success: (res) => {
+        console.log(res.windowHeight) // 获取可使用窗口高度
+        this.windowHeight = (res.windowHeight * (750 / res.windowWidth)) // 将高度乘以换算后的该设备的rpx与px的比例
+        console.log(this.windowHeight) // 最后获得转化后得rpx单位的窗口高度
+      }
+    })
+  },
+
+  onShow () {
     wx.getStorage({
       key: 'worksItem',
       success: (res) => {
@@ -154,13 +165,6 @@ export default {
         this.item = res.data
         this.files = (this.item.job_images.map((element) => { return element.original_url }))
         this.phoneNumber = this.item.customer_mobile
-      }
-    })
-    wx.getSystemInfo({
-      success: (res) => {
-        console.log(res.windowHeight) // 获取可使用窗口高度
-        this.windowHeight = (res.windowHeight * (750 / res.windowWidth)) // 将高度乘以换算后的该设备的rpx与px的比例
-        console.log(this.windowHeight) // 最后获得转化后得rpx单位的窗口高度
       }
     })
   },

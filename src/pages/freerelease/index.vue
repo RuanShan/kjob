@@ -28,6 +28,9 @@
 </template>
 
 <script>
+import {
+  getWxFollower
+} from '../../http/api.js'
 
 export default {
   data () {
@@ -37,7 +40,8 @@ export default {
     }
   },
 
-  async onLoad () {
+  onLoad () {
+    console.log('onLoad ..................开始');
     wx.showTabBar({ animation: true })
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
@@ -46,15 +50,41 @@ export default {
     wx.setNavigationBarTitle({
       title: '免费发布'
     })
-    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    console.log('onLoad ..................结束');
+  },
+
+  onShow () {
+    console.log('onShow ..................开始');
     wx.getStorage({
       key: 'userInfoForAPI',
       success: (res) => {
-        console.log('userInfoForAPI 获取成功了!!!')
-        this.userInfoForAPI = res.data;
+        console.log('getStorage userInfoForAPI 获取成功了!!!')
+        let id = res.data.id
+        getWxFollower(id).then((res) => {
+          // console.log(res);
+          // 得到当前用户微信数保和KJob用户信息保持到userInfoForAPI中
+          this.userInfoForAPI = res;
+          // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+          wx.setStorage({
+            key: 'userInfoForAPI',
+            data: this.userInfoForAPI,
+            success: (res) => {
+              // console.log('setStorage data 后得 res = ', res);
+              console.log('setStorage userInfoForAPI 存储成功了!!!')
+            },
+            fail: () => {
+              console.log('setStorage userInfoForAPI 存储失败了*******')
+            }
+          })
+        }).catch((err) => {
+          console.log("API - getWxFollower 错误 = ", err);
+        });
       }
     })
+
+    console.log('onShow ..................结束');
   },
+
   methods: {
     releaseWorkerInfo () {
       console.log('免费发布找活信息****')

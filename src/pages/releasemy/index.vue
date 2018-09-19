@@ -477,7 +477,7 @@ export default {
     }
   },
 
-  async onLoad (option) {
+  onLoad (option) {
     console.log('onLoad...........');
 
     wx.setNavigationBarColor({
@@ -491,6 +491,24 @@ export default {
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
 
+    /* *************get kjob server 得到全国地区数据*************** */
+    getRegionTree().then(res => {
+      console.log('地区', res)
+      this.pickerRegionArray = res;
+    }).catch(function (error) {
+      console.log('error', error)
+    })
+    /* *************get kjob server 得到工种数据*************** */
+    getJobTaxonTree().then(res => {
+      console.log('用工分类', res);
+      this.mulLinkageTwoPicker = res
+    }).catch(function (error) {
+      console.log('error', error)
+    })
+  },
+
+  onShow () {
+    console.log('noShow...........');
     // 程序进入当前页面后,先取得全局用户信息userInfoForAPI,然后根据id取云端userInfoFroAPI,再根据从云端取回来的数据存入本地userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
@@ -536,25 +554,6 @@ export default {
         })
       }
     })
-
-    /* *************get kjob server 得到全国地区数据*************** */
-    getRegionTree().then(res => {
-      console.log('地区', res)
-      this.pickerRegionArray = res;
-    }).catch(function (error) {
-      console.log('error', error)
-    })
-    /* *************get kjob server 得到工种数据*************** */
-    getJobTaxonTree().then(res => {
-      console.log('用工分类', res);
-      this.mulLinkageTwoPicker = res
-    }).catch(function (error) {
-      console.log('error', error)
-    })
-  },
-
-  async onShow () {
-    console.log('noShow...........');
   },
 
   methods: {
