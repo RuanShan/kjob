@@ -72,7 +72,7 @@ export default {
     }
   },
 
-  async onLoad () {
+  onLoad () {
     wx.showTabBar({ animation: true })
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
@@ -82,16 +82,17 @@ export default {
       title: '身份证认证'
     })
   },
-  onShow(){
-    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+
+  onShow () {
     wx.getStorage({
       key: 'userInfoForAPI',
       success: (res) => {
         console.log('userInfoForAPI 获取成功了!!!')
-        this.userInfoForAPI = res.data;
+        this.userInfoForAPI = res.data
       }
     })
   },
+
   methods: {
     checkboxChange (e) {
       console.log(e.mp.detail.value[0])
@@ -125,15 +126,15 @@ export default {
         realname: this.realName
       }
       // API 函数 身份证验证
-      identifyIdnum(this.userInfoForAPI.id, data).then((response) => {
+      identifyIdnum(data).then((response) => {
         console.log('then........')
         console.log(response)
         // 成功认证
-        if (response.id) {
+        if (response.id !== '') {
           // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
           wx.setStorage({
             key: 'userInfoForAPI',
-            data: response,
+            data: this.userInfoForAPI,
             success: (res) => {
               console.log('setStorage data 后得 res = ', res);
               console.log('userInfoForAPI 存储成功了!!!')

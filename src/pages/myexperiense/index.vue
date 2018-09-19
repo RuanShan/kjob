@@ -174,14 +174,6 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
-    wx.getStorage({
-      key: 'userInfoForAPI',
-      success: (res) => {
-        console.log('userInfoForAPI 获取成功了!!!')
-        this.userInfoForAPI = res.data;
-      }
-    })
     console.log('option = ', option);
     if (option.isView === "true") {
       this.isView = true  // 点击了查看
@@ -215,6 +207,17 @@ export default {
       this.district_fullname = '请选择' // 项目地点
       this.files = []
     }
+  },
+
+  onShow () {
+    // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        console.log('userInfoForAPI 获取成功了!!!')
+        this.userInfoForAPI = res.data;
+      }
+    })
   },
 
   methods: {

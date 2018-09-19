@@ -171,16 +171,6 @@ export default {
   },
 
   methods: {
-    getData () {
-      console.log('开始接收数据了')
-      wx.getStorage({
-        key: 'abc',
-        success: (res) => {
-          console.log(res.data)
-          this.Data = res.data
-        }
-      })
-    },
     calling: function () {
       wx.makePhoneCall({
         phoneNumber: '12345678900', // 此号码并非真实电话号码，仅用于测试
