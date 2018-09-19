@@ -205,13 +205,12 @@ export default {
               showCancel: false
             })
           }
-
-        }).catch(function (res) {
+        }).catch(function (err) {
+          console.log(err);
           wx.showModal({
-            content: res.error,
+            content: err.response.data.error,
             showCancel: false
           })
-          console.log(res);
         });
       }
     }
