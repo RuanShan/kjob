@@ -15,7 +15,7 @@
 
     <!-- 列表概览 ===> START -->
     <div class="list">
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scroll="scroll" lower-threshold="50">
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scrolltoupper="scrolltoupper" >
 
         <div class="circular" v-for="(item, i) in peopleList" :key="item.id" @click="detail(item)">
           <div class="div-left">
@@ -75,13 +75,13 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
+import _ from 'lodash'
 import {
   getJobTaxonTree,
   // getRegionTree,
   searchApplicants
 } from '../../http/api.js'
 import { regions } from '../../store/regions'
-import _ from 'lodash'
 
 export default {
   components: {
@@ -92,7 +92,7 @@ export default {
       state: {
         q: {
           page: 0,
-          perPage: 6,
+          perPage: 12,
           comboDistrictId: 0,
           jobTaxonId: 0
         },
@@ -216,7 +216,7 @@ export default {
       }
       return params
     },
-    async loadMoreJob () {
+    async loadMoreJob (isScrollToUpper) {
       if (!this.state.loading) {
         this.state.loading = true
         this.state.q.page += 1
@@ -239,9 +239,14 @@ export default {
         this.state.loading = false
         console.log("before dataFormat")
         this.dataFormat(data.applicants)
-        console.log("before uniquelizeObjs")
-        this.peopleList = this.uniquelizeObjs(this.peopleList.concat(data.applicants))
-        console.log("after uniquelizeObjs")
+        console.log("before unionBy")
+
+        if( isScrollToUpper ){
+          this.peopleList = _.unionBy( data.peopleList, this.peopleList, 'id' )
+        }else{
+          this.peopleList = _.unionBy( this.peopleList, data.applicants, 'id' )
+        }
+        console.log("after unionBy")
         console.log("this.peopleList.length=" + this.peopleList.length)
 
       }
@@ -341,21 +346,11 @@ export default {
     scrolltolower () {
       this.loadMoreJob()
     },
-    scroll (e) {
-
-    },
-    uniquelizeObjs (objs) {
-      var keys = {}
-      var newObjs = new Array();
-      console.log("objs=", objs)
-      objs.forEach((obj) => {
-        if (!keys[obj.id]) {
-          newObjs.push(obj)
-          keys[obj.id] = true
-        }
-      })
-      return newObjs;
+    scrolltoupper(e){
+      console.log(e)
+      this.loadMoreJob ( true )
     }
+
 
   },
   computed: {

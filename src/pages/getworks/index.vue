@@ -30,7 +30,7 @@
     <!-- 列表概览 ===> START -->
     <div id="job-list-wrap" class="list">
 
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="150" @scrolltolower="scrolltolower" >
+      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="150" @scrolltolower="scrolltolower" @scrolltoupper="scrolltoupper" >
 
         <div class="circular" v-for="item in jobs" :key="item.id" @click="detail(item)">
           <div class="top-----half">
@@ -105,7 +105,7 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
-// import Fly from 'flyio/dist/npm/wx'
+import _ from 'lodash'
 import {
   getJobTaxonTree,
   //getRegionTree,
@@ -128,6 +128,7 @@ export default {
         q: {
           page: 0,
           perPage: 20,
+          total: 0,
           comboDistrictId: 0,
           jobTaxonId: 0
         },
@@ -379,7 +380,7 @@ export default {
       }
       return params
     },
-    async loadMoreJob () {
+    async loadMoreJob (isScrollToUpper) {
       if( !this.state.loading  )  {
         wx.showLoading("数据加载中...")
         this.state.q.page += 1
@@ -402,7 +403,11 @@ export default {
           this.state.loadEnd = true
         }
         this.dataFormat(data.jobs)
-        this.jobs = this.uniquelizeObjs( this.jobs.concat( data.jobs ))
+        if( isScrollToUpper ){
+          this.jobs = _.unionBy( data.jobs, this.jobs, 'id' )
+        }else{
+          this.jobs = _.unionBy( this.jobs, data.jobs, 'id' )
+        }
         console.log("getMilliseconds()", now.getSeconds(),now.getMilliseconds())
       }
     },
@@ -504,7 +509,10 @@ export default {
     scrolltolower () {
       this.loadMoreJob()
      },
-    scroll (e) {   },
+    scrolltoupper(e){
+      console.log(e)
+      this.loadMoreJob ( true )
+    },
     // *******************数据格式化*******************
     dataFormat (data) {
       data.forEach((element) => {
