@@ -27,26 +27,26 @@
       "list": [
         {
           "pagePath": "pages/getworks/main",
-          "selectedIconPath": "/resources/tabBar/zhaogong-s.png",
-          "iconPath": "/resources/tabBar/zhaogong.png",
+          "selectedIconPath": "/static/tabBar/zhaogong-s.png",
+          "iconPath": "/static/tabBar/zhaogong.png",
           "text": "招工"
         },
         {
           "pagePath": "pages/getpeople/main",
-          "selectedIconPath": "/resources/tabBar/gongren-s.png",
-          "iconPath": "/resources/tabBar/gongren.png",
+          "selectedIconPath": "/static/tabBar/gongren-s.png",
+          "iconPath": "/static/tabBar/gongren.png",
           "text": "找活"
         },
         {
           "pagePath": "pages/freerelease/main",
-          "selectedIconPath": "/resources/tabBar/fabu-s.png",
-          "iconPath": "/resources/tabBar/fabu.png",
+          "selectedIconPath": "/static/tabBar/fabu-s.png",
+          "iconPath": "/static/tabBar/fabu.png",
           "text": "免费发布"
         },
         {
           "pagePath": "pages/my/main",
-          "selectedIconPath": "/resources/tabBar/wode-s.png",
-          "iconPath": "/resources/tabBar/wode.png",
+          "selectedIconPath": "/static/tabBar/wode-s.png",
+          "iconPath": "/static/tabBar/wode.png",
           "text": "我的"
         }
       ]

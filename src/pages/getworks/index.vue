@@ -105,7 +105,6 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
-import _ from 'lodash'
 import {
   getJobTaxonTree,
   //getRegionTree,
@@ -404,9 +403,9 @@ export default {
         }
         this.dataFormat(data.jobs)
         if( isScrollToUpper ){
-          this.jobs = _.unionBy( data.jobs, this.jobs, 'id' )
+          this.jobs = this.uniquelizeObjs( data.jobs.concat( this.jobs ))
         }else{
-          this.jobs = _.unionBy( this.jobs, data.jobs, 'id' )
+          this.jobs = this.uniquelizeObjs( this.jobs.concat( data.jobs))
         }
         console.log("getMilliseconds()", now.getSeconds(),now.getMilliseconds())
       }
