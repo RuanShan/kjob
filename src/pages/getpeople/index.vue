@@ -482,6 +482,7 @@ page {
           width: 211rpx;
           padding: 0rpx 18rpx;
           height: 40rpx;
+          line-height:40rpx;
         }
         // .left-bottom-top {
         //   background-color: #ffff80;

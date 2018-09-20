@@ -385,7 +385,7 @@ export default {
     wx.setBackgroundColor({
       backgroundColor: '#F0F0F0' // 窗口的背景色为灰色
     })
-   
+
     /* *************get kjob server 得到全国地区数据*************** */
     getRegionTree().then(res => {
       console.log('地区', res)
@@ -792,7 +792,7 @@ page {
       display: flex;
       .button-point {
         display: flex;
-        border: solid 1rpx #b1b1b1;
+        /*border: solid 1rpx #b1b1b1;*/
         border-radius: 20rpx;
         // margin: 0 25rpx;
         .radio-input {
