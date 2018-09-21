@@ -2,7 +2,7 @@
   <div>
     <!-- 列表单元 第一行 START -->
     <div class="first-section">
-      <img class="background-img" src="/resources/images/bkg.jpg">
+      <img class="background-img" src="../../../resources/images/bkg.jpg">
       <div class="one-colum">
         <!-- <img style="width: 160rpx; height: 160rpx;" src="/resources/headImage/姜亿万.png"> -->
         <img style="width: 160rpx; height: 160rpx;" :src="userInfoForAPI.headimgurl">
@@ -19,7 +19,7 @@
     <div class="second-row">
       <div class="one-colum button-wrap">
         <button @click="toIDCard">
-          <img style="width: 120rpx; height: 120rpx;" src="/resources/icon/peopleID.png">
+          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/peopleID.png">
           <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.id_num_identified_at" />
           <div>身份认证</div>
         </button>
