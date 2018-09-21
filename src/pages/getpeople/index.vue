@@ -75,7 +75,6 @@
 
 <script>
 import mpvuePicker from 'mpvue-picker'
-import _ from 'lodash'
 import {
   getJobTaxonTree,
   // getRegionTree,
@@ -242,9 +241,9 @@ export default {
         console.log("before unionBy")
 
         if( isScrollToUpper ){
-          this.peopleList = _.unionBy( data.peopleList, this.peopleList, 'id' )
+          this.peopleList = this.uniquelizeObjs( data.peopleList.concat(this.peopleList) )
         }else{
-          this.peopleList = _.unionBy( this.peopleList, data.applicants, 'id' )
+          this.peopleList = this.uniquelizeObjs( this.peopleList.concat( data.applicants) )
         }
         console.log("after unionBy")
         console.log("this.peopleList.length=" + this.peopleList.length)
@@ -321,7 +320,7 @@ export default {
             city_names.push( element['district' + (i + 1) + '_name'] )
           }
         }
-        element.city_names = _.uniq( city_names )
+        element.city_names = Array.from(new Set(city_names))
         for (let i = 0; i < 3; i++) {
           let key = 'job_taxon' + (i + 1) + '_fullname'
           if (element[key]) {
@@ -349,9 +348,19 @@ export default {
     scrolltoupper(e){
       console.log(e)
       this.loadMoreJob ( true )
+    },
+
+    uniquelizeObjs (objs) {
+      var keys = {}
+      var newObjs = new Array();
+      objs.forEach((obj) => {
+        if (!keys[obj.id]) {
+          newObjs.push(obj)
+          keys[obj.id] = true
+        }
+      })
+      return newObjs;
     }
-
-
   },
   computed: {
     computedHeightStyle () {
