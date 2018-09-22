@@ -215,7 +215,7 @@ export default {
       }
       return params
     },
-    async loadMoreJob (isScrollToUpper) {
+    async loadMoreJob () {
       if (!this.state.loading) {
         this.state.loading = true
         this.state.q.page += 1
@@ -236,17 +236,31 @@ export default {
           this.state.loadEnd = true
         }
         this.state.loading = false
-        console.log("before dataFormat")
-        this.dataFormat(data.applicants)
-        console.log("before unionBy")
 
-        if( isScrollToUpper ){
-          this.peopleList = this.uniquelizeObjs( data.peopleList.concat(this.peopleList) )
-        }else{
-          this.peopleList = this.uniquelizeObjs( this.peopleList.concat( data.applicants) )
-        }
-        console.log("after unionBy")
+        this.dataFormat(data.applicants)
+
+        this.peopleList = this.uniquelizeObjs( this.peopleList.concat( data.applicants) )
+
         console.log("this.peopleList.length=" + this.peopleList.length)
+
+      }
+    },
+
+    async refreshFirstPageJobs () {
+      if (!this.state.loading) {
+        console.log("refreshFirstPageJobs" )
+
+        this.state.loading = true
+        let params = this.buildParams()
+        params.page = 1
+        let data = await searchApplicants(params)
+
+        this.state.loading = false
+        console.log("refreshFirstPageJobs=", data )
+
+        this.dataFormat(data.applicants)
+
+        this.peopleList = this.uniquelizeObjs( data.applicants.concat(this.peopleList) )
 
       }
     },
@@ -343,14 +357,16 @@ export default {
     },
 
     scrolltolower () {
+      console.log("scrolltolower")
       this.loadMoreJob()
     },
     scrolltoupper(e){
-      console.log(e)
-      this.loadMoreJob ( true )
+      console.log("scrolltoupper")
+      this.refreshFirstPageJobs(  )
     },
 
     uniquelizeObjs (objs) {
+      console.log("uniquelizeObjs")
       var keys = {}
       var newObjs = new Array();
       objs.forEach((obj) => {

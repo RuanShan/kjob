@@ -373,21 +373,19 @@ export default {
       if (this.state.q.jobTaxonId > 0) {
         params.q.job_taxon_id_eq = this.state.q.jobTaxonId
       }
-      console.log('this.state.q.comboDistrictId', this.state.q.comboDistrictId)
       if (parseInt(this.state.q.comboDistrictId) > 0) {
         params.q.combo_district_id_start = this.state.q.comboDistrictId
       }
       return params
     },
-    async loadMoreJob (isScrollToUpper) {
+    async loadMoreJob () {
       if( !this.state.loading  )  {
         wx.showLoading("数据加载中...")
         this.state.q.page += 1
         let params = this.buildParams()
         let data = await searchJobs(params)
         wx.hideLoading()
-        let now = new Date()
-        console.log("getMilliseconds()", now.getSeconds(),now.getMilliseconds())
+
         if (data.jobs.length === 0) {
           this.state.loading = false
           this.state.q.page -= 1
@@ -401,15 +399,28 @@ export default {
           this.state.loading = false
           this.state.loadEnd = true
         }
+        console.log("loadMoreJob=",  data)
         this.dataFormat(data.jobs)
-        if( isScrollToUpper ){
-          this.jobs = this.uniquelizeObjs( data.jobs.concat( this.jobs ))
-        }else{
-          this.jobs = this.uniquelizeObjs( this.jobs.concat( data.jobs))
-        }
-        console.log("getMilliseconds()", now.getSeconds(),now.getMilliseconds())
+        this.jobs = this.uniquelizeObjs( data.jobs.concat( this.jobs ))
+
       }
     },
+
+    async refreshFirstPageJobs( ) {
+      if( !this.state.loading  )  {
+
+        let params = this.buildParams()
+        params.page = 1
+        let data = await searchJobs(params)
+
+        this.dataFormat(data.jobs)
+        console.log("refreshFirstPageJobs=", data )
+
+        this.jobs = this.uniquelizeObjs( data.jobs.concat( this.jobs ))
+
+      }
+    },
+
     // ***************地区筛选方法***************
     showPickerForRegion () {
       this.$refs.mpvuePickerForRegion.show();
@@ -506,11 +517,12 @@ export default {
     },
 
     scrolltolower () {
+      console.log("scrolltolower")
       this.loadMoreJob()
      },
     scrolltoupper(e){
-      console.log(e)
-      this.loadMoreJob ( true )
+      console.log("scrolltoupper")
+      this.refreshFirstPageJobs(  )
     },
     // *******************数据格式化*******************
     dataFormat (data) {
