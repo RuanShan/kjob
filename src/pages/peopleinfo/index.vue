@@ -296,6 +296,7 @@ page {
                         width: 218rpx;
                         padding: 0 1rpx;
                         height: 40rpx;
+                        line-height: 40rpx;
                     }
                 }
                 .tpye-of-work {
