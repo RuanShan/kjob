@@ -473,7 +473,7 @@ export default {
       experienceCount: 0, // 工作经验计数器
       // experienceDsiplay: true, // 动态显示工作经历开关
       experienseArray: [], // 工作经历数据存储数组
-      experienseImages: [], // 经过整理的工作经历照片 
+      experienseImages: [], // 经过整理的工作经历照片
     }
   },
 
@@ -527,7 +527,7 @@ export default {
               wx.getStorage({
                 key: 'userInfoForAPI',
                 success: (res) => {
-                  console.log('userInfoForAPI 获取成功了!!!')
+                  console.log('userInfoForAPI 获取成功了!!!', res.data)
                   this.userInfoForAPI = res.data;
                   // 判断 男 女
                   if (this.userInfoForAPI.gender === 1) {
@@ -698,7 +698,7 @@ export default {
 
     // *********************找活描述中,textArray 输入处理函数************************
     textAreaInput (e) {
-      console.log(e.target.value)
+      //console.log(e.target.value)
       this.description = e.target.value
     },
 
@@ -753,9 +753,9 @@ export default {
       let dataToServer = {}
       let tempArrayFroProfession = []; // 为了得到工种需要的临时数组
       dataToServer.headimgurl = this.userInfoForAPI.headimgurl
-      dataToServer.customer_id = this.userInfoForAPI.id
+      dataToServer.customer_id = this.userInfoForAPI.customer_id
       dataToServer.realname = this.userInfoForAPI.realname
-      dataToServer.computed_age = this.userInfoForAPI.computed_age
+      dataToServer.age = this.userInfoForAPI.computed_age
       dataToServer.mobile = this.userInfoForAPI.mobile
       dataToServer.nation = this.nation
       dataToServer.gender = this.userInfoForAPI.gender // 恐怕是没有
