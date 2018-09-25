@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <!-- 第一大行 ===> START -->
-    <div class="first-line">
+    <div class="first-line" v-if="parttimeDisplay">
       <div class="one---row">
         <div class="one-row-left">
           {{item.state}}&nbsp;{{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
@@ -14,15 +14,47 @@
       </div>
       <div class="two---row">
         <div class="two-row-left">
-          价格:&nbsp;&nbsp;&nbsp;&nbsp;
+          工资标准:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="price">
-            &nbsp;&nbsp;{{item.pay}}
+            &nbsp;&nbsp;{{item.pay}}&nbsp;&nbsp;人/天
+          </div>
+        </div>
+        <div class="two-row-right">
+          招工人数:
+          <div class="worksAmount">
+            &nbsp;&nbsp;{{item.quantity}}&nbsp;&nbsp;人
+          </div>
+        </div>
+      </div>
+      <div class="three---row">
+        <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/location.png"> {{item.state}}&nbsp;&nbsp;-&nbsp;&nbsp;{{item.city}}
+      </div>
+    </div>
+    <!-- 第一大行 ===> END -->
+
+    <!-- 第一大行 ===> START -->
+    <div class="first-line" v-if="contractDisplay">
+      <div class="one---row">
+        <div class="one-row-left">
+          {{item.state}}&nbsp;{{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
+        </div>
+        <div class="one-row-right">
+          <div class="worksClass">
+            &nbsp;{{item.job_taxon_parent_name}}&nbsp;
+          </div>
+        </div>
+      </div>
+      <div class="two---row">
+        <div class="two-row-left">
+          单价:&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="price">
+            &nbsp;&nbsp;{{item.pay}}&nbsp;&nbsp;元
           </div>
         </div>
         <div class="two-row-right">
           工程量:
           <div class="worksAmount">
-            &nbsp;&nbsp;{{item.pay_desc}}
+            &nbsp;&nbsp;{{item.quantity}}&nbsp;&nbsp;平方米
           </div>
         </div>
       </div>
@@ -132,6 +164,8 @@ export default {
       item: null, // 接收到的招工列表的JoSon数据
       item2: null, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
+      parttimeDisplay: null, // 点工显示开关
+      contractDisplay: null, // 包工显示开关
       warning: '工友请你在找活起见，请不要缴纳任何费用，已防止受骗。你在拨打电话时，若无人接听，可能对方正在忙。或者人不在。举报电话0411-12345678910'
     }
   },
@@ -163,6 +197,15 @@ export default {
       success: (res) => {
         console.log(res.data)
         this.item = res.data
+        // 判断是点工还是包工
+        if (this.item.worker_type === 'parttime') {
+          this.parttimeDisplay = true
+          this.contractDisplay = false
+        }
+        if (this.item.worker_type === 'contract') {
+          this.parttimeDisplay = false
+          this.contractDisplay = true
+        }
         this.files = (this.item.job_images.map((element) => { return element.original_url }))
         this.phoneNumber = this.item.customer_mobile
       }

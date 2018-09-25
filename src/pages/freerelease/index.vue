@@ -91,7 +91,7 @@ export default {
       // wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
 
       // 根据当前用户信息判读是否进行了身份证认证和电话认证
-      if (this.userInfoForAPI.hasOwnProperty('id_num_identified_at') && this.userInfoForAPI.hasOwnProperty('mobile_identified_at') && this.userInfoForAPI.id_num_identified_at !== null && this.userInfoForAPI.mobile_identified_at !== null) {
+      if (this.userInfoForAPI.hasOwnProperty('id_num_identified_at') || this.userInfoForAPI.hasOwnProperty('mobile_identified_at')) {
         wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
       } else {
         wx.showModal({
@@ -102,10 +102,10 @@ export default {
     },
     releaseJobInfo () {
       console.log('免费发布招工信息%%%')
-      // wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
+      wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
 
       // 根据当前用户信息判读是否进行了身份证认证和电话认证
-      if (this.userInfoForAPI.hasOwnProperty('id_num_identified_at') && this.userInfoForAPI.hasOwnProperty('mobile_identified_at') && this.userInfoForAPI.id_num_identified_at !== null && this.userInfoForAPI.mobile_identified_at !== null) {
+      if (this.userInfoForAPI.hasOwnProperty('id_num_identified_at') || this.userInfoForAPI.hasOwnProperty('mobile_identified_at')) {
         wx.navigateTo({ url: '../releasejob/main' }) // 跳转到发布招工页面
       } else {
         wx.showModal({
