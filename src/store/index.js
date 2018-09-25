@@ -15,6 +15,9 @@ const store = new Vuex.Store({
     applicant: null
   },
   mutations: {
+    setApplicantReset(state){
+      state.applicant = null
+    },
     setApplicant(state, payload){
       state.applicant = payload.applicant
     },

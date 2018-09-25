@@ -88,7 +88,7 @@ export default {
   methods: {
     releaseWorkerInfo () {
       console.log('免费发布找活信息****')
-      // wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
+      wx.navigateTo({ url: '../releasemy/main' }) // 跳转到我的找活页面
 
       // 根据当前用户信息判读是否进行了身份证认证和电话认证
       if (this.userInfoForAPI.hasOwnProperty('id_num_identified_at') || this.userInfoForAPI.hasOwnProperty('mobile_identified_at')) {

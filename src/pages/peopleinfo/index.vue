@@ -35,6 +35,12 @@
       <div>
         找&nbsp;活&nbsp;区&nbsp;域&nbsp;&nbsp;:&nbsp;&nbsp;{{item.district1_fullname}}
       </div>
+      <div v-if="item.district2_fullname">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.district2_fullname}}
+      </div>
+      <div v-if="item.district3_fullname">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.district3_fullname}}
+      </div>
     </div>
   </div>
   <!-- 第二大行 ===> START -->
@@ -95,7 +101,7 @@
       <div> {{work.start_at}} ~ {{work.end_at}} </div>
       <div>{{work.district_fullname}}</div>
       <div>
-        {{work.description}}
+        {{work.name}}
       </div>
       <div class="image-upload">
         <div class="pre-div-image">
@@ -192,7 +198,7 @@ export default {
   methods: {
     calling: function () {
       wx.makePhoneCall({
-        phoneNumber: '12345678900', // 此号码并非真实电话号码，仅用于测试
+        phoneNumber: this.item.mobile, // 此号码并非真实电话号码，仅用于测试
         success: function () {
           console.log('拨打电话OK！')
         },
