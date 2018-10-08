@@ -301,6 +301,8 @@
 <script>
 import mpvuePicker from 'mpvue-picker'
 import { getRegionTree, getJobTaxonTree, addJob } from '../../http/api.js'
+import config from '../../http/config'
+const hostFly = config.host + '/api/v1/images/'
 
 export default {
   components: {
@@ -660,7 +662,7 @@ export default {
         title: '正在上传第' + count + '张',
       })
       wx.uploadFile({
-        url: 'https://tapi.getstore.cn/api/v1/images/', //
+        url: hostFly, //
         filePath: imgPaths[count],
         name: 'image[attachment]',  //示例，使用顺序给文件命名
         formData: { 'image[job_id]': id },
