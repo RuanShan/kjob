@@ -12,7 +12,8 @@ const store = new Vuex.Store({
     appGlobalData: {
     },
     job: null,
-    applicant: null
+    applicant: null,
+    workDetailStore:{} // VUEX 工作详情
   },
   mutations: {
     setApplicantReset(state){
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
     },
     setJob(state, payload){
       state.applicant = payload.job
+    },
+    setworkDetailStore(state,payload){
+      state.workDetailStore = payload
     }
   },
   actions: {

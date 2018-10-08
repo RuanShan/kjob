@@ -501,16 +501,19 @@ export default {
     detail (item) {
       console.log('工作详情页面 !!!')
       console.log('item = ', item)
-      wx.setStorage({
-        key: 'worksItem',
-        data: item,
-        success: () => {
-          console.log('worksItem 存储成功了!!!')
-        },
-        fail: () => {
-          console.log('worksItem 存储失败了*******')
-        }
-      })
+      // wx.setStorage({
+      //   key: 'worksItem', 
+      //   data: item,
+      //   success: () => {
+      //     console.log('worksItem 存储成功了!!!')
+      //   },
+      //   fail: () => {
+      //     console.log('worksItem 存储失败了*******')
+      //   }
+      // })
+      this.$store.commit('setworkDetailStore',item) // 保存到VueX中
+      // console.log('this.$store.state.workDetailStore = ',this.$store.state.workDetailStore);
+      
       wx.navigateTo({
         url: '../workinfo/main'
       }) // 当前点击的item,数据传递给招工详情页面

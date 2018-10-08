@@ -138,7 +138,7 @@
 <script>
 import mpvuePicker from 'mpvue-picker'
 import { addCustomerWork } from '../../http/api.js'
-import config from '../../http/config'
+import config from '../../config'
 const hostFly = config.host + '/api/v1/images/'
 
 export default {
