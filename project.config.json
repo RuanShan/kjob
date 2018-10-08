@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wxfee5872ed5af4066",
+	"appid": "wxcbc7a4f226e01d3c",
 	"projectname": "kjob",
 	"libVersion": "2.2.5",
 	"condition": {
