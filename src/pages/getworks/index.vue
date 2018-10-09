@@ -641,8 +641,12 @@ page {
           padding-left: 25rpx;
           font-size: 40rpx;
           font-weight: bold;
+          text-overflow:ellipsis;
+          white-space:nowrap;
+          overflow:hidden;
         }
         .one-row-two {
+          word-break: keep-all;
           // margin-right: 25rxp;
           padding-right: 25rpx;
           // border-radius: 30rpx;

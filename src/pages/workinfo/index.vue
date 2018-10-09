@@ -4,7 +4,7 @@
     <div class="first-line" v-if="parttimeDisplay">
       <div class="one---row">
         <div class="one-row-left">
-          {{item.state}}&nbsp;{{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
+          {{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
         </div>
         <div class="one-row-right">
           <div class="worksClass">
@@ -36,7 +36,7 @@
     <div class="first-line" v-if="contractDisplay">
       <div class="one---row">
         <div class="one-row-left">
-          {{item.state}}&nbsp;{{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
+          {{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
         </div>
         <div class="one-row-right">
           <div class="worksClass">
@@ -270,6 +270,7 @@ page {
         .one-row-right {
           padding-right: 25rpx;
           .worksClass {
+            word-break: keep-all;
             margin-top: 15rpx;
             font-size: 25rpx;
             border-radius: 30rpx;
