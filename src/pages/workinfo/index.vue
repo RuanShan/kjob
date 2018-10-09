@@ -191,25 +191,37 @@ export default {
     })
   },
 
-  onShow () {
-    wx.getStorage({
-      key: 'worksItem',
-      success: (res) => {
-        console.log(res.data)
-        this.item = res.data
-        // 判断是点工还是包工
-        if (this.item.worker_type === 'parttime') {
-          this.parttimeDisplay = true
-          this.contractDisplay = false
-        }
-        if (this.item.worker_type === 'contract') {
-          this.parttimeDisplay = false
-          this.contractDisplay = true
-        }
-        this.files = (this.item.job_images.map((element) => { return element.original_url }))
-        this.phoneNumber = this.item.customer_mobile
-      }
-    })
+  onReady () {
+    // wx.getStorage({
+    //   key: 'worksItem',
+    //   success: (res) => {
+    //     console.log(res.data)
+    //     this.item = res.data
+    //     // 判断是点工还是包工
+    //     if (this.item.worker_type === 'parttime') {
+    //       this.parttimeDisplay = true
+    //       this.contractDisplay = false
+    //     }
+    //     if (this.item.worker_type === 'contract') {
+    //       this.parttimeDisplay = false
+    //       this.contractDisplay = true
+    //     }
+    //     this.files = (this.item.job_images.map((element) => { return element.original_url }))
+    //     this.phoneNumber = this.item.customer_mobile
+    //   }
+    // }),
+    this.item = this.$store.state.workDetailStore
+    // 判断是点工还是包工
+    if (this.item.worker_type === 'parttime') {
+      this.parttimeDisplay = true
+      this.contractDisplay = false
+    }
+    if (this.item.worker_type === 'contract') {
+      this.parttimeDisplay = false
+      this.contractDisplay = true
+    }
+    this.files = (this.item.job_images.map((element) => { return element.original_url }))
+    this.phoneNumber = this.item.customer_mobile
   },
 
   methods: {

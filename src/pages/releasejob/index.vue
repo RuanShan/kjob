@@ -181,7 +181,7 @@
         </div>
         <div class="text-array-class">
           <textarea class="text-array" v-show="textAreaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
-        </div>
+          </div>
       </div>
       <!-- 列表单元 招工描述 END -->
 
@@ -301,6 +301,8 @@
 <script>
 import mpvuePicker from 'mpvue-picker'
 import { getRegionTree, getJobTaxonTree, addJob } from '../../http/api.js'
+import config from '../../config'
+const hostFly = config.host + '/api/v1/images/'
 
 export default {
   components: {
@@ -375,6 +377,18 @@ export default {
   },
 
   onLoad (option) {
+    console.log('hostFly = ', hostFly);
+    this.title = '' // 输入的招工名称
+    this.timeWorkDisplay = true // 选择点工显示
+    this.allWorkDisplay = false // 选择包工显示
+    this.worker_type = '点工'
+    this.regionFullName = '请选择'
+    this.profession = '请选择'
+    this.quantity = '' // 输入工程量和输入招工人数
+    this.pay = '' // 输入的工资标准
+    this.description = '' // 招工描述 输入
+    this.files = []
+    this.releaseTime = '请选择'
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#4b55b6'
@@ -575,7 +589,7 @@ export default {
       let job = {}
       let dataToServer = {}
       dataToServer.name = this.title // 招工名称
-      dataToServer.customer_id = this.userInfoForAPI.id // 发布人id
+      dataToServer.customer_id = this.userInfoForAPI.customer_id // 发布人id
       dataToServer.district_fullname = this.regionFullName // 招工地点
       dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
       dataToServer.quantity = this.quantity // 招工人数或工程数量
@@ -660,7 +674,7 @@ export default {
         title: '正在上传第' + count + '张',
       })
       wx.uploadFile({
-        url: 'https://tapi.getstore.cn/api/v1/images/', //
+        url: hostFly, //
         filePath: imgPaths[count],
         name: 'image[attachment]',  //示例，使用顺序给文件命名
         formData: { 'image[job_id]': id },
