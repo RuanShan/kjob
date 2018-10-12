@@ -33,6 +33,7 @@
       </div>
       <div class="three-colum button-wrap">
         <button open-type='share'>
+          <!-- <button @click="shareButton"> -->
           <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/share.png">
           <div>分享</div>
         </button>
@@ -42,7 +43,7 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-row">
-      <img style="width: 300rpx; height: 300rpx;" src="../../../resources/images/two-code.jpg">
+      <img style="width: 300rpx; height: 300rpx;" src="../../../resources/images/WX-EWM.jpg">
     </div>
     <!-- 列表单元 第三行 END -->
   </div>
@@ -59,6 +60,15 @@ export default {
     }
   },
 
+  onShareAppMessage (res) {
+    return {
+      title: '快来和我一起体验建筑用工小程序吧！',
+      path: 'pages/index/main',
+      imageUrl: 'https://api.yixingongcheng.com/wxshare2.jpg'
+    }
+  },
+
+
   onLoad () {
     wx.showTabBar({ animation: true })
     wx.setNavigationBarColor({
@@ -70,7 +80,7 @@ export default {
     })
 
   },
-  onShow(){
+  onShow () {
     // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
@@ -111,7 +121,15 @@ export default {
       } else {
         wx.navigateTo({ url: '../phoneid/main' })
       }
-    }
+    },
+    // shareButton () {
+    //   onShareAppMessage(() => {
+    //     return {
+    //       title: '分享',
+    //       path: '/pages/index'
+    //     }
+    //   })
+    // }
   }
 }
 </script>
@@ -192,12 +210,11 @@ page {
       button::after {
         border: none;
       }
-      .identified-icon{
-        position:absolute;
-        right:0px;
-        bottom:20px;
+      .identified-icon {
+        position: absolute;
+        right: 0px;
+        bottom: 20px;
       }
-
     }
   }
   .three-row {

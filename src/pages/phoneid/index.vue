@@ -51,10 +51,8 @@
 </template>
 
 <script>
-import {
-  identifyMobile,
-  getVerifyCode
-} from '../../http/api.js'
+import { identifyMobile, getVerifyCode } from '../../http/api.js'
+import { noDuty } from '../../store/noduty.js'
 
 export default {
   data () {
@@ -68,7 +66,7 @@ export default {
       inputVerifyCode: '', // 用户输入的校验码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
       buttonDisabled: true, // 按钮是否可以的控制开关
-      exceptions: '免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款',
+      exceptions: noDuty,
       checkBoxFlage: undefined // watch函数通过这个数值来决定是否让按钮可用
     }
   },
@@ -82,8 +80,10 @@ export default {
     wx.setNavigationBarTitle({
       title: '手机认证'
     })
+    console.log(noDuty);
+
   },
-  onShow(){
+  onShow () {
     // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
@@ -117,9 +117,9 @@ export default {
 
           // 访问kjob-server给从微信server得到的code和userInfo数据
           let data = { mobile: this.phoneNum }
-          getVerifyCode( this.userInfoForAPI.id, data).then((response) => {
+          getVerifyCode(this.userInfoForAPI.id, data).then((response) => {
             console.log('收到的response = ', response)
-            if( response.ret == 1){
+            if (response.ret == 1) {
               //验证码获取成功
               console.log('获取手机验证码成功')
               // 禁用,计时,然后变字样
@@ -135,7 +135,7 @@ export default {
                   clearInterval(returnTimer)
                 }
               }, 1000)
-            }else{
+            } else {
               wx.showModal({
                 content: '获取手机验证码失败,请晚些再试',
                 showCancel: false
@@ -177,7 +177,7 @@ export default {
         })
       } else {
         // 验证码正确 -> 1.跳转; 2.存入状态
-        identifyMobile( this.userInfoForAPI.id, {mobile: this.phoneNum, code: this.inputVerifyCode}).then((response)=>{
+        identifyMobile(this.userInfoForAPI.id, { mobile: this.phoneNum, code: this.inputVerifyCode }).then((response) => {
           if (response.id) {
             //返回 WxFollower, 需要更新storeage
             // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中

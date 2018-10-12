@@ -17,7 +17,7 @@
     <button @click="toPhoneID">手机认证</button> -->
 
     <div class="company-text">
-      <text class="company" decode="true">公司名称有限公司</text>
+      <text class="company" decode="true">大连懿鑫建筑工程有限公司</text>
     </div>
   </div>
 </template>
