@@ -42,8 +42,7 @@
 
     <!-- 列表单元 第四行 START -->
     <div class="fifth">
-      <div>
-        {{exceptions}}
+      <div v-html="exceptions">
       </div>
     </div>
     <!-- 列表单元 第四行 END -->
