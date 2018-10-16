@@ -10,6 +10,7 @@
       <div class="two-colum">
         <div class="name">
           {{userInfoForAPI.nickname}}
+          <!-- 恭喜发财红包拿来8888888888888 -->
         </div>
       </div>
     </div>
@@ -19,22 +20,23 @@
     <div class="second-row">
       <div class="one-colum button-wrap">
         <button @click="toIDCard">
-          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/peopleID.png">
+          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/peopleID.png">
           <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.id_num_identified_at" />
-          <div>身份认证</div>
+          <div class="words">身份认证</div>
         </button>
       </div>
       <div class="two-colum button-wrap">
         <button @click="toPhoneID">
-          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/phoneID.png">
+          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/phoneID.png">
           <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.mobile_identified_at" />
-          <div>手机认证</div>
+          <div class="words">手机认证</div>
         </button>
       </div>
       <div class="three-colum button-wrap">
         <button open-type='share'>
-          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/share.png">
-          <div>分享</div>
+          <!-- <button @click="shareButton"> -->
+          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/share.png">
+          <div class="words">分享</div>
         </button>
       </div>
     </div>
@@ -42,7 +44,7 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-row">
-      <img style="width: 300rpx; height: 300rpx;" src="../../../resources/images/two-code.jpg">
+      <img style="width: 300rpx; height: 300rpx;" src="../../../resources/images/WX-EWM.jpg">
     </div>
     <!-- 列表单元 第三行 END -->
   </div>
@@ -59,6 +61,15 @@ export default {
     }
   },
 
+  onShareAppMessage (res) {
+    return {
+      title: '快来和我一起体验建筑用工小程序吧！',
+      path: 'pages/index/main',
+      imageUrl: 'https://api.yixingongcheng.com/wxshare2.jpg'
+    }
+  },
+
+
   onLoad () {
     wx.showTabBar({ animation: true })
     wx.setNavigationBarColor({
@@ -70,7 +81,7 @@ export default {
     })
 
   },
-  onShow(){
+  onShow () {
     // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
     wx.getStorage({
       key: 'userInfoForAPI',
@@ -111,7 +122,15 @@ export default {
       } else {
         wx.navigateTo({ url: '../phoneid/main' })
       }
-    }
+    },
+    // shareButton () {
+    //   onShareAppMessage(() => {
+    //     return {
+    //       title: '分享',
+    //       path: '/pages/index'
+    //     }
+    //   })
+    // }
   }
 }
 </script>
@@ -152,6 +171,12 @@ page {
       justify-content: space-around;
       align-items: center;
       // background-color: #ff80ff;
+      .name {
+        font-size: 40rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
   .second-row {
@@ -192,12 +217,14 @@ page {
       button::after {
         border: none;
       }
-      .identified-icon{
-        position:absolute;
-        right:0px;
-        bottom:20px;
+      .identified-icon {
+        position: absolute;
+        right: 0px;
+        bottom: 20px;
       }
-
+      .words {
+        font-size: 28rpx;
+      }
     }
   }
   .three-row {

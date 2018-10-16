@@ -44,8 +44,7 @@
 
     <!-- 列表单元 第四行 START -->
     <div class="fifth">
-      <div>
-        {{exceptions}}
+      <div v-html="exceptions">
       </div>
     </div>
     <!-- 列表单元 第四行 END -->
@@ -56,6 +55,7 @@
 import {
   identifyIdnum
 } from '../../http/api.js'
+import { noDuty } from '../../store/noduty.js'
 
 export default {
   data () {
@@ -67,7 +67,7 @@ export default {
       cardIdNum: '', // 用户输入的身份证号码
       cheItem: { name: '阅读并同意以下条款', value: 1, checked: false }, // checkBox的数据
       buttonDisabled: true, // 按钮是否可以的控制开关
-      exceptions: '免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款免责条款',
+      exceptions: noDuty,
       checkBoxFlage: undefined // watch函数通过这个数值来决定是否让按钮可用
     }
   },

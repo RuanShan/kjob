@@ -8,7 +8,7 @@
     </div>
     <div class="start-button">
       <!-- <button type="primary" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="background-color: #2862f9;">立即体验</button> -->
-      <button type="primary" style="background-color: #2862f9;" open-type="getUserInfo" @getuserinfo="onGotUserInfo">立即体验</button>
+      <button type="primary" style="background-color: #2862f9;" open-type="getUserInfo" @getuserinfo="onGotUserInfo">欢迎使用</button>
       <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button> -->
     </div>
 
@@ -17,7 +17,7 @@
     <button @click="toPhoneID">手机认证</button> -->
 
     <div class="company-text">
-      <text class="company" decode="true">公司名称有限公司</text>
+      <text class="company" decode="true">大连懿鑫建筑工程有限公司</text>
     </div>
   </div>
 </template>
