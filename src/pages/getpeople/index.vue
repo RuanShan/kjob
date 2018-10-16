@@ -428,7 +428,7 @@ page {
     margin: 25rpx auto;
     background: #ffffff;
     width: 700rpx;
-    height: 250rpx;
+    height: 276rpx;
     border: 2px solid #d6d6d6;
     border-radius: 30rpx;
     // line-height: 200px;
@@ -471,7 +471,7 @@ page {
               align-items: center;
               .certification {
                 padding: 5rpx 20rpx;
-                font-size: 19rpx;
+                font-size: 17rpx;
                 font-weight: bold;
                 border-radius: 30rpx;
                 border: solid 5rpx #fe0a9c;
