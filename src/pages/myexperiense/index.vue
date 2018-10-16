@@ -276,7 +276,7 @@ export default {
         },
         complete: function () {
           console.log('commplete')
-          _this.addImageCount++
+          _this.addImageCount = _this.files.length
         }
       })
     },
@@ -400,8 +400,18 @@ export default {
     // ***************************************************************
     addImageCount: function () {
       console.log(this.addImageCount)
-      if (this.addImageCount >= 3) {
+      if (this.addImageCount === 3) {
         this.addImageDisplay = false
+        return false
+      }
+      if (this.addImageCount > 3) {        
+        this.files = []
+        this.addImageDisplay = true
+        // 提示框
+        wx.showModal({
+          content: '最多只能上传3张照片',
+          showCancel: false
+        })
       } else {
         this.addImageDisplay = true
       }

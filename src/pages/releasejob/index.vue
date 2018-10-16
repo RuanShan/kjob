@@ -194,7 +194,7 @@
               <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
             </div>
             <div class="text">
-              添加工程照片
+              添加工程照片(最多3张)
             </div>
           </div>
         </div>
@@ -560,7 +560,7 @@ export default {
         },
         complete: function () {
           console.log('commplete')
-          _this.addImageCount++
+          _this.addImageCount = _this.files.length
         }
       })
     },
@@ -707,12 +707,22 @@ export default {
     // ***************************************************************
     addImageCount: function () {
       console.log(this.addImageCount)
-      if (this.addImageCount >= 3) {
+      if (this.addImageCount === 3) {
         this.addImageDisplay = false
+        return false
+      }
+      if (this.addImageCount > 3) {        
+        this.files = []
+        this.addImageDisplay = true
+        // 提示框
+        wx.showModal({
+          content: '最多只能上传3张照片',
+          showCancel: false
+        })
       } else {
         this.addImageDisplay = true
       }
-    }
+    },
   }
 }
 </script>
@@ -774,7 +784,7 @@ page {
         }
       }
     }
-    .mpvue-picker-view{
+    .mpvue-picker-view {
       height: 93vh;
     }
   }
