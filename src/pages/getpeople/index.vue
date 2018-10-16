@@ -397,7 +397,7 @@ page {
 .sizer {
   // position:absolute;
   width: 100%;
-  height: 92rpx;
+  height: 106rpx;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -428,7 +428,7 @@ page {
     margin: 25rpx auto;
     background: #ffffff;
     width: 700rpx;
-    height: 300rpx;
+    height: 250rpx;
     border: 2px solid #d6d6d6;
     border-radius: 30rpx;
     // line-height: 200px;
@@ -458,7 +458,7 @@ page {
             display: flex;
             .left-top-two-top-one {
               width: 60%;
-              font-size: 50rpx;
+              font-size: 40rpx;
               display: flex;
               justify-content: center;
               align-items: center;
@@ -471,7 +471,7 @@ page {
               align-items: center;
               .certification {
                 padding: 5rpx 20rpx;
-                font-size: 28rpx;
+                font-size: 19rpx;
                 font-weight: bold;
                 border-radius: 30rpx;
                 border: solid 5rpx #fe0a9c;

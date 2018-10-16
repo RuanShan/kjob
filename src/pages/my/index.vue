@@ -10,6 +10,7 @@
       <div class="two-colum">
         <div class="name">
           {{userInfoForAPI.nickname}}
+          <!-- 恭喜发财红包拿来8888888888888 -->
         </div>
       </div>
     </div>
@@ -19,23 +20,23 @@
     <div class="second-row">
       <div class="one-colum button-wrap">
         <button @click="toIDCard">
-          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/peopleID.png">
+          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/peopleID.png">
           <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.id_num_identified_at" />
-          <div>身份认证</div>
+          <div class="words">身份认证</div>
         </button>
       </div>
       <div class="two-colum button-wrap">
         <button @click="toPhoneID">
-          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/phoneID.png">
+          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/phoneID.png">
           <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.mobile_identified_at" />
-          <div>手机认证</div>
+          <div class="words">手机认证</div>
         </button>
       </div>
       <div class="three-colum button-wrap">
         <button open-type='share'>
           <!-- <button @click="shareButton"> -->
-          <img style="width: 120rpx; height: 120rpx;" src="../../../resources/icon/share.png">
-          <div>分享</div>
+          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/share.png">
+          <div class="words">分享</div>
         </button>
       </div>
     </div>
@@ -170,6 +171,12 @@ page {
       justify-content: space-around;
       align-items: center;
       // background-color: #ff80ff;
+      .name {
+        font-size: 40rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
   .second-row {
@@ -214,6 +221,9 @@ page {
         position: absolute;
         right: 0px;
         bottom: 20px;
+      }
+      .words {
+        font-size: 28rpx;
       }
     }
   }

@@ -46,13 +46,13 @@
             </div>
             <div class="two---row">
               <div class="two-row-one" v-if="item.isPartTime">
-                工资标准:&nbsp;&nbsp;&nbsp;&nbsp;
+                工资标准:&nbsp;&nbsp;
                 <div class="pay">
                   &nbsp;&nbsp;{{item.pay}}元/天
                 </div>
               </div>
               <div class="two-row-one" v-if="!item.isPartTime">
-                单位价格:&nbsp;&nbsp;&nbsp;&nbsp;
+                单位价格:&nbsp;&nbsp;
                 <div class="pay">
                   &nbsp;&nbsp;{{item.pay}}元
                 </div>
@@ -560,7 +560,7 @@ page {
 .sizer {
   // position:absolute;
   width: 100%;
-  height: 92rpx;
+  height: 106rpx;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -673,6 +673,7 @@ page {
         .two-row-one {
           padding-left: 25rpx;
           display: flex;
+          font-size:35rpx;
           .pay {
             color: #fc0a77;
           }
@@ -680,6 +681,7 @@ page {
         .two-row-two {
           // width: 60%;
           // background-color:cornsilk;
+          font-size:35rpx;
           padding-right: 25rpx;
           display: flex;
           .worksAmount {
