@@ -146,7 +146,7 @@
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" maxlength="15" type="text" placeholder="量+单位/可中文" v-model="quantity_dese" />
+          <input class="wx-input" maxlength="15" type="text" placeholder="量+单位/可中文" v-model="quantity_desc" />
         </div>
       </div>
       <!-- 列表单元 工程数量 END -->
@@ -371,8 +371,8 @@ export default {
       // numOfPeople: '', // 输入招工人数
       quantity: '', // 输入招工人数
       pay: '', // 输入的工资标准
-      quantity_dese:'', // 输入工程数量
-      pay_desc:'', // 输入单价
+      quantity_desc: '', // 输入工程数量
+      pay_desc: '', // 输入单价
       description: '', // 招工描述 输入
       textAreaDisplay: true, // 招工描述显示开关
       disclaimer: '建筑用工郑重声明：招聘过程中禁止提前支付费费用，必须在附近验证身份后再带入工地现场，以免被骗！若双方发生经济纠纷本平台概不负责！举报客服电话：13042472444' // 免责声明 服务器给
@@ -595,10 +595,6 @@ export default {
       dataToServer.customer_id = this.userInfoForAPI.customer_id // 发布人id
       dataToServer.district_fullname = this.regionFullName // 招工地点
       dataToServer.job_taxon_id = this.job_taxon_id // 工种类别
-      dataToServer.quantity = this.quantity // 招工人数或工程数量
-      dataToServer.pay = this.pay // 工资标准
-      dataToServer.quantity_dese = this.quantity_dese // 招工人数或工程数量
-      dataToServer.pay_desc = this.pay_desc //单位价格
       dataToServer.description = this.description // 招工描述
       dataToServer.expire_in = this.releaseTime.substring(0, 2) // 发布时间
       // dataToServer.job_images_attributes = this.files.map((file) => { return { attachment: file }})  // 照片
@@ -608,21 +604,14 @@ export default {
         dataToServer.worker_type = 'parttime' // 招工类型-点工
         // 如果没有填全,弹窗
         if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
-          // console.log('this.title = ', this.title);
-          // console.log('this.regionFullName = ', this.regionFullName);
-          // console.log('this.profession = ', this.profession);
-          // console.log('this.pay_desc = ', this.pay_desc);
-          // console.log('this.pay = ', this.pay);
-          // console.log('this.description = ', this.description);
-          // console.log('this.files = ', this.files);
-          // console.log('this.releaseTime = ', this.releaseTime);
-          // console.log('this.name = ', this.name);
           console.log('dataToServer = ', dataToServer);
           wx.showModal({
             content: '请填入必填信息,方能提交保存!',
             showCancel: false
           })
         } else { // 转换数据,提交KJob
+          dataToServer.quantity = this.quantity // 招工人数或工程数量
+          dataToServer.pay = this.pay // 工资标准
           job.job = dataToServer
           console.log(job);
           this.addJobInfo(job)
@@ -631,7 +620,7 @@ export default {
       }
       if (this.worker_type === '包工') {
         dataToServer.worker_type = 'contract' // 招工类型-包工
-        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity_dese === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity_desc === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
           // console.log('this.title = ', this.title);
           // console.log('this.regionFullName = ', this.regionFullName);
           // console.log('this.profession = ', this.profession);
@@ -645,6 +634,8 @@ export default {
             showCancel: false
           })
         } else { // 转换数据,提交KJob
+          dataToServer.quantity_desc = this.quantity_desc // 招工人数或工程数量
+          dataToServer.pay_desc = this.pay_desc //单位价格
           job.job = dataToServer
           console.log(job);
           this.addJobInfo(job)

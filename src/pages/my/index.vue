@@ -42,6 +42,12 @@
     </div>
     <!-- 列表单元 第二行 END -->
 
+    <!-- <dir>
+      <input maxlength="18" type="text" placeholder="真实身份证号码填入" v-model="cardIdNum" />
+      <button type="primary" @click="verifyButton" :disabled="buttonDisabled">老算法</button>
+      <button type="primary" @click="checkIDCard" :disabled="buttonDisabled">新算法</button>
+    </dir> -->
+
     <!-- 列表单元 第三行 START -->
     <div class="three-row">
       <img style="width: 300rpx; height: 300rpx;" src="../../../resources/images/WX-EWM.jpg">
@@ -58,6 +64,8 @@ export default {
       // userInfo: [] // 当前微信用户信息
       // ************当前用户信息需要的数据************
       userInfoForAPI: null,
+      cardIdNum: '', // 用户输入的身份证号码
+
     }
   },
 
@@ -131,6 +139,153 @@ export default {
     //     }
     //   })
     // }
+    // verifyButton () {
+    //   if (this.realName === '') {
+    //     console.log('姓名没有填写')
+    //     // 提示框
+    //     wx.showModal({
+    //       content: '请填写姓名',
+    //       showCancel: false
+    //     })
+    //     return false
+    //   }
+    //   if (!this.cardIdNum || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(this.cardIdNum)) {
+    //     console.log('身份证号码----非非非非非非法')
+    //     // 提示框
+    //     wx.showModal({
+    //       content: '身份证号格式错误',
+    //       showCancel: false
+    //     })
+    //     console.log('身份证号格式错误');
+    //   }
+    //   else {
+    //     console.log('正确');
+    //   }
+
+
+    // },
+    // checkIDCard () {
+    //   console.log('新算法');
+    //   var idNum = this.cardIdNum;
+    //   // alert(idNum);
+    //   var errors = new Array("验证通过", "身份证号码位数不对", "身份证含有非法字符", "身份证号码校验错误",
+    //     "身份证地区非法");
+    //   // 身份号码位数及格式检验
+    //   var re;
+    //   var len = idNum.length;
+    //   // 身份证位数检验
+    //   if (len != 15 && len != 18) {
+    //     console.log(errors[1]);
+    //     // return errors[1];
+    //     return false;
+    //   } else if (len == 15) {
+    //     re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+    //   } else {
+    //     re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})([0-9xX])$/);
+    //   }
+    //   var area = {
+    //     11: "北京",
+    //     12: "天津",
+    //     13: "河北",
+    //     14: "山西",
+    //     15: "内蒙古",
+    //     21: "辽宁",
+    //     22: "吉林",
+    //     23: "黑龙江",
+    //     31: "上海",
+    //     32: "江苏",
+    //     33: "浙江",
+    //     34: "安徽",
+    //     35: "福建",
+    //     36: "江西",
+    //     37: "山东",
+    //     41: "河南",
+    //     42: "湖北",
+    //     43: "湖南",
+    //     44: "广东",
+    //     45: "广西",
+    //     46: "海南",
+    //     50: "重庆",
+    //     51: "四川",
+    //     52: "贵州",
+    //     53: "云南",
+    //     54: "西藏",
+    //     61: "陕西",
+    //     62: "甘肃",
+    //     63: "青海",
+    //     64: "宁夏",
+    //     65: "新疆",
+    //     71: "台湾",
+    //     81: "香港",
+    //     82: "澳门",
+    //     91: "国外"
+    //   }
+    //   var idcard_array = new Array();
+    //   idcard_array = idNum.split("");
+    //   // 地区检验
+    //   if (area[parseInt(idNum.substr(0, 2))] == null) {
+    //     console.log(errors[4]);
+    //     // return errors[4];
+    //     return false;
+    //   }
+    //   // 出生日期正确性检验
+    //   var a = idNum.match(re);
+    //   if (a != null) {
+    //     if (len == 15) {
+    //       var DD = new Date("19" + a[3] + "/" + a[4] + "/" + a[5]);
+    //       var flag = DD.getYear() == a[3] && (DD.getMonth() + 1) == a[4]
+    //         && DD.getDate() == a[5];
+    //     } else if (len == 18) {
+    //       DD = new Date(a[3] + "/" + a[4] + "/" + a[5]);
+    //       flag = DD.getFullYear() == a[3] && (DD.getMonth() + 1) == a[4]
+    //         && DD.getDate() == a[5];
+    //     }
+    //     if (!flag) {
+    //       // return false;
+    //       console.log("身份证出生日期不对！");
+    //       // return "身份证出生日期不对！";
+    //       return false;
+    //     }
+    //     // 检验校验位
+    //     if (len == 18) {
+    //       let S = (parseInt(idcard_array[0]) + parseInt(idcard_array[10])) * 7
+    //         + (parseInt(idcard_array[1]) + parseInt(idcard_array[11]))
+    //         * 9
+    //         + (parseInt(idcard_array[2]) + parseInt(idcard_array[12]))
+    //         * 10
+    //         + (parseInt(idcard_array[3]) + parseInt(idcard_array[13]))
+    //         * 5
+    //         + (parseInt(idcard_array[4]) + parseInt(idcard_array[14]))
+    //         * 8
+    //         + (parseInt(idcard_array[5]) + parseInt(idcard_array[15]))
+    //         * 4
+    //         + (parseInt(idcard_array[6]) + parseInt(idcard_array[16]))
+    //         * 2 + parseInt(idcard_array[7]) * 1
+    //         + parseInt(idcard_array[8]) * 6 + parseInt(idcard_array[9])
+    //         * 3;
+    //       let Y = S % 11;
+    //       let M = "F";
+    //       let JYM = "10X98765432";
+    //       M = JYM.substr(Y, 1); // 判断校验位
+    //       // 检测ID的校验位
+    //       if (M == idcard_array[17]) {
+    //         console.log('好像是正确了');
+    //         return true;
+    //       } else {
+    //         console.log(errors[3]);
+    //         // return errors[3];
+    //         return false;
+    //       }
+    //     }
+    //   } else {
+    //     console.log(errors[2]);
+    //     // return errors[2];
+    //     return false;
+    //   }
+    //   console.log('OK');
+    //   return true;
+    // }
+
   }
 }
 </script>

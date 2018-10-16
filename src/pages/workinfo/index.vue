@@ -48,13 +48,13 @@
         <div class="two-row-left">
           单价:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="price">
-            &nbsp;&nbsp;{{item.pay}}&nbsp;&nbsp;元
+            &nbsp;&nbsp;{{item.pay_desc}}&nbsp;&nbsp;元
           </div>
         </div>
         <div class="two-row-right">
           工程量:
           <div class="worksAmount">
-            &nbsp;&nbsp;{{item.quantity}}&nbsp;&nbsp;平方米
+            &nbsp;&nbsp;{{item.quantity_desc}}
           </div>
         </div>
       </div>

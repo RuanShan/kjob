@@ -54,7 +54,7 @@
               <div class="two-row-one" v-if="!item.isPartTime">
                 单位价格:&nbsp;&nbsp;
                 <div class="pay">
-                  &nbsp;&nbsp;{{item.pay}}元
+                  &nbsp;&nbsp;{{item.pay_desc}}元
                 </div>
               </div>
               <div class="two-row-two" v-if="item.isPartTime">
@@ -66,7 +66,7 @@
               <div class="two-row-two" v-if="!item.isPartTime">
                 工程数量:
                 <div class="worksAmount">
-                  &nbsp;&nbsp;{{item.quantity}}平方米
+                  &nbsp;&nbsp;{{item.quantity_desc}}
                 </div>
               </div>
             </div>
