@@ -298,6 +298,7 @@ page {
     width: 750rpx;
     height: 500rpx;
     display: flex;
+    flex-direction: column;
     background-color: aquamarine;
     .background-img {
       z-index: 1;
@@ -308,8 +309,8 @@ page {
       top: 0;
     }
     .one-colum {
-      width: 40%;
-      height: 500rpx;
+      width: 750rpx;
+      height: 90%;
       z-index: 2;
       display: flex;
       justify-content: center;
@@ -317,13 +318,14 @@ page {
       // background-color: #0080c0;
     }
     .two-colum {
-      width: 60%;
-      height: 500rpx;
+      width: 750rpx;
+      height: 0%;
+      margin-top:-78rpx;
       z-index: 3;
       font-size: 80rpx;
       color: #ffffff;
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
       align-items: center;
       // background-color: #ff80ff;
       .name {

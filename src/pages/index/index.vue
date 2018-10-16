@@ -129,7 +129,7 @@ export default {
 }
 
 .company {
-  font-size: 25rpx;
+  font-size: 38rpx;
   color: #c0c0c0;
 }
 </style>

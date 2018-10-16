@@ -54,7 +54,7 @@
               <div class="two-row-one" v-if="!item.isPartTime">
                 单位价格:&nbsp;&nbsp;
                 <div class="pay">
-                  &nbsp;&nbsp;{{item.pay_desc}}元
+                  &nbsp;&nbsp;{{item.pay_desc}}
                 </div>
               </div>
               <div class="two-row-two" v-if="item.isPartTime">
