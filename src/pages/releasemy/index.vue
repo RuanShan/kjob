@@ -1058,6 +1058,9 @@ page {
         }
       }
     }
+    .mpvue-picker-view{
+      height: 93vh;
+    }
   }
   .info-option {
     display: flex;
