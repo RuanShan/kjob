@@ -204,28 +204,34 @@ export default {
 
   methods: {
     calling () {
+      console.log( "this.userInfoForAPI=",this.userInfoForAPI)
       //检查是否手机认证,若手机以认证,可以拨打电话
-      // if(){
+      if (this.userInfoForAPI.mobile_identified_at) {
 
-      // }
-      wx.makePhoneCall({
-          phoneNumber: this.item.mobile, // 此号码并非真实电话号码，仅用于测试
-          success: function () {
-            console.log('拨打电话OK！')
-          },
-          fail: function () {
-            console.log('拨打电话失败！')
-            wx.showModal({
-              content: '电话拨打失败,请检查手机设置或权限!',
-              showCancel: false,
-              success: function (res) {
-                // if (res.confirm) {
-                //   console.log('用户点击确定')
-                // }
-              }
-            })
-          }
-        })
+        wx.makePhoneCall({
+            phoneNumber: this.item.mobile, // 此号码并非真实电话号码，仅用于测试
+            success: function () {
+              console.log('拨打电话OK！')
+            },
+            fail: function () {
+              console.log('拨打电话失败！')
+              wx.showModal({
+                content: '电话拨打失败,请检查手机设置或权限!',
+                showCancel: false,
+                success: function (res) {
+                  // if (res.confirm) {
+                  //   console.log('用户点击确定')
+                  // }
+                }
+              })
+            }
+          })
+        } else {
+          wx.showModal({
+            content: '请先进行手机认证,之后才能拨打电话!',
+            showCancel: false
+          })
+        }
     },
 
     // *********************预览图片处理函数************************

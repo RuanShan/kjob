@@ -159,6 +159,7 @@
 export default {
   data () {
     return {
+      userInfoForAPI: null,
       files: [],
       phoneNumber: '', // 电话号码 来自API
       item: null, // 接收到的招工列表的JoSon数据
@@ -192,6 +193,12 @@ export default {
   },
 
   onReady () {
+    wx.getStorage({
+      key: 'userInfoForAPI',
+      success: (res) => {
+        this.userInfoForAPI = res.data;
+      }
+    })
     // wx.getStorage({
     //   key: 'worksItem',
     //   success: (res) => {
@@ -227,21 +234,32 @@ export default {
   methods: {
     // 拨打电话按钮,时间处理函数
     calling: function () {
-      wx.makePhoneCall({
-        phoneNumber: this.phoneNumber, // 来自API
-        success: function () {
-          console.log('拨打电话OK！')
-        },
-        fail: function () {
-          console.log('拨打电话失败！')
-          wx.showModal({
-            content: '电话拨打失败,请检查手机设置或权限!',
-            showCancel: false,
-            success: function (res) {
-            }
-          })
-        }
-      })
+      console.log( "this.userInfoForAPI=",this.userInfoForAPI)
+
+      // 根据当前用户信息判读是否进行了身份证认证和电话认证 id_num_identified_at mobile_identified_at
+      if (this.userInfoForAPI.mobile_identified_at) {
+
+        wx.makePhoneCall({
+          phoneNumber: this.phoneNumber, // 来自API
+          success: function () {
+            console.log('拨打电话OK！')
+          },
+          fail: function () {
+            console.log('拨打电话失败！')
+            wx.showModal({
+              content: '电话拨打失败,请检查手机设置或权限!',
+              showCancel: false,
+              success: function (res) {
+              }
+            })
+          }
+        })
+      } else {
+        wx.showModal({
+          content: '请先进行手机认证,之后才能拨打电话!',
+          showCancel: false
+        })
+      }
     },
     // *********************预览图片处理函数************************
     // ***调用wx.previewImage***
