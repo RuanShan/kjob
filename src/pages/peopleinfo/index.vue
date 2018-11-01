@@ -134,10 +134,22 @@ export default {
       files: [],
       item: { members: 0 }, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
-      warning: '建筑用工郑重声明：招聘过程中禁止提前支付费费用，必须在附近验证身份后再带入工地现场，以免被骗！若双方发生经济纠纷本平台概不负责！举报客服电话：13042472444'
+      warning: '建筑用工郑重声明：招聘过程中禁止提前支付费费用，必须在附近验证身份后再带入工地现场，以免被骗！若双方发生经济纠纷本平台概不负责！举报客服电话：13042482444'
     }
   },
-
+  //动态分享
+  //   onShareAppMessage (res) {
+  //   return {
+  //     title: '全国建筑工地招工找活信息平台',
+  //     path: 'pages/peopleinfo/main',
+  //     success: function (res) {
+  //       // 转发成功
+  //     },
+  //     fail: function (res) {
+  //       // 转发失败
+  //     }
+  //   }
+  // },
   async onLoad (option) {
     console.log("peopleinfo onload is called..")
     console.log("this.store.applicant", this.$store.state.applicant)

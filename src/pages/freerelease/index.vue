@@ -39,7 +39,19 @@ export default {
       userInfoForAPI: null,
     }
   },
-
+  //动态分享
+  //   onShareAppMessage (res) {
+  //   return {
+  //     title: '全国建筑工地招工找活信息平台',
+  //     path: 'pages/freerelease/main',
+  //     success: function (res) {
+  //       // 转发成功
+  //     },
+  //     fail: function (res) {
+  //       // 转发失败
+  //     }
+  //   }
+  // },
   onLoad () {
     console.log('onLoad ..................开始');
     wx.showTabBar({ animation: true })

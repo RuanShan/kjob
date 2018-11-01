@@ -375,10 +375,22 @@ export default {
       pay_desc: '', // 输入单价
       description: '', // 招工描述 输入
       textAreaDisplay: true, // 招工描述显示开关
-      disclaimer: '建筑用工郑重声明：招聘过程中禁止提前支付费费用，必须在附近验证身份后再带入工地现场，以免被骗！若双方发生经济纠纷本平台概不负责！举报客服电话：13042472444' // 免责声明 服务器给
+      disclaimer: '建筑用工郑重声明：招聘过程中禁止提前支付费费用，必须在附近验证身份后再带入工地现场，以免被骗！若双方发生经济纠纷本平台概不负责！举报客服电话：13042482444' // 免责声明 服务器给
     }
   },
-
+  //动态分享
+  // onShareAppMessage (res) {
+  //   return {
+  //     title: '全国建筑工地招工找活信息平台',
+  //     path: 'pages/releasejob/main',
+  //     success: function (res) {
+  //       // 转发成功
+  //     },
+  //     fail: function (res) {
+  //       // 转发失败
+  //     }
+  //   }
+  // },
   onLoad (option) {
     console.log('hostFly = ', hostFly);
     this.title = '' // 输入的招工名称
@@ -711,7 +723,7 @@ export default {
         this.addImageDisplay = false
         return false
       }
-      if (this.addImageCount > 3) {        
+      if (this.addImageCount > 3) {
         this.files = []
         this.addImageDisplay = true
         // 提示框

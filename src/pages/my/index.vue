@@ -71,9 +71,9 @@ export default {
 
   onShareAppMessage (res) {
     return {
-      title: '快来和我一起体验建筑用工小程序吧！',
+      title: '全国建筑工地招工找活信息平台',
       path: 'pages/index/main',
-      imageUrl: 'https://api.yixingongcheng.com/wxshare2.jpg'
+      imageUrl: 'https://api.yixingongcheng.com/wxshare4.jpg'
     }
   },
 

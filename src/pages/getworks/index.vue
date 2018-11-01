@@ -172,6 +172,19 @@ export default {
       end: null
     }
   },
+   //动态分享
+    onShareAppMessage (res) {
+    return {
+      title: '全国建筑工地招工找活信息平台',
+      path: 'pages/getworks/main',
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
+  },
   computed: {
     computedHeightStyle () {
       return `height:${this.scrollViewHeight}px`
@@ -189,7 +202,7 @@ export default {
     })
     wx.setNavigationBarTitle({
       title: '招工列表'
-    })
+    })    
     wx.getUserInfo({
       // 请求微信server,得到userInfo
       success: (res) => {
@@ -547,7 +560,7 @@ export default {
         }
       })
       return newObjs;
-    }
+    }   
   }
 }
 </script>

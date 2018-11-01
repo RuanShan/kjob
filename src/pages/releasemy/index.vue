@@ -245,8 +245,8 @@
           </div>
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" v-show="textareaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
-        </div>
+          <textarea class="text-array" v-show="textareaDisplay" @input="textAreaInput" maxlength="150" style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          </div>
       </div>
       <!-- 列表单元 找活描述 END -->
 
@@ -476,7 +476,19 @@ export default {
       experienseImages: [], // 经过整理的工作经历照片
     }
   },
-
+  //动态分享
+  // onShareAppMessage (res) {
+  //   return {
+  //     title: '全国建筑工地招工找活信息平台',
+  //     path: 'pages/releasemy/main',
+  //     success: function (res) {
+  //       // 转发成功
+  //     },
+  //     fail: function (res) {
+  //       // 转发失败
+  //     }
+  //   }
+  // },
   onLoad (option) {
     console.log('onLoad...........');
 
@@ -1058,7 +1070,7 @@ page {
         }
       }
     }
-    .mpvue-picker-view{
+    .mpvue-picker-view {
       height: 93vh;
     }
   }

@@ -84,7 +84,7 @@
         </div>
         <div class="text-array-class">
           <textarea ref="textAR" class="text-array" @input="textAreaInput" :value="description" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
-        </div>
+          </div>
       </div>
       <!-- 列表单元 经历描述 END -->
 
@@ -164,7 +164,19 @@ export default {
       saveButtonDisplay: true // 保存按钮显示开关
     }
   },
-
+  //动态分享
+  // onShareAppMessage (res) {
+  //   return {
+  //     title: '全国建筑工地招工找活信息平台',
+  //     path: 'pages/myexperiense/main',
+  //     success: function (res) {
+  //       // 转发成功
+  //     },
+  //     fail: function (res) {
+  //       // 转发失败
+  //     }
+  //   }
+  // },
   async onLoad (option) {
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
@@ -404,7 +416,7 @@ export default {
         this.addImageDisplay = false
         return false
       }
-      if (this.addImageCount > 3) {        
+      if (this.addImageCount > 3) {
         this.files = []
         this.addImageDisplay = true
         // 提示框

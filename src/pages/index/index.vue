@@ -31,6 +31,19 @@ export default {
       userInfo: {}
     }
   },
+  //动态分享
+    onShareAppMessage (res) {
+    return {
+      title: '全国建筑工地招工找活信息平台',
+      path: 'pages/index/main',
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
+  },
   components: {
     card
   },

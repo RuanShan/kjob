@@ -1,115 +1,7 @@
 <template>
   <div class="content">
-    <div class="item-link">
-      <div class="link-left">
-        项目名称:
-      </div>
-      <div class="link-right">
-        {{item.state}}{{item.city}}-招 {{item.job_taxon_name}}
-      </div>
-    </div>
-
-    <div class="item-link">
-      <div class="link-left">
-        项目地址:
-      </div>
-      <div class="link-right">
-        {{item.state}}{{item.city}}{{district}}
-      </div>
-    </div>
-
-    <div class="item-link">
-      <div class="link-left">
-        联系人:
-      </div>
-      <div class="link-right">
-        {{item.customer_realname}} {{item.customer_mobile}}
-      </div>
-    </div>
-
-    <div class="item-link" v-if="parttimeDisplay">
-      <div class="link-left">
-        招工人数:
-      </div>
-      <div class="link-right">
-        {{item.quantity}} 元
-      </div>
-    </div>
-
-    <div class="item-link" v-if="parttimeDisplay">
-      <div class="link-left">
-        工资标准:
-      </div>
-      <div class="link-right">
-        {{item.pay}} 人/天
-      </div>
-    </div>
-
-    <div class="item-link" v-if="contractDisplay">
-      <div class="link-left">
-        工程量:
-      </div>
-      <div class="link-right">
-        {{item.quantity_desc}}
-      </div>
-    </div>
-
-    <div class="item-link" v-if="contractDisplay">
-      <div class="link-left">
-        单价:
-      </div>
-      <div class="link-right">
-        {{item.pay_desc}} 元
-      </div>
-    </div>
-
-    <div class="item-link">
-      <div class="link-left">
-        要求/备注:
-      </div>
-      <div class="link-right">
-        {{item.description}}
-      </div>
-    </div>
-
-    <div class="item-link">
-      <div class="link-left">
-        发布时间:
-      </div>
-      <div class="link-right">
-        {{item.releaseTime}}
-      </div>
-    </div>
-
-    <div class="item-link">
-      <div class="two---row">
-        <div class="image-upload">
-          <div class="pre-div-image">
-            <block v-for="(item, index) in files" :key="index">
-              <div class="uploader-pre-image" @click="predivImage" :id="item">
-                <image class="uploader__img" :src="item" mode="aspectFill" />
-              </div>
-            </block>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="item-link">
-      <div class="fifth-line">
-        <div class="one---row">
-          <div class="one-row-left">
-            <img style="width: 60rpx; height: 60rpx;" src="../../../resources/icon/warning.png">
-          </div>
-          <div class="one-row-right">
-            &nbsp;&nbsp; {{warning}}
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- 第一大行 ===> START -->
-    <!-- <div class="first-line" v-if="parttimeDisplay">
+    <div class="first-line" v-if="parttimeDisplay">
       <div class="one---row">
         <div class="one-row-left">
           {{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
@@ -137,11 +29,11 @@
       <div class="three---row">
         <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/location.png"> {{item.state}}&nbsp;&nbsp;-&nbsp;&nbsp;{{item.city}}
       </div>
-    </div> -->
+    </div>
     <!-- 第一大行 ===> END -->
 
     <!-- 第一大行 ===> START -->
-    <!-- <div class="first-line" v-if="contractDisplay">
+    <div class="first-line" v-if="contractDisplay">
       <div class="one---row">
         <div class="one-row-left">
           {{item.city}}&nbsp;招&nbsp;{{item.job_taxon_name}}
@@ -169,11 +61,11 @@
       <div class="three---row">
         <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/location.png"> {{item.state}}&nbsp;&nbsp;-&nbsp;&nbsp;{{item.city}}
       </div>
-    </div> -->
+    </div>
     <!-- 第一大行 ===> END -->
 
     <!-- 第二大行 ===> START -->
-    <!-- <div class="second-line">
+    <div class="second-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/discription.png">
@@ -185,11 +77,11 @@
       <div class="two---row">
         {{item.description}}
       </div>
-    </div> -->
+    </div>
     <!-- 第二大行 ===> START -->
 
     <!-- 第三大行 ===> START -->
-    <!-- <div class="third-line">
+    <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/skill.png">
@@ -201,11 +93,11 @@
       <div class="two---row">
         {{item.job_taxon_parent_name}}&nbsp;-&nbsp;{{item.job_taxon_name}}
       </div>
-    </div> -->
+    </div>
     <!-- 第三大行 ===> END -->
 
     <!-- 第四大行 ===> START -->
-    <!-- <div class="fourth-line">
+    <div class="fourth-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/phone.png">
@@ -214,11 +106,11 @@
           &nbsp;&nbsp; 联系人 &nbsp;-&nbsp;{{item.customer_realname}}
         </div>
       </div>
-    </div> -->
+    </div>
     <!-- 第四大行 ===> END -->
 
     <!-- 第五大行 ===> START -->
-    <!-- <div class="third-line">
+    <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/skill.png">
@@ -238,11 +130,11 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
     <!-- 第五大行 ===> END -->
 
     <!-- 第六大行 ===> START -->
-    <!-- <div class="fifth-line">
+    <div class="fifth-line">
       <div class="one---row">
         <div class="one-row-left">
           <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/warning.png">
@@ -251,13 +143,13 @@
           &nbsp;&nbsp; {{warning}}
         </div>
       </div>
-    </div> -->
+    </div>
     <!-- 第六大行 ===> END -->
 
     <!-- 第七大行 ===> START -->
-    <!-- <div class="sixth-line">
+    <div class="sixth-line">
       <button class="calling" type="primary" @click="calling">点击拨打电话</button>
-    </div> -->
+    </div>
     <!-- 第七大行 ===> END -->
   </div>
 </template>
@@ -271,7 +163,6 @@ export default {
       files: [],
       phoneNumber: '', // 电话号码 来自API
       item: null, // 接收到的招工列表的JoSon数据
-      district: null, // 区
       item2: null, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       parttimeDisplay: null, // 点工显示开关
@@ -350,9 +241,6 @@ export default {
     }
     this.files = (this.item.job_images.map((element) => { return element.original_url }))
     this.phoneNumber = this.item.customer_mobile
-    // 截取字符串 获得区
-    let strIndexOf = this.find(this.item.district_fullname, '-', 1)
-    this.district = this.item.district_fullname.substring(strIndexOf + 1)
   },
 
   methods: {
@@ -395,13 +283,6 @@ export default {
         urls: this.files // 需要预览的图片http链接列表
       })
     },
-    find (str, cha, num) {
-      var x = str.indexOf(cha);
-      for (var i = 0; i < num; i++) {
-        x = str.indexOf(cha, x + 1);
-      }
-      return x;
-    }
   }
 }
 </script>
@@ -412,82 +293,6 @@ page {
   background-color: #f0f0f0;
   .content {
     height: 100%;
-    .item-link {
-      // border-top: 1px solid #bbbbbb;
-      border-bottom: 1px solid #bbbbbb;
-      background-color: #ffffff;
-      padding: 20rpx;
-      display: flex;
-      font-size: 40rpx;
-      letter-spacing: 4rpx;
-      .link-left {
-        font-weight: bold;
-        width: 30%;
-        // background-color: #80ff80;
-      }
-      .link-right {
-        font-weight: normal;
-        width: 70%;
-        text-align: right;
-        color: #2291ff;
-        // background-color: #0080ff;
-      }
-      .image-upload {
-        height: 228rpx;
-        background-color: #ffffff;
-        .uploader-input-box {
-          float: left;
-          position: relative;
-          margin-right: 9px;
-          margin-bottom: 9px;
-          width: 77px;
-          height: 77px;
-          // border: 1px solid #d9d9d9;
-          .add-image {
-            margin: 25rpx;
-            height: 200rpx;
-            width: 200rpx;
-            background-color: #ffffff;
-            border: solid 1rpx #0080ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-        }
-        .pre-div-image {
-          .uploader__img {
-            display: block;
-            width: 180rpx;
-            height: 180rpx;
-          }
-          .uploader-pre-image {
-            float: left;
-            margin: 25rpx;
-            .delet-button {
-              height: 40rpx;
-              display: flex;
-              align-items: center;
-              font-size: 40rpx;
-              justify-content: center;
-            }
-          }
-        }
-      }
-      .fifth-line {
-        // height: 23%;
-        background-color: #ffffff;
-        flex-direction: column;
-        justify-content: space-around;
-        .one---row {
-          padding: 0;
-          display: flex;
-          font-size: 36rpx;
-          color: #ff82ff;
-          // border-bottom: solid 1rpx #b8b8b8;
-        }
-      }
-    }
-
     .first-line {
       height: 23%;
       background-color: #ffffff;
