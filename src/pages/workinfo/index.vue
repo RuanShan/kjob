@@ -23,7 +23,12 @@
         联系人:
       </div>
       <div class="link-right">
-        {{item.customer_realname}} {{item.customer_mobile}}
+        <div class="callPhone">
+          <div>{{linkman}}</div>
+          <div>
+            <button class="calling" type="primary" size="mini" @click="calling">拨打</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -272,6 +277,7 @@ export default {
       phoneNumber: '', // 电话号码 来自API
       item: null, // 接收到的招工列表的JoSon数据
       district: null, // 区
+      linkman: null, // 联系人
       item2: null, // 接收到的招工列表的JoSon数据
       windowHeight: null, // 当前手机可用窗口的高度,单位rpx
       parttimeDisplay: null, // 点工显示开关
@@ -353,6 +359,7 @@ export default {
     // 截取字符串 获得区
     let strIndexOf = this.find(this.item.district_fullname, '-', 1)
     this.district = this.item.district_fullname.substring(strIndexOf + 1)
+    this.linkman = this.item.customer_realname + this.item.customer_mobile
   },
 
   methods: {
@@ -418,7 +425,7 @@ page {
       background-color: #ffffff;
       padding: 20rpx;
       display: flex;
-      font-size: 40rpx;
+      font-size: 38rpx;
       letter-spacing: 4rpx;
       .link-left {
         font-weight: bold;
@@ -431,6 +438,19 @@ page {
         text-align: right;
         color: #2291ff;
         // background-color: #0080ff;
+
+        .callPhone {
+          display: flex;
+          justify-content: space-between;
+          .calling {
+            font-size: 25rpx;
+            margin: 0;
+            padding: 3rpx;
+            padding-left: 10rpx;
+            padding-right: 10rpx;
+            background-color: #2862f9;
+          }
+        }
       }
       .image-upload {
         height: 228rpx;
