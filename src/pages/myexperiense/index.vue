@@ -233,7 +233,12 @@ export default {
       }
     })
   },
-
+  
+  onUnload(){ // 当页面被关闭时，状态不被保存
+    this.files = []
+    this.addImageCount = 0
+  },
+  
   methods: {
     // ********************开始时间选择处理函数*****************************
     startDateChange (e) {

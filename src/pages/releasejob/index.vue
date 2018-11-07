@@ -441,7 +441,12 @@ export default {
       }
     })
   },
-
+  
+  onUnload(){ // 当页面被关闭时，状态不被保存
+    this.files = []
+    this.addImageCount = 0
+  },
+  
   methods: {
     // **********************招工类型点击事件**************************
     radioChange (e) {
