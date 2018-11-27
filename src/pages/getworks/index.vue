@@ -202,7 +202,7 @@ export default {
     })
     wx.setNavigationBarTitle({
       title: '招工列表'
-    })    
+    })
     wx.getUserInfo({
       // 请求微信server,得到userInfo
       success: (res) => {
@@ -560,7 +560,7 @@ export default {
         }
       })
       return newObjs;
-    }   
+    }
   }
 }
 </script>

@@ -16,7 +16,7 @@
     "window": {
       "backgroundTextStyle": "light",
       "navigationBarBackgroundColor": "#fff",
-      "navigationBarTitleText": "建筑用工小程序",
+      "navigationBarTitleText": "建筑用工互助平台",
       "navigationBarTextStyle": "black"
     },
     "tabBar": {
