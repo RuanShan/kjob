@@ -2,9 +2,15 @@
   <div class="content">
     <!-- 第一大行 ===> START -->
     <div class="first-line">
-      <img class="background-img" src="../../../resources/images/timg.jpg">
+      <img
+        class="background-img"
+        src="../../../resources/images/timg.jpg"
+      >
       <div class="one---row">
-        <img style="width: 120rpx; height: 120rpx;" :src='item.headimgurl'>
+        <img
+          style="width: 120rpx; height: 120rpx;"
+          :src='item.headimgurl'
+        >
       </div>
       <div class="two---row">
         {{item.realname}}
@@ -16,7 +22,10 @@
     <div class="second-line">
       <div class="one---row">
         <div class="one-row-left">
-          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/baseinfo.png">
+          <img
+            style="width: 40rpx; height: 40rpx;"
+            src="../../../resources/icon/baseinfo.png"
+          >
         </div>
         <div class="one-row-right">
           &nbsp;&nbsp; 基本信息
@@ -49,7 +58,10 @@
     <div class="third-line">
       <div class="one---row">
         <div class="one-row-left">
-          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/tpyeOfWork.png">
+          <img
+            style="width: 40rpx; height: 40rpx;"
+            src="../../../resources/icon/tpyeOfWork.png"
+          >
         </div>
         <div class="one-row-right">
           &nbsp;&nbsp; 我的工种
@@ -57,13 +69,22 @@
       </div>
       <div class="two---row">
         <div class="work-class">
-          <div class="work-class-item" v-show="item.job_taxon1_name">
+          <div
+            class="work-class-item"
+            v-show="item.job_taxon1_name"
+          >
             {{item.job_taxon1_name}}
           </div>
-          <div class="work-class-item" v-show="item.job_taxon2_name">
+          <div
+            class="work-class-item"
+            v-show="item.job_taxon2_name"
+          >
             {{item.job_taxon2_name}}
           </div>
-          <div class="work-class-item" v-show="item.job_taxon3_name">
+          <div
+            class="work-class-item"
+            v-show="item.job_taxon3_name"
+          >
             {{item.job_taxon3_name}}
           </div>
         </div>
@@ -75,7 +96,10 @@
     <div class="fourth-line">
       <div class="one---row">
         <div class="one-row-left">
-          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/discription.png">
+          <img
+            style="width: 40rpx; height: 40rpx;"
+            src="../../../resources/icon/discription.png"
+          >
         </div>
         <div class="one-row-right">
           &nbsp;&nbsp;招工描述
@@ -91,13 +115,20 @@
     <div class="fifth-line">
       <div class="one---row">
         <div class="one-row-left">
-          <img style="width: 40rpx; height: 40rpx;" src="../../../resources/icon/work_line.png">
+          <img
+            style="width: 40rpx; height: 40rpx;"
+            src="../../../resources/icon/work_line.png"
+          >
         </div>
         <div class="one-row-right">
           &nbsp;&nbsp; 工作经历
         </div>
       </div>
-      <div class="two---row" v-for="(work, index ) in computedCustomerWorks" :key="index">
+      <div
+        class="two---row"
+        v-for="(work, index ) in computedCustomerWorks"
+        :key="index"
+      >
         <div> {{work.start_at}} ~ {{work.end_at}} </div>
         <div>{{work.district_fullname}}</div>
         <div>
@@ -105,22 +136,39 @@
         </div>
         <div class="image-upload">
           <div class="pre-div-image">
-            <block v-for="(item, num) in files[index]" :key="num">
-              <div class="uploader-pre-image" @click="predivImage({urls:files[index],current:item})">
-                <image class="uploader__img" :src="item" mode="aspectFill" />
+            <block
+              v-for="(item, num) in files[index]"
+              :key="num"
+            >
+              <div
+                class="uploader-pre-image"
+                @click="predivImage({urls:files[index],current:item})"
+              >
+                <image
+                  class="uploader__img"
+                  :src="item"
+                  mode="aspectFill"
+                />
               </div>
             </block>
           </div>
         </div>
       </div>
 
-      <div class="two---row" v-show="computedCustomerWorks.length==0"> 暂无经验 </div>
+      <div
+        class="two---row"
+        v-show="computedCustomerWorks.length==0"
+      > 暂无经验 </div>
     </div>
     <!-- 第五大行 ===> END -->
 
     <!-- 第六大行 ===> START -->
     <div class="sixth-line">
-      <button class="calling" type="primary" @click="calling">点击拨打电话</button>
+      <button
+        class="calling"
+        type="primary"
+        @click="calling"
+      >点击拨打电话</button>
     </div>
     <!-- 第六大行 ===> END -->
   </div>
@@ -216,34 +264,43 @@ export default {
 
   methods: {
     calling () {
-      console.log( "this.userInfoForAPI=",this.userInfoForAPI)
+      console.log("this.userInfoForAPI=", this.userInfoForAPI)
       //检查是否手机认证,若手机以认证,可以拨打电话
-      if (this.userInfoForAPI.mobile_identified_at) {
-
+      // if (this.userInfoForAPI.mobile_identified_at) {
+      // 如果没有身份证和手机认证,调到免费注册页面
+      if ((this.userInfoForAPI.id_num_identified_at != null) && (this.userInfoForAPI.mobile_identified_at != null)) {
         wx.makePhoneCall({
-            phoneNumber: this.item.mobile, // 此号码并非真实电话号码，仅用于测试
-            success: function () {
-              console.log('拨打电话OK！')
-            },
-            fail: function () {
-              console.log('拨打电话失败！')
-              wx.showModal({
-                content: '电话拨打失败,请检查手机设置或权限!',
-                showCancel: false,
-                success: function (res) {
-                  // if (res.confirm) {
-                  //   console.log('用户点击确定')
-                  // }
-                }
-              })
+          phoneNumber: this.item.mobile, // 此号码并非真实电话号码，仅用于测试
+          success: function () {
+            console.log('拨打电话OK！')
+          },
+          fail: function () {
+            console.log('拨打电话失败！')
+            wx.showModal({
+              content: '电话拨打失败,请检查手机设置或权限!',
+              showCancel: false,
+              success: function (res) {
+                // if (res.confirm) {
+                //   console.log('用户点击确定')
+                // }
+              }
+            })
+          }
+        })
+      } else { // 没有认证,调到免费注册页面
+        wx.showModal({
+          content: '请先进行手机认证和身份证认证,之后才能拨打电话!',
+          showCancel: false,
+
+          success: function(res) {
+            if (res.confirm) {
+              console.log('点击了确定按钮!!!');
+              wx.switchTab({ url: '../my/main' }) // 跳转到免费注册页面
             }
-          })
-        } else {
-          wx.showModal({
-            content: '请先进行手机认证,之后才能拨打电话!',
-            showCancel: false
-          })
-        }
+          }
+
+        })
+      }
     },
 
     // *********************预览图片处理函数************************

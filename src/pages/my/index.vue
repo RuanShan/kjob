@@ -2,10 +2,16 @@
   <div>
     <!-- 列表单元 第一行 START -->
     <div class="first-section">
-      <img class="background-img" src="../../../resources/images/bkg.jpg">
+      <img
+        class="background-img"
+        src="../../../resources/images/bkg.jpg"
+      >
       <div class="one-colum">
         <!-- <img style="width: 160rpx; height: 160rpx;" src="/resources/headImage/姜亿万.png"> -->
-        <img style="width: 160rpx; height: 160rpx;" :src="userInfoForAPI.headimgurl">
+        <img
+          style="width: 160rpx; height: 160rpx;"
+          :src="userInfoForAPI.headimgurl"
+        >
       </div>
       <div class="two-colum">
         <div class="name">
@@ -20,22 +26,40 @@
     <div class="second-row">
       <div class="one-colum button-wrap">
         <button @click="toIDCard">
-          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/peopleID.png">
-          <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.id_num_identified_at" />
+          <img
+            style="width: 100rpx; height: 100rpx;"
+            src="../../../resources/icon/peopleID.png"
+          >
+          <icon
+            type="success"
+            class="weui-flex__item identified-icon"
+            v-if="userInfoForAPI.id_num_identified_at"
+          />
           <div class="words">身份认证</div>
         </button>
       </div>
       <div class="two-colum button-wrap">
         <button @click="toPhoneID">
-          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/phoneID.png">
-          <icon type="success" class="weui-flex__item identified-icon" v-if="userInfoForAPI.mobile_identified_at" />
+          <img
+            style="width: 100rpx; height: 100rpx;"
+            src="../../../resources/icon/phoneID.png"
+          >
+          <icon
+            type="success"
+            class="weui-flex__item identified-icon"
+            v-if="userInfoForAPI.mobile_identified_at"
+          />
           <div class="words">手机认证</div>
         </button>
       </div>
       <div class="three-colum button-wrap">
         <button open-type='share'>
           <!-- <button @click="shareButton"> -->
-          <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/share.png">
+          <img
+            style="width: 100rpx; height: 100rpx;"
+            src="../../../resources/icon/share.png"
+          >
+          <!-- <img style="width: 100rpx; height: 100rpx;" src="../../../resources/icon/share.png"> -->
           <div class="words">分享</div>
         </button>
       </div>
@@ -50,7 +74,10 @@
 
     <!-- 列表单元 第三行 START -->
     <div class="three-row">
-      <img style="width: 300rpx; height: 300rpx;" src="../../../resources/images/WX-EWM.jpg">
+      <img
+        style="width: 300rpx; height: 300rpx;"
+        src="../../../resources/images/WX-EWM.jpg"
+      >
     </div>
     <!-- 列表单元 第三行 END -->
   </div>
@@ -73,7 +100,7 @@ export default {
     return {
       title: '全国建筑工地招工找活信息平台',
       path: 'pages/index/main',
-      imageUrl: 'https://api.yixingongcheng.com/wxshare4.jpg'
+      imageUrl: 'https://api.yixingongcheng.com/wxshare5.jpg'
     }
   },
 
@@ -89,6 +116,7 @@ export default {
     })
 
   },
+  // 小程序从后台进入前台显示 小程序初始化完成后
   onShow () {
     // 程序进入当前页面后,先取得全局用户信息userInfoForAPI
     wx.getStorage({
@@ -99,8 +127,26 @@ export default {
       }
     })
   },
+  // 小程序从前台进入后台
+  onHide () {
+    this.$store.commit('setuserInfoForAPIStore', this.userInfoForAPI) // 保存到VueX中
+    // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
+    wx.setStorage({
+      key: 'userInfoForAPI',
+      data: this.userInfoForAPI,
+      success: (res) => {
+        console.log('setStorage data 后得 res = ', res);
+        console.log('userInfoForAPI 存储成功了!!!')
+      },
+      fail: () => {
+        console.log('userInfoForAPI 存储失败了*******')
+      }
+    })
+  },
+
   methods: {
     // *********************点击身份认证处理函数************************
+
     // ***跳转到身份证认证界面***
     // ***************************************************************
     toIDCard () {
@@ -320,7 +366,7 @@ page {
     .two-colum {
       width: 750rpx;
       height: 0%;
-      margin-top:-78rpx;
+      margin-top: -78rpx;
       z-index: 3;
       font-size: 80rpx;
       color: #ffffff;

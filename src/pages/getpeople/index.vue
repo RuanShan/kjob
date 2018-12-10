@@ -4,20 +4,42 @@
     <div class="sizer">
       <div class="position-select">
         <button @click="showPickerForRegion">{{selectedRegionName}}</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="deepLengthForRegion" :pickerValueDefault="pickerRegionDefault" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <mpvue-picker
+          ref="mpvuePickerForRegion"
+          :mode="modeForRegion"
+          :deepLength="deepLengthForRegion"
+          :pickerValueDefault="pickerRegionDefault"
+          @onConfirm="onConfirmForRegion"
+          @onCancel="onCancelForRegion"
+          :pickerValueArray="pickerRegionArray"
+        ></mpvue-picker>
       </div>
       <div class="work-select">
         <button @click="showPickerForJob">{{selectedTaxonName}}</button>
-        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
+        <mpvue-picker
+          ref="mpvuePickerForJob"
+          :mode="modeForJob"
+          :deepLength="deepLengthForJob"
+          :pickerValueDefault="pickerJobDefault"
+          @onConfirm="onConfirmForJob"
+          @onCancel="onCancelForJob"
+          :pickerValueArray="pickerJobArray"
+        ></mpvue-picker>
       </div>
     </div>
     <!-- 筛选 ===> END -->
 
     <!-- 列表概览 ===> START -->
     <div class="list">
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y @scrolltolower="scrolltolower" @scrolltoupper="scrolltoupper" >
+      <scroll-view
+        class="job-list"
+        :style="computedHeightStyle"
+        scroll-y
+        @scrolltolower="scrolltolower"
+        @scrolltoupper="scrolltoupper"
+      >
 
-        <div class="circular" v-for="(item, i) in peopleList" :key="item.id" @click="detail(item)">
+        <!-- <div class="circular" v-for="(item, i) in peopleList" :key="item.id" @click="detail(item)">
           <div class="div-left">
             <div class="left-top">
               <div class="left-top-one">
@@ -65,12 +87,86 @@
               </div>
             </div>
           </div>
+        </div> -->
+        <div
+          class="new-rectangle"
+          v-for="item in peopleList"
+          :key="item.id"
+          @click="detail(item)"
+        >
+          <div class="location-job">
+            <div class="location">
+              {{item.state_city1}} + {{item.job_taxon1_name}}
+            </div>
+            <div class="job">
+              <div class="certification">实名认证</div>
+              <!-- <div class="typeOfWork">
+                正在招聘
+              </div> -->
+            </div>
+          </div>
+          <div class="details">
+
+            <div class="icon">
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/people.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/nation.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/age.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/team.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/time.png"
+              >
+            </div>
+            <div class="title">
+              <div>
+                <p>姓名:</p>
+              </div>
+              <div>
+                <p>民族:</p>
+              </div>
+              <div>
+                <p>年龄:</p>
+              </div>
+              <div>
+                <p>队伍:</p>
+              </div>
+              <div>
+                <p>发布时间:</p>
+              </div>
+            </div>
+            <div class="content">
+              <div class="people-color">{{item.realname}}</div>
+              <div>{{item.nation}}</div>
+              <div> {{item.age}}</div>
+              <div>{{item.members}}</div>
+              <div>{{item.releaseTime}}</div>
+            </div>
+            <div class="arrows">
+              <img
+                style="width: 50rpx; height: 50rpx;"
+                src="../../../resources/icon/details.png"
+              >
+            </div>
+          </div>
         </div>
+
       </scroll-view>
     </div>
     <!-- 列表概览 ===> END -->
-
   </div>
+
 </template>
 
 <script>
@@ -144,7 +240,7 @@ export default {
     }
   },
   //动态分享
-    onShareAppMessage (res) {
+  onShareAppMessage (res) {
     return {
       title: '全国建筑工地招工找活信息平台',
       path: 'pages/peopleinfo/main',
@@ -251,7 +347,18 @@ export default {
 
         this.dataFormat(data.applicants)
 
-        this.peopleList = this.uniquelizeObjs( this.peopleList.concat( data.applicants) )
+        this.peopleList = this.uniquelizeObjs(this.peopleList.concat(data.applicants))
+
+        console.log('peopleList = ', this.peopleList);
+
+        let tempSymbol = 0;
+        // let tempArray = this.peopleList;
+        this.peopleList.map((item, index, arr) => {
+          console.log('item = ', item);
+          tempSymbol = this.find(item.district1_fullname, '-', 1)
+          console.log('tempSymbol = ', tempSymbol);
+          item.state_city1 = item.district1_fullname.substring(0, tempSymbol)
+        })
 
         console.log("this.peopleList.length=" + this.peopleList.length)
 
@@ -260,7 +367,7 @@ export default {
 
     async refreshFirstPageJobs () {
       if (!this.state.loading) {
-        console.log("refreshFirstPageJobs" )
+        console.log("refreshFirstPageJobs")
 
         this.state.loading = true
         let params = this.buildParams()
@@ -268,11 +375,20 @@ export default {
         let data = await searchApplicants(params)
 
         this.state.loading = false
-        console.log("refreshFirstPageJobs=", data )
+        console.log("refreshFirstPageJobs=", data)
 
         this.dataFormat(data.applicants)
 
-        this.peopleList = this.uniquelizeObjs( data.applicants.concat(this.peopleList) )
+        this.peopleList = this.uniquelizeObjs(data.applicants.concat(this.peopleList))
+
+        let tempSymbol = 0;
+        // let tempArray = this.peopleList;
+        this.peopleList.map((item, index, arr) => {
+          console.log('item = ', item);
+          tempSymbol = this.find(item.district1_fullname, '-', 1)
+          console.log('tempSymbol = ', tempSymbol);
+          item.state_city1 = item.district1_fullname.substring(0, tempSymbol)
+        })
 
       }
     },
@@ -344,7 +460,7 @@ export default {
           let key = 'district' + (i + 1) + '_fullname'
           if (element[key]) {
             element['district' + (i + 1) + '_name'] = element[key].split('-')[1]
-            city_names.push( element['district' + (i + 1) + '_name'] )
+            city_names.push(element['district' + (i + 1) + '_name'])
           }
         }
         element.city_names = Array.from(new Set(city_names))
@@ -352,7 +468,7 @@ export default {
           let key = 'job_taxon' + (i + 1) + '_fullname'
           if (element[key]) {
             element['job_taxon' + (i + 1) + '_name'] = element[key].split('-')[1]
-            element.job_taxon_names.push( element['job_taxon' + (i + 1) + '_name'] )
+            element.job_taxon_names.push(element['job_taxon' + (i + 1) + '_name'])
           }
         }
         // 格式化发布时间
@@ -373,9 +489,9 @@ export default {
       console.log("scrolltolower")
       this.loadMoreJob()
     },
-    scrolltoupper(e){
+    scrolltoupper (e) {
       console.log("scrolltoupper")
-      this.refreshFirstPageJobs(  )
+      this.refreshFirstPageJobs()
     },
 
     uniquelizeObjs (objs) {
@@ -409,7 +525,7 @@ page {
 .sizer {
   // position:absolute;
   width: 100%;
-  height: 106rpx;
+  // height: 106rpx;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -520,7 +636,7 @@ page {
           width: 211rpx;
           padding: 0rpx 18rpx;
           height: 40rpx;
-          line-height:40rpx;
+          line-height: 40rpx;
         }
         // .left-bottom-top {
         //   background-color: #ffff80;
@@ -564,6 +680,109 @@ page {
         justify-content: center;
         align-items: center;
         height: 50%;
+      }
+    }
+  }
+
+  .new-rectangle {
+    padding-top: 15rpx;
+    padding-left: 25rpx;
+    padding-right: 25rpx;
+    padding-bottom: 15rpx;
+    margin: 25rpx 25rpx;
+    background: #ffffff;
+    width: 645rpx;
+    height: 250rpx;
+    border: 2px solid #d6d6d6;
+    border-radius: 30rpx;
+    .location-job {
+      height: 25%;
+      // background-color: #fc94b8;
+      display: flex;
+      align-items: center;
+      .location {
+        // border-radius: 30rpx;
+        // background: linear-gradient(
+        //   to right,
+        //   rgb(245, 183, 102),
+        //   rgb(251, 251, 253)
+        // );
+        // background-color: #bbe9ff;
+        font-size: 32rpx;
+        width: 80%;
+      }
+      .job {
+        width: 20%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .typeOfWork {
+          color: #ffffff;
+          padding-left: 10rpx;
+          padding-right: 10rpx;
+          font-size: 23rpx;
+          border-radius: 6rpx;
+          background-color: #ff9f71;
+          border: 1px solid #808080;
+        }
+        .certification {
+          padding: 5rpx 20rpx;
+          font-size: 17rpx;
+          font-weight: bold;
+          border-radius: 30rpx;
+          border: solid 5rpx #fe0a9c;
+          color: #f80404;
+        }
+        // background-color: azure;
+      }
+    }
+    .details {
+      height: 75%;
+      display: flex;
+      // background-color: #80ff80;
+      .icon {
+        width: 10%;
+        height: 100%;
+        // background-color: lightseagreen;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .title {
+        width: 20%;
+        height: 100%;
+        // background-color: rgb(250, 246, 31);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: space-around;
+        font-size: 25rpx;
+        text-align-last: justify;
+        text-align: justify;
+        text-justify: distribute-all-lines; // 这行必加，兼容ie浏览器
+      }
+      .content {
+        padding-left: 18rpx;
+        width: 60%;
+        height: 100%;
+        // background-color: rgb(32, 70, 240);
+        font-size: 25rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        .people-color {
+          color: #ff8000;
+        }
+      }
+      .arrows {
+        width: 10%;
+        height: 100%;
+        // background-color: rgb(112, 32, 178);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

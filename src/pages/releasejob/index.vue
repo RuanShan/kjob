@@ -10,11 +10,11 @@
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
           </div>
           <div class="text">
-            招工名称
+            公司名称
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" maxlength="10" type="text" placeholder="如:深圳招电工" v-model="title" />
+          <input class="wx-input" maxlength="10" type="text" placeholder="如:某公司某工程" v-model="title" />
         </div>
       </div>
       <!-- 列表单元 招工名称 END -->
@@ -130,13 +130,13 @@
           </div>
         </div>
         <div class="three-col">
-          <input class="wx-input" style="width:190rpx;" maxlength="10" type="number" placeholder="多少钱?" v-model="pay" /> &nbsp;&nbsp;元/天
+          <input class="wx-input" style="width:190rpx;" maxlength="10" type="number" placeholder="多少钱?" v-model="pay_desc" /> &nbsp;&nbsp;元/天
         </div>
       </div>
       <!-- 列表单元 工资标准 END -->
 
       <!-- 列表单元 工程数量 START -->
-      <div class="my-info-list" v-if="allWorkDisplay">
+      <!-- <div class="my-info-list" v-if="allWorkDisplay">
         <div class="one-and-two-col">
           <div class="icon">
             <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
@@ -148,8 +148,24 @@
         <div class="three-col">
           <input class="wx-input" maxlength="15" type="text" placeholder="量+单位/可中文" v-model="quantity_desc" />
         </div>
-      </div>
+      </div> -->
       <!-- 列表单元 工程数量 END -->
+
+       <!-- 列表单元 招工人数 START -->
+      <div class="my-info-list" v-if="allWorkDisplay">
+        <div class="one-and-two-col">
+          <div class="icon">
+            <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/info-fill.png">
+          </div>
+          <div class="text">
+            招工人数
+          </div>
+        </div>
+        <div class="three-col">
+          <input class="wx-input" maxlength="10" type="number" placeholder="多少人?只能数字" v-model="quantity" />
+        </div>
+      </div>
+      <!-- 列表单元 招工人数 END -->
 
       <!-- 列表单元 单位价格 START -->
       <div class="my-info-list" v-if="allWorkDisplay">
@@ -181,7 +197,7 @@
           </div>
         </div>
         <div class="text-array-class">
-          <textarea class="text-array" v-show="textAreaDisplay" @input="textAreaInput" maxlength="150" placeholder="请根据实际情况,真实地填写描述.不可发布违法信息,否则后果自负." style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
+          <textarea class="text-array" v-show="textAreaDisplay" @input="textAreaInput" maxlength="150" placeholder="例如：几栋楼、工程概况、招工条件和用工需求，等一些工地的实际情况。" style="height: 150rpx; background-color: #d8d8d8; width: 700rpx; margin: 0rpx 25rpx 25rpx 25rpx;" />
           </div>
       </div>
       <!-- 列表单元 招工描述 END -->
@@ -441,12 +457,12 @@ export default {
       }
     })
   },
-  
+
   onUnload(){ // 当页面被关闭时，状态不被保存
     this.files = []
     this.addImageCount = 0
   },
-  
+
   methods: {
     // **********************招工类型点击事件**************************
     radioChange (e) {
@@ -620,7 +636,7 @@ export default {
       if (this.worker_type === '点工') {
         dataToServer.worker_type = 'parttime' // 招工类型-点工
         // 如果没有填全,弹窗
-        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity === '' || this.pay === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
           console.log('dataToServer = ', dataToServer);
           wx.showModal({
             content: '请填入必填信息,方能提交保存!',
@@ -628,7 +644,8 @@ export default {
           })
         } else { // 转换数据,提交KJob
           dataToServer.quantity = this.quantity // 招工人数或工程数量
-          dataToServer.pay = this.pay // 工资标准
+          // dataToServer.pay = this.pay // 工资标准
+          dataToServer.pay_desc = this.pay_desc // 工资标准
           job.job = dataToServer
           console.log(job);
           this.addJobInfo(job)
@@ -637,7 +654,8 @@ export default {
       }
       if (this.worker_type === '包工') {
         dataToServer.worker_type = 'contract' // 招工类型-包工
-        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity_desc === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+        // if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity_desc === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
+        if (this.title === '' || this.regionFullName == '请选择' || this.profession === '请选择' || this.quantity === '' || this.pay_desc === '' || this.description === '' || this.files.length === 0 || this.releaseTime === '请选择') {
           // console.log('this.title = ', this.title);
           // console.log('this.regionFullName = ', this.regionFullName);
           // console.log('this.profession = ', this.profession);
@@ -651,7 +669,8 @@ export default {
             showCancel: false
           })
         } else { // 转换数据,提交KJob
-          dataToServer.quantity_desc = this.quantity_desc // 招工人数或工程数量
+          // dataToServer.quantity_desc = this.quantity_desc // 招工人数或工程数量
+          dataToServer.quantity = this.quantity // 招工人数
           dataToServer.pay_desc = this.pay_desc //单位价格
           job.job = dataToServer
           console.log(job);

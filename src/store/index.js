@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     },
     job: null,
     applicant: null,
-    workDetailStore:{} // VUEX 工作详情
+    workDetailStore:{}, // VUEX 工作详情
+    userInfoForAPI: {} // VUEX 当前操作用户详情
   },
   mutations: {
     setApplicantReset(state){
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
     },
     setworkDetailStore(state,payload){
       state.workDetailStore = payload
+    },
+    setuserInfoForAPIStore(state,payload){
+      state.userInfoForAPI = payload
     }
   },
   actions: {

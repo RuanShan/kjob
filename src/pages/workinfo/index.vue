@@ -2,7 +2,7 @@
   <div class="content">
     <div class="item-link">
       <div class="link-left">
-        项目名称:
+        公司名称:
       </div>
       <div class="link-right">
         {{item.state}}{{item.city}}-招 {{item.job_taxon_name}}
@@ -26,45 +26,59 @@
         <div class="callPhone">
           <div>{{linkman}}</div>
           <div>
-            <button class="calling" type="primary" size="mini" @click="calling">拨打</button>
+            <button
+              class="calling"
+              type="primary"
+              size="mini"
+              @click="calling"
+            >拨打</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="item-link" v-if="parttimeDisplay">
+    <div
+      class="item-link"
+      v-if="parttimeDisplay"
+    >
       <div class="link-left">
         招工人数:
       </div>
       <div class="link-right">
-        {{item.quantity}} 元
+        {{item.quantity}} 人
       </div>
     </div>
 
-    <div class="item-link" v-if="parttimeDisplay">
+    <div
+      class="item-link"
+      v-if="parttimeDisplay"
+    >
       <div class="link-left">
         工资标准:
       </div>
       <div class="link-right">
-        {{item.pay}} 人/天
+        {{item.pay_desc}}
       </div>
     </div>
 
-    <div class="item-link" v-if="contractDisplay">
+    <!-- <div class="item-link" v-if="contractDisplay">
       <div class="link-left">
         工程量:
       </div>
       <div class="link-right">
         {{item.quantity_desc}}
       </div>
-    </div>
+    </div> -->
 
-    <div class="item-link" v-if="contractDisplay">
+    <div
+      class="item-link"
+      v-if="contractDisplay"
+    >
       <div class="link-left">
         单价:
       </div>
       <div class="link-right">
-        {{item.pay_desc}} 元
+        {{item.pay_desc}}
       </div>
     </div>
 
@@ -90,9 +104,20 @@
       <div class="two---row">
         <div class="image-upload">
           <div class="pre-div-image">
-            <block v-for="(item, index) in files" :key="index">
-              <div class="uploader-pre-image" @click="predivImage" :id="item">
-                <image class="uploader__img" :src="item" mode="aspectFill" />
+            <block
+              v-for="(item, index) in files"
+              :key="index"
+            >
+              <div
+                class="uploader-pre-image"
+                @click="predivImage"
+                :id="item"
+              >
+                <image
+                  class="uploader__img"
+                  :src="item"
+                  mode="aspectFill"
+                />
               </div>
             </block>
           </div>
@@ -104,10 +129,13 @@
       <div class="fifth-line">
         <div class="one---row">
           <div class="one-row-left">
-            <img style="width: 60rpx; height: 60rpx;" src="../../../resources/icon/warning.png">
+            <img
+              style="width: 60rpx; height: 60rpx;"
+              src="../../../resources/icon/warning.png"
+            >
           </div>
           <div class="one-row-right">
-            &nbsp;&nbsp; {{warning}}
+            &nbsp;&nbsp;&nbsp;&nbsp; {{warning}}
           </div>
         </div>
       </div>
@@ -320,12 +348,12 @@ export default {
   },
 
   onReady () {
-    wx.getStorage({
-      key: 'userInfoForAPI',
-      success: (res) => {
-        this.userInfoForAPI = res.data;
-      }
-    })
+    // wx.getStorage({
+    //   key: 'userInfoForAPI',
+    //   success: (res) => {
+    //     this.userInfoForAPI = res.data;
+    //   }
+    // })
     // wx.getStorage({
     //   key: 'worksItem',
     //   success: (res) => {
@@ -344,6 +372,9 @@ export default {
     //     this.phoneNumber = this.item.customer_mobile
     //   }
     // }),
+
+
+    this.userInfoForAPI = this.$store.state.userInfoForAPI; // 去VUEX 中的userInfoForAPI数据
     this.item = this.$store.state.workDetailStore
     // 判断是点工还是包工
     if (this.item.worker_type === 'parttime') {
@@ -359,7 +390,27 @@ export default {
     // 截取字符串 获得区
     let strIndexOf = this.find(this.item.district_fullname, '-', 1)
     this.district = this.item.district_fullname.substring(strIndexOf + 1)
-    this.linkman = this.item.customer_realname + this.item.customer_mobile
+    // this.linkman = this.item.customer_realname + this.item.customer_mobile
+
+    // console.log('this.userInfoForAPI.id_num_identified_at = ', this.userInfoForAPI.hasOwnProperty('id_num_identified_at'));
+    // console.log('this.userInfoForAPI.mobile_identified_at = ', this.userInfoForAPI.hasOwnProperty('mobile_identified_at'));
+
+    // 判断是否身份和手机注册,若注册显示全部,若没有显示****,
+    if (this.userInfoForAPI.hasOwnProperty('id_num_identified_at') && this.userInfoForAPI.hasOwnProperty('mobile_identified_at')) {
+      console.log("真");
+      this.linkman = this.item.customer_realname + this.item.customer_mobile
+    } else {
+      console.log("假");
+      let tempMobile = this.item.customer_mobile;
+      console.log("tempMobile = ", tempMobile);
+      let tempLength = this.item.customer_mobile.length;
+      console.log("tempLength = ", tempLength);
+      let tempFourNum = tempMobile.substring(tempLength - 4);
+      console.log("tempFourNum = ", tempFourNum);
+      tempMobile = tempMobile.replace(tempFourNum, '****');
+      console.log("tempMobile = ", tempMobile);
+      this.linkman = this.item.customer_realname + tempMobile;
+    }
   },
 
   methods: {
@@ -368,7 +419,7 @@ export default {
       console.log("this.userInfoForAPI=", this.userInfoForAPI)
 
       // 根据当前用户信息判读是否进行了身份证认证和电话认证 id_num_identified_at mobile_identified_at
-      if (this.userInfoForAPI.mobile_identified_at) {
+      if (this.userInfoForAPI.mobile_identified_at && this.userInfoForAPI.id_num_identified_at) {
 
         wx.makePhoneCall({
           phoneNumber: this.phoneNumber, // 来自API
@@ -387,8 +438,14 @@ export default {
         })
       } else {
         wx.showModal({
-          content: '请先进行手机认证,之后才能拨打电话!',
-          showCancel: false
+          content: '请先进行手机认证和身份证认证,之后才能拨打电话!',
+          showCancel: false,
+           success: function(res) {
+            if (res.confirm) {
+              console.log('点击了确定按钮!!!');
+              wx.switchTab({ url: '../my/main' }) // 跳转到免费注册页面
+            }
+          }
         })
       }
     },

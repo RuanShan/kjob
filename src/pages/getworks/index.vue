@@ -4,11 +4,29 @@
     <div class="sizer">
       <div class="position-select">
         <button @click="showPickerForRegion">{{selectedRegionName}}</button>
-        <mpvue-picker ref="mpvuePickerForRegion" :mode="modeForRegion" :deepLength="2" :pickerValueDefault="pickerRegionDefault" @onChange="onChangeForRegion" @onConfirm="onConfirmForRegion" @onCancel="onCancelForRegion" :pickerValueArray="pickerRegionArray"></mpvue-picker>
+        <mpvue-picker
+          ref="mpvuePickerForRegion"
+          :mode="modeForRegion"
+          :deepLength="2"
+          :pickerValueDefault="pickerRegionDefault"
+          @onChange="onChangeForRegion"
+          @onConfirm="onConfirmForRegion"
+          @onCancel="onCancelForRegion"
+          :pickerValueArray="pickerRegionArray"
+        ></mpvue-picker>
       </div>
       <div class="work-select">
         <button @click="showPickerForJob">{{selectedTaxonName}}</button>
-        <mpvue-picker ref="mpvuePickerForJob" :mode="modeForJob" :deepLength="deepLengthForJob" :pickerValueDefault="pickerJobDefault" @onChange="onChangeForJob" @onConfirm="onConfirmForJob" @onCancel="onCancelForJob" :pickerValueArray="pickerJobArray"></mpvue-picker>
+        <mpvue-picker
+          ref="mpvuePickerForJob"
+          :mode="modeForJob"
+          :deepLength="deepLengthForJob"
+          :pickerValueDefault="pickerJobDefault"
+          @onChange="onChangeForJob"
+          @onConfirm="onConfirmForJob"
+          @onCancel="onCancelForJob"
+          :pickerValueArray="pickerJobArray"
+        ></mpvue-picker>
       </div>
     </div>
     <!-- 筛选 ===> END -->
@@ -16,23 +34,46 @@
     <!-- 统计 ===> START -->
     <div class="statistics">
       <div class="works-num">
-        今日在线招工数:
-        <div class="works-num-color">{{onLineworkersNum}}</div>
+        今日在线招工数&nbsp;&nbsp;:&nbsp;&nbsp;
+        <div class="works-num-color">&nbsp;&nbsp;{{onLineworkersNum}}</div>
       </div>
-      <div class="people-num">
+      <!-- <div class="people-num">
         今日浏览人次:
         <div class="people-num-color">{{browsedTimes}}</div>
         <div></div>
-      </div>
+      </div> -->
     </div>
+    <!-- 统计 ===> END -->
+    <!-- 统计 ===> START -->
+    <!-- <div class="statistics-two">
+      <div class="">
+        今日在线招工数
+      </div>
+      <div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div class="today-online-num">
+        {{onLineworkersNum}}
+      </div>
+    </div> -->
     <!-- 统计 ===> END -->
 
     <!-- 列表概览 ===> START -->
-    <div id="job-list-wrap" class="list">
+    <div
+      id="job-list-wrap"
+      class="list"
+    >
 
-      <scroll-view class="job-list" :style="computedHeightStyle" scroll-y  lower-threshold="150" @scrolltolower="scrolltolower" @scrolltoupper="scrolltoupper" >
+      <scroll-view
+        class="job-list"
+        :style="computedHeightStyle"
+        scroll-y
+        lower-threshold="150"
+        @scrolltolower="scrolltolower"
+        @scrolltoupper="scrolltoupper"
+      >
 
-        <div class="circular" v-for="item in jobs" :key="item.id" @click="detail(item)">
+        <!-- <div class="circular" v-for="item in jobs" :key="item.id" @click="detail(item)">
           <div class="top-----half">
             <div class="one---row">
               <div class="one-row-one">
@@ -48,13 +89,13 @@
               <div class="two-row-one" v-if="item.isPartTime">
                 工资标准:&nbsp;&nbsp;
                 <div class="pay">
-                  &nbsp;&nbsp;{{item.pay}}元/天
+                  &nbsp;&nbsp;{{item.pay}}
                 </div>
               </div>
               <div class="two-row-one" v-if="!item.isPartTime">
-                单位价格:&nbsp;&nbsp;
+                单价:&nbsp;&nbsp;
                 <div class="pay">
-                  &nbsp;&nbsp;{{item.pay_desc}}元
+                  &nbsp;&nbsp;{{item.pay_desc}}
                 </div>
               </div>
               <div class="two-row-two" v-if="item.isPartTime">
@@ -84,7 +125,6 @@
               <div class="four-row-one">
                 <div class="image">
                   <img style="width: 50rpx; height: 50rpx;" src="../../../resources/icon/dateTime.png">
-                  <!-- <img style="width: 60rpx; height: 60rpx;" :src="userInfoForAPI.headimgurl"> -->
                 </div>
                 <div class="name">
                   &nbsp;&nbsp;联系人&nbsp;&nbsp;-&nbsp;&nbsp;{{item.customer_realname}}
@@ -95,14 +135,80 @@
               </div>
             </div>
           </div>
+        </div> -->
+
+        <div
+          class="new-rectangle"
+          v-for="item in jobs"
+          :key="item.id"
+          @click="detail(item)"
+        >
+          <div class="location-job">
+            <div class="location">
+              {{item.state}} {{item.city}} - 招 {{item.job_taxon_name}}
+            </div>
+            <div class="job">
+              <div class="typeOfWork">
+                正在招聘
+              </div>
+            </div>
+          </div>
+          <div class="details">
+
+            <div class="icon">
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/people.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/price.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/workType.png"
+              >
+              <img
+                style="width: 30rpx; height: 30rpx;"
+                src="../../../resources/icon/time.png"
+              >
+            </div>
+            <div class="title">
+              <div>
+                <p>招工人数:</p>
+              </div>
+              <div>
+                <p>工资(单价):</p>
+              </div>
+              <div>
+                <p>工种类别:</p>
+              </div>
+              <div>
+                <p>发布时间:</p>
+              </div>
+            </div>
+            <div class="content">
+              <div class="people-color">{{item.quantity}} 人</div>
+              <div>{{item.pay_desc}}</div>
+              <div> {{item.job_taxon_name}}</div>
+              <div>{{item.releaseTime}}</div>
+            </div>
+            <div class="arrows">
+              <img
+                style="width: 50rpx; height: 50rpx;"
+                src="../../../resources/icon/details.png"
+              >
+            </div>
+          </div>
         </div>
+
       </scroll-view>
     </div>
     <!-- 列表概览 ===> END -->
 
   </div>
-</template>
 
+</template>
 <script>
 import mpvuePicker from 'mpvue-picker'
 import {
@@ -172,8 +278,8 @@ export default {
       end: null
     }
   },
-   //动态分享
-    onShareAppMessage (res) {
+  //动态分享
+  onShareAppMessage (res) {
     return {
       title: '全国建筑工地招工找活信息平台',
       path: 'pages/getworks/main',
@@ -244,6 +350,8 @@ export default {
                     // console.log(res);
                     // 得到当前用户微信数保和KJob用户信息保持到userInfoForAPI中
                     this.userInfoForAPI = res;
+                    // 把userInfoForAPI保存到VUEX中
+                    this.$store.commit('setuserInfoForAPIStore', this.userInfoForAPI) // 保存到VueX中
                     // 把当前用户微信数保和KJob用户信息保存到全局变量userInfoForAPI中
                     wx.setStorage({
                       key: 'userInfoForAPI',
@@ -392,7 +500,7 @@ export default {
       return params
     },
     async loadMoreJob () {
-      if( !this.state.loading  )  {
+      if (!this.state.loading) {
         wx.showLoading("数据加载中...")
         this.state.q.page += 1
         let params = this.buildParams()
@@ -412,24 +520,24 @@ export default {
           this.state.loading = false
           this.state.loadEnd = true
         }
-        console.log("loadMoreJob=",  data)
+        console.log("loadMoreJob=", data)
         this.dataFormat(data.jobs)
-        this.jobs = this.uniquelizeObjs( data.jobs.concat( this.jobs ))
+        this.jobs = this.uniquelizeObjs(data.jobs.concat(this.jobs))
 
       }
     },
 
-    async refreshFirstPageJobs( ) {
-      if( !this.state.loading  )  {
+    async refreshFirstPageJobs () {
+      if (!this.state.loading) {
 
         let params = this.buildParams()
         params.page = 1
         let data = await searchJobs(params)
 
         this.dataFormat(data.jobs)
-        console.log("refreshFirstPageJobs=", data )
+        console.log("refreshFirstPageJobs=", data)
 
-        this.jobs = this.uniquelizeObjs( data.jobs.concat( this.jobs ))
+        this.jobs = this.uniquelizeObjs(data.jobs.concat(this.jobs))
 
       }
     },
@@ -524,7 +632,7 @@ export default {
       //     console.log('worksItem 存储失败了*******')
       //   }
       // })
-      this.$store.commit('setworkDetailStore',item) // 保存到VueX中
+      this.$store.commit('setworkDetailStore', item) // 保存到VueX中
       // console.log('this.$store.state.workDetailStore = ',this.$store.state.workDetailStore);
 
       wx.navigateTo({
@@ -535,10 +643,10 @@ export default {
     scrolltolower () {
       console.log("scrolltolower")
       this.loadMoreJob()
-     },
-    scrolltoupper(e){
+    },
+    scrolltoupper (e) {
       console.log("scrolltoupper")
-      this.refreshFirstPageJobs(  )
+      this.refreshFirstPageJobs()
     },
     // *******************数据格式化*******************
     dataFormat (data) {
@@ -573,7 +681,7 @@ page {
 .sizer {
   // position:absolute;
   width: 100%;
-  height: 106rpx;
+  // height: 106rpx;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -625,6 +733,19 @@ page {
     }
   }
 }
+.statistics-two {
+  height: 36rpx;
+  width: 100%;
+  background-color: #ebebeb;
+  border-bottom: 1px solid #c0c0c0;
+  border-top: 1px solid #c0c0c0;
+  display: flex;
+  font-size: 25rpx;
+  justify-content: center;
+  .today-online-num {
+    color: red;
+  }
+}
 
 .list {
   .job-list {
@@ -657,9 +778,9 @@ page {
           padding-left: 25rpx;
           font-size: 40rpx;
           font-weight: bold;
-          text-overflow:ellipsis;
-          white-space:nowrap;
-          overflow:hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
         .one-row-two {
           word-break: keep-all;
@@ -686,7 +807,7 @@ page {
         .two-row-one {
           padding-left: 25rpx;
           display: flex;
-          font-size:35rpx;
+          font-size: 35rpx;
           .pay {
             color: #fc0a77;
           }
@@ -694,7 +815,7 @@ page {
         .two-row-two {
           // width: 60%;
           // background-color:cornsilk;
-          font-size:35rpx;
+          font-size: 35rpx;
           padding-right: 25rpx;
           display: flex;
           .worksAmount {
@@ -751,6 +872,101 @@ page {
           // width: 30%;
           // background-color:cornsilk;
         }
+      }
+    }
+  }
+  .new-rectangle {
+    padding-top: 15rpx;
+    padding-left: 25rpx;
+    padding-right: 25rpx;
+    padding-bottom: 15rpx;
+    margin: 25rpx 25rpx;
+    background: #ffffff;
+    width: 645rpx;
+    height: 250rpx;
+    border: 2px solid #d6d6d6;
+    border-radius: 30rpx;
+    .location-job {
+      height: 25%;
+      // background-color: #fc94b8;
+      display: flex;
+      align-items: center;
+      .location {
+        // border-radius: 30rpx;
+        // background: linear-gradient(
+        //   to right,
+        //   rgb(245, 183, 102),
+        //   rgb(251, 251, 253)
+        // );
+        // background-color: #bbe9ff;
+        font-size: 32rpx;
+        width: 80%;
+      }
+      .job {
+        width: 20%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .typeOfWork {
+          color: #ffffff;
+          padding-left: 10rpx;
+          padding-right: 10rpx;
+          font-size: 23rpx;
+          border-radius: 6rpx;
+          background-color: #ff9f71;
+          border: 1px solid #808080;
+        }
+
+        // background-color: azure;
+      }
+    }
+    .details {
+      height: 75%;
+      display: flex;
+      // background-color: #80ff80;
+      .icon {
+        width: 10%;
+        height: 100%;
+        // background-color: lightseagreen;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .title {
+        width: 20%;
+        height: 100%;
+        // background-color: rgb(250, 246, 31);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: space-around;
+        font-size: 25rpx;
+        text-align-last: justify;
+        text-align: justify;
+        text-justify: distribute-all-lines; // 这行必加，兼容ie浏览器
+      }
+      .content {
+        padding-left: 18rpx;
+        width: 60%;
+        height: 100%;
+        // background-color: rgb(32, 70, 240);
+        font-size: 25rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        .people-color {
+          color: rgb(46, 247, 180);
+        }
+      }
+      .arrows {
+        width: 10%;
+        height: 100%;
+        // background-color: rgb(112, 32, 178);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
     }
   }
