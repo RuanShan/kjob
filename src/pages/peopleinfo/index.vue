@@ -186,18 +186,18 @@ export default {
     }
   },
   //动态分享
-  //   onShareAppMessage (res) {
-  //   return {
-  //     title: '全国建筑工地招工找活信息平台',
-  //     path: 'pages/peopleinfo/main',
-  //     success: function (res) {
-  //       // 转发成功
-  //     },
-  //     fail: function (res) {
-  //       // 转发失败
-  //     }
-  //   }
-  // },
+    onShareAppMessage (res) {
+    return {
+      title: '全国建筑工地招工找活信息平台',
+      path: 'pages/getpeople/main',
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
+  },
   async onLoad (option) {
     console.log("peopleinfo onload is called..")
     console.log("this.store.applicant", this.$store.state.applicant)

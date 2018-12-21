@@ -314,18 +314,18 @@ export default {
     }
   },
   //动态分享
-  // onShareAppMessage (res) {
-  //   return {
-  //     title: '全国建筑工地招工找活信息平台',
-  //     path: 'pages/workinfo/main',
-  //     success: function (res) {
-  //       // 转发成功
-  //     },
-  //     fail: function (res) {
-  //       // 转发失败
-  //     }
-  //   }
-  // },
+  onShareAppMessage (res) {
+    return {
+      title: '全国建筑工地招工找活信息平台',
+      path: 'pages/getworks/main',
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
+  },
   onLoad (option) {
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
